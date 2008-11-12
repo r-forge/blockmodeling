@@ -1,0 +1,355 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package blockmodeling:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package blockmodeling:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="blockmodeling-package">
+<param name="Local" value="blockmodeling-package.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ad">
+<param name="Local" value="ss.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="check.these.par">
+<param name="Local" value="check.these.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="clu">
+<param name="Local" value="clu.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="crand">
+<param name="Local" value="rand.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="crand2">
+<param name="Local" value="rand.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="crit.fun">
+<param name="Local" value="crit.fun.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="err">
+<param name="Local" value="clu.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="find.cut">
+<param name="Local" value="find.m.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="find.m">
+<param name="Local" value="find.m.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="find.m2">
+<param name="Local" value="find.m.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="formatA">
+<param name="Local" value="formatA.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fun.by.blocks">
+<param name="Local" value="fun.by.blocks.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fun.by.blocks.default">
+<param name="Local" value="fun.by.blocks.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fun.by.blocks.opt.more.par">
+<param name="Local" value="fun.by.blocks.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="genRandomPar">
+<param name="Local" value="genRandomPar.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="gplot1">
+<param name="Local" value="gplot1.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="gplot2">
+<param name="Local" value="gplot1.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="IM">
+<param name="Local" value="clu.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ircNorm">
+<param name="Local" value="ircNorm.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadmatrix">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadnetwork">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadnetwork2">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadpajek">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadvector">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loadvector2">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nkpar">
+<param name="Local" value="nkpartitions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nkpartitions">
+<param name="Local" value="nkpartitions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="one2two">
+<param name="Local" value="two2one.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="opt.par">
+<param name="Local" value="opt.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="opt.random.par">
+<param name="Local" value="opt.random.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="opt.these.par">
+<param name="Local" value="opt.random.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Pajek">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="partitions">
+<param name="Local" value="clu.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.check.these.par">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.crit.fun">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.mat">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.mat.nm">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.opt.more.par">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.opt.more.par.mode">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.opt.par">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="plot.opt.par.mode">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="rand">
+<param name="Local" value="rand.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="rand2">
+<param name="Local" value="rand.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="recode">
+<param name="Local" value="recode.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGD.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGD.ow.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.FC">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.FC.ow">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.nm.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.ow">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.ow.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE.ownm.for">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="reorderImage">
+<param name="Local" value="reorderImage.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="savematrix">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="savenetwork">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="savevector">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="sedist">
+<param name="Local" value="sedist.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ss">
+<param name="Local" value="ss.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="two2one">
+<param name="Local" value="two2one.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package blockmodeling:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="A formating function for numbers">
+<param name="Local" value="formatA.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="A wrapper for funcction gplot - Two-Dimensional Visualization of Graphs">
+<param name="Local" value="gplot1.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="An R package for Generalized and classical blockmodeling of valued networks ">
+<param name="Local" value="blockmodeling-package.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Comparing partitions">
+<param name="Local" value="rand.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Computation of function values by blocks">
+<param name="Local" value="fun.by.blocks.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Computes distances in terms of Structural equivalence (Lorrain and White, 1971)">
+<param name="Local" value="sedist.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Computes the criterion function for a given network and partition">
+<param name="Local" value="crit.fun.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Computes the value of a criterion function for a given network and a set of partitions">
+<param name="Local" value="check.these.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Computing the threshold">
+<param name="Local" value="find.m.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling">
+<param name="Local" value="clu.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Function for iterated row and column normalization of valued matrices.">
+<param name="Local" value="ircNorm.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Functions for listing all possible partitions or just cunting the number of them.">
+<param name="Local" value="nkpartitions.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Functions for loading and writing Pajek[http://vlado.fmf.uni-lj.si/pub/networks/pajek/] files">
+<param name="Local" value="Pajek.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Functions for plotting a partitioned matrix">
+<param name="Local" value="plot.mat.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Optimizes a partition based on the value of a criterion function.">
+<param name="Local" value="opt.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Optimizes a set of partitions based on the value of a criterion function.">
+<param name="Local" value="opt.random.par.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Recode">
+<param name="Local" value="recode.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece.">
+<param name="Local" value="REGE.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Reorders an image matrix of the blockmodel (or an error matrix based on new and old partition.">
+<param name="Local" value="reorderImage.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Sum of Squared deviations from the mean and sum of Absolute Deviations from the median">
+<param name="Local" value="ss.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="The function for generating random partitions">
+<param name="Local" value="genRandomPar.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Two-mode network conversions">
+<param name="Local" value="two2one.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>

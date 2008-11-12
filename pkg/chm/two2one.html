@@ -1,0 +1,97 @@
+<html><head><title>Two-mode network conversions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>two2one(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   two2one">
+<param name="keyword" value="R:   one2two">
+<param name="keyword" value=" Two-mode network conversions">
+</object>
+
+
+<h2>Two-mode network conversions</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Coverting two mode networks from two to one mode matrix representation and vice versa. If a two-mode matrix is converted in-to a one-mode matrix, the original two-mode matrix lies in the upper right corner of the one-mode matrix.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+two2one(M)
+one2two(M, clu = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network.</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+A partition. Each unique value represents one cluster. This should be a list of two vectors, one for each mode</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+Functions returns list with elemets:
+a mode mode matrix with the two mode network in its upper left corner.
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+The matrix</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+The partition, in form appropriate for the mode of the matrix</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="crit.fun.html">crit.fun</a></code>,<code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="plot.mat.html">plot.mat</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generating a simple network corresponding to the simple Sum of squares structural equivalence with blockmodel:
+# null com
+# null null
+n&lt;-c(7,13)
+net&lt;-matrix(NA,nrow=n[1],ncol=n[2])
+clu&lt;-list(rep(1:2,times=c(3,4)),rep(1:2,times=c(5,8)))
+tclu&lt;-lapply(clu,table)
+net[clu[[1]]==1,clu[[2]]==1]&lt;-rnorm(n=tclu[[1]][1]*tclu[[2]][1],mean=0,sd=1)
+net[clu[[1]]==1,clu[[2]]==2]&lt;-rnorm(n=tclu[[1]][1]*tclu[[2]][2],mean=4,sd=1)
+net[clu[[1]]==2,clu[[2]]==1]&lt;-rnorm(n=tclu[[1]][2]*tclu[[2]][1],mean=4,sd=1)
+net[clu[[1]]==2,clu[[2]]==2]&lt;-rnorm(n=tclu[[1]][2]*tclu[[2]][2],mean=0,sd=1)
+plot.mat(net,clu=clu) #two mode matrix of a two mode network
+#converting to one mode network
+M1&lt;-two2one(net)$M
+plot.mat(M1,clu=two2one(net)$clu) #plotting one mode matrix
+plot.mat(one2two(M1,clu=clu)$M,clu=clu) #converting one to two mode matix and ploting
+</pre>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.5 <a href="00Index.html">Index]</a></div>
+
+</body></html>

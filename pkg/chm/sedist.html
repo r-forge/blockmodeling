@@ -1,0 +1,123 @@
+<html><head><title>Computes distances in terms of Structural equivalence (Lorrain and White, 1971)</title>
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>sedist(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   sedist">
+<param name="keyword" value=" Computes distances in terms of Structural equivalence (Lorrain and White 1971)">
+</object>
+
+
+<h2>Computes distances in terms of Structural equivalence (Lorrain and White 1971)</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The functions computed the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network. Several options for treating the diagonal values are supported.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+sedist(M, method = "default", fun = "default", fun.on.rows = "default", handle.interaction = "switch", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network must be one-mode.</td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+The method used to compute distances - any of the methods alloed by functions dist, cor or cov {all package::stats} or just "cor" or "cov" (given as character).</td></tr>
+<tr valign="top"><td><code>fun</code></td>
+<td>
+Which function should be used to comput distacnes (given as character), .</td></tr>
+<tr valign="top"><td><code>fun.on.rows</code></td>
+<td>
+For non-standard function - does the function compute measure on rows (such as <code>cor</code>, <code>cov</code>,...) of the data matrix (as opposed to computing measure on columns (such as <code>dist</code>).</td></tr>
+<tr valign="top"><td><code>handle.interaction</code></td>
+<td>
+How should the interaction between the vertices analysed be handled:<br>
+"switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]<br>
+"ignore" (diagonal) - Diagonal is ignored<br>
+"none" - the matrix is used "as is"</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Additional arguments to <code>fun</code></td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+If both <code>method</code> and <code>fun</code> are "default", the euclidian distances are computed. the "default" method for <code>fun="dist"</code> is "eucludian" and for <code>fun="cor"</code> "pearson".
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A matrix (usually of class dist) is returned.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for structural equivalence. Social Networks 14, 63-90.
+</p>
+<p>
+Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a onclick="findlink('graphics', 'hist.html')" style="text-decoration: underline; color: blue; cursor: hand">hist</a></code>, <code><a href="REGE.html">REGE</a></code>, <code><a href="crit.fun.html">crit.fun</a></code>,<code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="plot.mat.html">plot.mat</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generating a simple network corresponding to the simple Sum of squares structural equivalence with blockmodel:
+# null com
+# null null
+n&lt;-20
+net&lt;-matrix(NA,ncol=n,nrow=n)
+clu&lt;-rep(1:2,times=c(5,15))
+tclu&lt;-table(clu)
+net[clu==1,clu==1]&lt;-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
+net[clu==1,clu==2]&lt;-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
+net[clu==2,clu==1]&lt;-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
+net[clu==2,clu==2]&lt;-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+
+D&lt;-sedist(M=net)
+plot.mat(net, clu=cutree(hclust(d=D,method="ward"),k=2))
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.4 <a href="00Index.html">Index]</a></div>
+
+</body></html>

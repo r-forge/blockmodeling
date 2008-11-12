@@ -1,0 +1,109 @@
+<html><head><title>Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>clu(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   clu">
+<param name="keyword" value="R:   partitions">
+<param name="keyword" value="R:   IM">
+<param name="keyword" value="R:   err">
+<param name="keyword" value=" Function for extraction of some elements for objects returend by functions for Generalized blockmodeling">
+</object>
+
+
+<h2>Function for extraction of some elements for objects returend by functions for Generalized blockmodeling</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Function for extraction of clu (partition), all best clus (partitions), IM (image or blockmodel) and err (total error or inconsistency) for objects, returend by functions <code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>, and <code><a href="check.these.par.html">check.these.par</a></code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+clu(res, which = 1, ...)
+IM(res, which = 1, ...)
+err(res, ...)
+partition(res)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>res</code></td>
+<td>
+Resoult of function <code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>, or <code><a href="check.these.par.html">check.these.par</a></code></td></tr>
+<tr valign="top"><td><code>which</code></td>
+<td>
+From which (if there are more than one) "best" solution whould the element be extracted. Warning! <code>which</code> grater than the number of "best" partitions produces an error.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Not used</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+The desired element.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+ŽIBERNA, Aleš (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. <a href="http://dx.doi.org/10.1016/j.socnet.2006.04.002">http://dx.doi.org/10.1016/j.socnet.2006.04.002</a>.
+</p>
+<p>
+ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. <a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>.
+</p>
+<p>
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuška (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="crit.fun.html">crit.fun</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="plot.mat.html">plot.opt.par</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n&lt;-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+net&lt;-matrix(NA,ncol=n,nrow=n)
+clu&lt;-rep(1:2,times=c(3,5))
+tclu&lt;-table(clu)
+net[clu==1,clu==1]&lt;-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
+net[clu==1,clu==2]&lt;-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
+net[clu==2,clu==1]&lt;-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
+net[clu==2,clu==2]&lt;-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+
+#we select a random parition and then optimise it
+
+all.par&lt;-nkpartitions(n=n, k=length(tclu)) #forming the partitions
+all.par&lt;-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
+res&lt;-opt.par(M=net,clu=all.par[[sample(1:length(all.par,size=1)]],approach="ss",blocks="com")
+plot(res) #Hopefully we get the original partition
+clu(res) #Hopefully we get the original partition
+err(res) #Error
+IM(res) #NULL, because FORTRAN subrutine is used.
+</pre>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.5 <a href="00Index.html">Index]</a></div>
+
+</body></html>

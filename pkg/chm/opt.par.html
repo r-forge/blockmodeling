@@ -1,0 +1,185 @@
+<html><head><title>Optimizes a partition based on the value of a criterion function.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>opt.par(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   opt.par">
+<param name="keyword" value=" Optimizes a partition based on the value of a criterion function.">
+</object>
+
+
+<h2>Optimizes a partition based on the value of a criterion function.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The function optimizes a partition based on the value of a criterion function (see <code><a href="crit.fun.html">crit.fun</a></code>) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2006) based on other parameters (see below).
+The optimization is done through local optimization, where the neighbourhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+opt.par(M, clu, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = TRUE, save.initial.param = TRUE, skip.par = NULL, save.checked.par = !is.null(skip.par), merge.save.skip.par = all(!is.null(skip.par), save.checked.par), check.skip = "never", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+Maxsimum number of iterations allowed</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to <code>"max"</code> for implicit approach.</td></tr>
+<tr valign="top"><td><code>approach</code></td>
+<td>
+One of the approaches described in Žiberna (2006). Possible values are:<br>
+"bin" - binary blockmodeling,<br>
+"val" - valued blockmodeling,<br>
+"imp" - implicit blockmodeling,<br>
+"ss" - sum of squares homogenity blockmodeling, and<br>
+"ad" - absolute deviations homogenity blockmodeling.</td></tr>
+<tr valign="top"><td><code>trace.iter</code></td>
+<td>
+Should the result of each iteration (and not only of the best one) be saved</td></tr>
+<tr valign="top"><td><code>switch.names</code></td>
+<td>
+Should  partitions that differ only in diferent names of positions be treated as different. It should be set to <code>TRUE</code> only if a asymetric blockmodel via <code>BLOCKS</code> is specified.</td></tr>
+<tr valign="top"><td><code>save.initial.param</code></td>
+<td>
+Should the inital parameters (<code>approach</code>,...) be saved</td></tr>
+<tr valign="top"><td><code>skip.par</code></td>
+<td>
+The partitions that are not allowed or were already checked and should therfire be skiped.</td></tr>
+<tr valign="top"><td><code>save.checked.par</code></td>
+<td>
+Should the checked partitions be saved. For example, so that they can be used in the next call as <code>skip.par</code></td></tr>
+<tr valign="top"><td><code>merge.save.skip.par</code></td>
+<td>
+Should the checked partitions be merged with skiped ones?</td></tr>
+<tr valign="top"><td><code>check.skip</code></td>
+<td>
+When should the check be preformed:<br>
+"all"  - before every call to 'crit.fun'<br>
+"iter" - at the end of eack iteratiton<br>
+"never" - never</td></tr>
+<tr valign="top"><td><code>use.for.opt</code></td>
+<td>
+Should FORTRAN function be used for optimization if possible. If FORTRAN function is used, the speed is dramatically increast, however some the output is slightly different and the plotting function might not work. FORTRAN subrutines are available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines - e.g. using function <code>parOK</code> to allow only certain kinds of partitions), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.</td></tr>
+<tr valign="top"><td><code>use.for</code></td>
+<td>
+(default = <code>TRUE</code>) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.</td></tr>
+<tr valign="top"><td><code>check.switch</code></td>
+<td>
+If <code>TRUE</code> (the default), the neighborhood of the selected partition also includes the partitions that can be obtained by exchanging (switching) two units from diferent clusters).</td></tr>
+<tr valign="top"><td><code>check.all</code></td>
+<td>
+If <code>TRUE</code> (the default), all partitions in the neighborhood of the selected partition are first evaluated and the current partition than changes to the one with the lowest value of the criterion function (if lower than that of the current partition). If <code>FALSE</code>, the first partition with the criterion lower the current partition becomes the new current partition (and the iteration terminates).</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Argumets passed to other functions, see <code><a href="crit.fun.html">crit.fun</a></code></td></tr>
+</table>
+
+<h3>Value</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+The matrix of the network analyzed</td></tr>
+<tr valign="top"><td><code>best</code></td>
+<td>
+A list of results from <code>crit.fun.tmp</code> with the same elements as the result of <code>crit.fun</code>, only without <code>M</code></td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+A list of resoults the same as <code>best</code> - one <code>best</code> for each iteration</td></tr>
+<tr valign="top"><td><code>err</code></td>
+<td>
+If selected - The vector of errors or inconsistencies of the emplirical network with the ideal network for a given blockmodel (model,approach,...) and parititions</td></tr>
+<tr valign="top"><td><code>nIter</code></td>
+<td>
+The number of iterations used. It can show that <code>maxiter</code> is to low if this value is equal to <code>maxiter</code></td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+The call used to call the function.</td></tr>
+<tr valign="top"><td><code>initial.param</code></td>
+<td>
+If selected - The inital parameters used.</td></tr>
+<tr valign="top"><td><code>checked.par</code></td>
+<td>
+If selected - A list of checked parititions. If <code>merge.save.skip.par</code> is <code>TRUE</code>, this list also includs the partitions in <code>skip.par</code>.</td></tr>
+</table>
+<p>
+
+...</p>
+
+<h3>Warning</h3>
+
+<p>
+This function can be extremly slow. The time complexity is incrising with the number od units and the number of clusters. It is advaisable to firtst time the function on a smaller network.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+ŽIBERNA, Aleš (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. <a href="http://dx.doi.org/10.1016/j.socnet.2006.04.002">http://dx.doi.org/10.1016/j.socnet.2006.04.002</a>.
+</p>
+<p>
+ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. <a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>.
+</p>
+<p>
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuška (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="crit.fun.html">crit.fun</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="plot.mat.html">plot.opt.par</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n&lt;-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+net&lt;-matrix(NA,ncol=n,nrow=n)
+clu&lt;-rep(1:2,times=c(3,5))
+tclu&lt;-table(clu)
+net[clu==1,clu==1]&lt;-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
+net[clu==1,clu==2]&lt;-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
+net[clu==2,clu==1]&lt;-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
+net[clu==2,clu==2]&lt;-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+
+#we select a random parition and then optimise it
+
+all.par&lt;-nkpartitions(n=n, k=length(tclu)) #forming the partitions
+all.par&lt;-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
+res&lt;-opt.par(M=net,clu=all.par[[sample(1:length(all.par,size=1)]],approach="ss",blocks="com")
+plot(res) #Hopefully we get the original partition
+</pre>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

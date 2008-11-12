@@ -1,0 +1,109 @@
+<html><head><title>A wrapper for funcction gplot - Two-Dimensional Visualization of Graphs</title>
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>gplot1(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   gplot1">
+<param name="keyword" value="R:   gplot2">
+<param name="keyword" value=" A wrapper for funcction gplot - Two-Dimensional Visualization of Graphs">
+</object>
+
+
+<h2>A wrapper for funcction gplot - Two-Dimensional Visualization of Graphs</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The function calls function <code>gplot</code> from library sna with different defaults. Usefun for ploting image graphs.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+gplot1(M, uselen = TRUE, usecurve = T, edge.len = 0.001, diag = T, displaylabels = T, boxed.labels = F, loop.cex = 4, arrowhead.cex = 2.5, edge.lwd = 1, edge.col = gray(1 - M/max(M)), thresh = 0.05, ...)
+gplot2(M, uselen = TRUE, usecurve = T, edge.len = 0.001, diag = T, displaylabels = T, boxed.labels = F, loop.cex = 4, arrowhead.cex = 2.5, edge.lwd = 1, edge.col = "default", thresh = 0.05, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matix (array) of a graph or set thereof.  This data may be valued. </td></tr>
+<tr valign="top"><td><code>diag</code></td>
+<td>
+boolean indicating whether or not the diagonal should be treated as valid data.  Set this true if and only if the data can contain loops.  <code>diag</code> is <code>FALSE</code> by default. </td></tr>
+<tr valign="top"><td><code>thresh</code></td>
+<td>
+real number indicating the lower threshold for tie values.  Only ties of value &gt;<code>thresh</code> are displayed.  By default, <code>thresh</code>=0.</td></tr>
+<tr valign="top"><td><code>mode</code></td>
+<td>
+the vertex placement algorithm; this must correspond to a <code><a onclick="findlink('sna', 'gplot.layout.html')" style="text-decoration: underline; color: blue; cursor: hand">gplot.layout</a></code> function. </td></tr>
+<tr valign="top"><td><code>displaylabels</code></td>
+<td>
+boolean; should vertex labels be displayed? </td></tr>
+<tr valign="top"><td><code>boxed.labels</code></td>
+<td>
+boolean; place vertex labels within boxes? </td></tr>
+<tr valign="top"><td><code>arrowhead.cex</code></td>
+<td>
+expansion factor for edge arrowheads.</td></tr>
+<tr valign="top"><td><code>loop.cex</code></td>
+<td>
+expansion factor for loops; may be given as a vector, if loops are to be of different sizes. </td></tr>
+<tr valign="top"><td><code>edge.col</code></td>
+<td>
+color for edges; may be given as a vector or adjacency matrix, if edges are to be of different colors. </td></tr>
+<tr valign="top"><td><code>edge.lwd</code></td>
+<td>
+line width scale for edges; if set greater than 0, edge widths are scaled by <code>edge.lwd*dat</code>.  May be given as a vector or adjacency matrix, if edges are to have different line widths. </td></tr>
+<tr valign="top"><td><code>edge.len</code></td>
+<td>
+if <code>uselen==TRUE</code>, curved edge lengths are scaled by <code>edge.len</code>. </td></tr>
+<tr valign="top"><td><code>uselen</code></td>
+<td>
+boolean; should we use <code>edge.len</code> to rescale edge lengths? </td></tr>
+<tr valign="top"><td><code>usecurve</code></td>
+<td>
+boolean; should we use <code>edge.curve</code>? </td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+additional arguments to <code><a onclick="findlink('urca', 'plot-methods.html')" style="text-decoration: underline; color: blue; cursor: hand">plot</a></code>. </td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+Plots a graph</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code>sna:gplot</code>
+</p>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.4 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,234 @@
+<html><head><title>Computes the criterion function for a given network and partition</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>crit.fun(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   crit.fun">
+<param name="keyword" value=" Computes the criterion function for a given network and partition">
+</object>
+
+
+<h2>Computes the criterion function for a given network and partition</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The function computes the value of a criterion function for a given network and partition for Generalized blockmodeling. (Žiberna, 2006) based on other parameters (see below).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+crit.fun(M, clu, approach, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode</td></tr>
+<tr valign="top"><td><code>approach</code></td>
+<td>
+One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2006). Possible values are:<br>
+"bin" - binary blockmodeling,<br>
+"val" - valued blockmodeling,<br>
+"imp" - implicit blockmodeling,<br>
+"ss" - sum of squares homogenity blockmodeling, and<br>
+"ad" - absolute deviations homogenity blockmodeling.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Several arguments, which are explaind below. They are actually used by the function <code>gen.crit.fun</code>, however since this functions is not intented to be called directly, it also has no help files. Therefore these arguments are described below. Which are needed depends on the <code>approach</code> selected</td></tr>
+<tr valign="top"><td><code>blocks</code></td>
+<td>
+A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For approaches "bin", and "val", at least two should be selected. Possible values are are:<br>
+"null" - null or empty block<br>
+"com" - complete block<br>
+"rdo", "cdo" - row and column-dominant blocks (binary, valued, and implicit approach only)<br>
+"reg" - (f-)regular block<br>
+"rre", "cre" - row and column-(f-)regular blocks<br>
+"rfn", "cfn" - row and column-dominant blocks (binary, valued, and implicit approach only)<br>
+"den" - density block (binary approach only)<br>
+"avg" - average block (valued and implicit approach only)<br>
+"dnc" - do not care block - the error is always zero<br>
+The ordering is important, since if several block types have identical error, the first on the list is selected.</td></tr>
+<tr valign="top"><td><code>BLOCKS</code></td>
+<td>
+An alternative to <code>blocks</code>. A pre-specified blockmodel. An array with dimensions three dimensions (see example below). The second and the third repreent the clusters (for rows and columns), while the first is as long as the maxsimum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values <code>NA</code>. The values in the array should be the ones from above. For multi-relational networks, it can be a list of such arrays.</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to <code>"max"</code> for implicit approach. For multi-relational networks, it can be a vector of such values.</td></tr>
+<tr valign="top"><td><code>cut</code></td>
+<td>
+(default = <code>min(M[M &gt; 0])</code>) The threshold used for binerizing the network for use with binary blockmodeling. All values with values lower than <code>cut</code> are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values.</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings.</td></tr>
+<tr valign="top"><td><code>norm</code></td>
+<td>
+Should the block errors (inconsistencies) be normalized with the size of the blocks, the block error does not depend on block size? The default is <code>FALSE</code>. Original version of implicit approach suggests <code>TRUE</code>, however the default is <code>FALSE</code> even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.</td></tr>
+<tr valign="top"><td><code>normMto2rel</code></td>
+<td>
+</td></tr>
+<tr valign="top"><td><code>sameModel</code></td>
+<td>
+</td></tr>
+<tr valign="top"><td><code>normbym</code></td>
+<td>
+The default is <code>FALSE</code> for valued and implicit approach, elsewher not used. Original version of implicit approach suggests <code>TRUE</code>, however the default is <code>FALSE</code> even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.</td></tr>
+<tr valign="top"><td><code>allow.max0</code></td>
+<td>
+Should the maximum that is the basis for calculation of inconsistencies in implicit blockmodeling be allowed to be 0. If FALSE, the maximum is in such case set to the maximum of the network (if maximum of a block is 0) or to the maxsimum of the block (if row or column maxismum is 0)Used only in implicit blockmodeling. If <code>TRUE</code>, the incosistency of an ideal null block is 0 for all block types. The default is <code>FALSE</code> if null blocks are incluede in the allowed blocks in at least one block and <code>TRUE</code> otherwise.</td></tr>
+<tr valign="top"><td><code>allow.dom0</code></td>
+<td>
+Should the dominant row or column (in row- or column-dominant blocks) be allowed to be 0. Used only in implicit blockmodeling. The default is <code>FALSE</code>.</td></tr>
+<tr valign="top"><td><code>max.con.val</code></td>
+<td>
+</td></tr>
+<tr valign="top"><td><code>mindim</code></td>
+<td>
+(default = 2) Minimal dimension (number of rows or columns) demanded for row and column-dominant and -functional blocks.</td></tr>
+<tr valign="top"><td><code>mindimreg</code></td>
+<td>
+(default = <code>FALSE</code>) Should the mindim argument also be used for (row or coulum-)(f-)regular blocks</td></tr>
+<tr valign="top"><td><code>blockWeights</code></td>
+<td>
+Weights for each type of block used, if they are to be different accros block types (see <code>blocks</code> above). It must be suplied in form of a named vetor <code>blockWeights = c(name.of.block.type1=weight,...)</code>. If some of the block types used are not listed, they are given weight 1.</td></tr>
+<tr valign="top"><td><code>positionWeights</code></td>
+<td>
+weigths for positions in the blockmodel (the dimensions must be the same as the error matrix). For now this is a matix (two-dimensional) even for multi-relational networks.</td></tr>
+<tr valign="top"><td><code>save.err.v</code></td>
+<td>
+(default = <code>FALSE</code>) Should the error vector for all allowed block types in each block be saved?</td></tr>
+<tr valign="top"><td><code>BLOCK.CV</code></td>
+<td>
+An array with the same dimmesions as  <code>BLOCKS</code> of central values  for pre-specified homogenity (sum of squares and absolute deviations) approach. For multi-relational networks, it can be a list of such arrays.</td></tr>
+<tr valign="top"><td><code>CV.use</code></td>
+<td>
+An array with the same dimmesions as  <code>BLOCKS.CV</code> with instuctions how to treat these centarl values. For multi-relational networks, it can be a list of such arrays. Possible alternatives are:<br>
+"fixed" - the central value is fixed to the value specified in <code>BLOCKS.CV</code>.<br>
+"min" - the central value specified in <code>BLOCKS.CV</code> is the minimal possible central value for a block. The central value for the block is computed as the maximum of the value specified in <code>BLOCKS.CV</code> and the empirical value computed based on tie values in the block.<br>
+"max" - the central value specified in <code>BLOCKS.CV</code> is the maximal possible central value for a block. The central value for the block is computed as the minimum of the value specified in <code>BLOCKS.CV</code> and the empirical value computed based on tie values in the block.<br>
+"free" - the central value is free, the value specified in <code>BLOCKS.CV</code> is igneored. The central value for the block is computed as the empirical value computed based on tie values in the block.<br></td></tr>
+<tr valign="top"><td><code>use.for</code></td>
+<td>
+(default = <code>TRUE</code>) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.</td></tr>
+<tr valign="top"><td><code>diag</code></td>
+<td>
+(default = <code>TRUE</code>) Should the special stauts of diagonal be acknowladged.</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A list:
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+The matrix of the network analyzed</td></tr>
+<tr valign="top"><td><code>err</code></td>
+<td>
+The error or inconsistency emplirical network with the ideal network for a given blockmodel (model,approach,...) and paritition</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+The analyzed partition</td></tr>
+<tr valign="top"><td><code>E</code></td>
+<td>
+Block errors by blocks</td></tr>
+<tr valign="top"><td><code>IM</code></td>
+<td>
+The obtained image</td></tr>
+<tr valign="top"><td><code>BM</code></td>
+<td>
+Block means by block - only for Homogeneity blockmodeling</td></tr>
+<tr valign="top"><td><code>ERR.V</code></td>
+<td>
+If selected. The error vector of errors for all allowed block types by blocks. The dimmensions are [rows, columns (,relations - if more than 1)]. Each cell contains a list of errors by block types</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+ŽIBERNA, Aleš (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. <a href="http://dx.doi.org/10.1016/j.socnet.2006.04.002">http://dx.doi.org/10.1016/j.socnet.2006.04.002</a>.
+</p>
+<p>
+ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. <a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>.
+</p>
+<p>
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuška (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="plot.mat.html">plot.crit.fun</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#generating a simple network corresponding to the simple Sum of squares structural equivalence with blockmodel:
+# null com
+# null null
+n&lt;-20
+net&lt;-matrix(NA,ncol=n,nrow=n)
+clu&lt;-rep(1:2,times=c(5,15))
+tclu&lt;-table(clu)
+net[clu==1,clu==1]&lt;-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
+net[clu==1,clu==2]&lt;-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
+net[clu==2,clu==1]&lt;-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
+net[clu==2,clu==2]&lt;-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+
+#computation of criterion function with the correct partition
+res&lt;-crit.fun(M=net,clu=clu,approach="ss",blocks="com")
+res$err #the error is relativly small
+res$BM  #The block means are around 0 or 4
+plot(res)
+
+#computation of criterion function with random partition
+clu.rnd&lt;-sample(1:2,size=n,replace=TRUE)
+res.rnd&lt;-crit.fun(M=net,clu=clu.rnd,approach="ss",blocks="com")
+res.rnd$err #the error is larger
+res.rnd$BM  #random block means
+plot(res.rnd)
+
+#adapt network for Valued blockmodeling with the same model
+net[net&gt;4]&lt;-4
+net[net&lt;0]&lt;-0
+
+#computation of criterion function with the correct partition
+res&lt;-crit.fun(M=net,clu=clu,approach="val",blocks=c("null","com"),m=4)
+res$err #the error is relativly small
+res$IM  #The image corresponds to the one used for generation of the network
+plot(res)
+
+#computation of criterion function with random partition
+res.rnd&lt;-crit.fun(M=net,clu=clu.rnd,approach="val",blocks=c("null","com"),m=4)
+res.rnd$err #the error is larger
+res.rnd$IM #all blocks are probably null
+plot(res.rnd)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.5 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,230 @@
+<html><head><title>Optimizes a set of partitions based on the value of a criterion function.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>opt.random.par(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   opt.random.par">
+<param name="keyword" value="R:   opt.these.par">
+<param name="keyword" value=" Optimizes a set of partitions based on the value of a criterion function.">
+</object>
+
+
+<h2>Optimizes a set of partitions based on the value of a criterion function.</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The function optimizes a set partitions based on the value of a criterion function  (see <code><a href="crit.fun.html">crit.fun</a></code> for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2006) based on other parameters (see below).
+The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
+A list of paritions can be specified (<code>opt.these.par</code>) or the number of clusters and a number of partitions to generate (<code>opt.random.par</code>).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+opt.random.par(M, k, n = NULL, rep, return.all = FALSE, return.err = TRUE, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = NULL, save.initial.param = TRUE, skip.par = NULL, save.checked.par = TRUE, merge.save.skip.par = any(!is.null(skip.par), save.checked.par), skip.allready.checked.par = TRUE, check.skip = "iter", print.iter = FALSE, max.iden = 10, seed = NULL, parGenFun = genRandomPar, mingr = 1, maxgr = Inf, addParam = list(genPajekPar = TRUE, probGenMech = NULL), maxTriesToFindNewPar = rep * 10, ...)
+
+opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE, skip.allready.checked.par = TRUE, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = TRUE, save.initial.param = TRUE, skip.par = NULL, save.checked.par = !is.null(skip.par), merge.save.skip.par = all(!is.null(skip.par), save.checked.par), check.skip = "never", print.iter = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+The number of clustrs used in generation of partitions.</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+The vector of the number of units in each mode (only necessary if mode is larger than 2.</td></tr>
+<tr valign="top"><td><code>rep</code></td>
+<td>
+The number of repetitions/different starting partitions to check.</td></tr>
+<tr valign="top"><td><code>partitions</code></td>
+<td>
+A list of partitions. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode.</td></tr>
+<tr valign="top"><td><code>return.all</code></td>
+<td>
+If <code>FALSE</code>, solution for only the best (one or more) partition/s is/are returned.</td></tr>
+<tr valign="top"><td><code>return.err</code></td>
+<td>
+Should the error for each optimized partition be returned</td></tr>
+<tr valign="top"><td><code>maxiter</code></td>
+<td>
+Maximum number of iterations</td></tr>
+<tr valign="top"><td><code>m</code></td>
+<td>
+Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to <code>"max"</code> for implicit approach.</td></tr>
+<tr valign="top"><td><code>approach</code></td>
+<td>
+One of the approaches described in Žiberna (2007). Possible values are:<br>
+"bin" - binary blockmodeling,<br>
+"val" - valued blockmodeling,<br>
+"imp" - implicit blockmodeling,<br>
+"ss" - sum of squares homogenity blockmodeling, and<br>
+"ad" - absolute deviations homogenity blockmodeling.</td></tr>
+<tr valign="top"><td><code>trace.iter</code></td>
+<td>
+Should the result of each iteration (and not only of the best one) be saved</td></tr>
+<tr valign="top"><td><code>switch.names</code></td>
+<td>
+Should  partitions that differ only in diferent names of positions be treated as different. It should be set to <code>TRUE</code> only if a asymetric blockmodel via <code>BLOCKS</code> is specified.</td></tr>
+<tr valign="top"><td><code>save.initial.param</code></td>
+<td>
+Should the inital parameters (<code>approach</code>,...) be saved</td></tr>
+<tr valign="top"><td><code>skip.par</code></td>
+<td>
+The partitions that are not allowed or were already checked and should therfire be skiped.</td></tr>
+<tr valign="top"><td><code>save.checked.par</code></td>
+<td>
+Should the checked partitions be saved. For example, so that they can be used in the next call as <code>skip.par</code></td></tr>
+<tr valign="top"><td><code>merge.save.skip.par</code></td>
+<td>
+Should the checked partitions be merged with skiped ones?</td></tr>
+<tr valign="top"><td><code>skip.allready.checked.par</code></td>
+<td>
+If <code>TRUE</code>,the partitions that were already checked when runing <code>opt.par</code> form different statrting points will be skiped.</td></tr>
+<tr valign="top"><td><code>check.skip</code></td>
+<td>
+When should the check be preformed:<br>
+"all"  - before every call to 'crit.fun' (Time demanding)<br>
+"iter" - at the end of eack iteratiton<br>
+"opt.par"  - before every call to <code>opt.par</code>, when starting the optimization of a new partition.<br>
+"never" - never</td></tr>
+<tr valign="top"><td><code>print.iter</code></td>
+<td>
+Should the progress of each iteration be printed?</td></tr>
+<tr valign="top"><td><code>max.iden</code></td>
+<td>
+The maximum number of results that should be saved (in case there are more than max.iden results with minimal error, only the first max.iden will be saved).</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+Optional. The seed for random generation of partitions.</td></tr>
+<tr valign="top"><td><code>parGenFun</code></td>
+<td>
+The fucntion (object) that will generate rendom partitions. The deault fuction is <code><a href="genRandomPar.html">genRandomPar</a></code>. The function has to accept the following parameters: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)</td></tr>
+<tr valign="top"><td><code>mingr</code></td>
+<td>
+Minimal alowed group size</td></tr>
+<tr valign="top"><td><code>maxgr</code></td>
+<td>
+Maximal alowed group size</td></tr>
+<tr valign="top"><td><code>addParam</code></td>
+<td>
+A list of additional parameters for function specified above. In the usage section they are specified for the dthe default function <code><a href="genRandomPar.html">genRandomPar</a></code>:</td></tr>
+<tr valign="top"><td><code>maxTriesToFindNewPar</code></td>
+<td>
+The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is <code>rep*1000</code></td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Argumets passed to other functions, see <code><a href="crit.fun.html">crit.fun</a></code></td></tr>
+</table>
+
+<h3>Value</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+The matrix of the network analyzed</td></tr>
+<tr valign="top"><td><code>res</code></td>
+<td>
+If <code>return.all = TRUE</code> - A list of results the same as <code>best</code> - one <code>best</code> for each partition optimized</td></tr>
+<tr valign="top"><td><code>best</code></td>
+<td>
+A list of results from <code>crit.fun.tmp</code> with the same elements as the result of <code>crit.fun</code>, only without <code>M</code></td></tr>
+<tr valign="top"><td><code>err</code></td>
+<td>
+If <code>return.err = TRUE</code> - The vector of errors or inconsistencies of the emplirical network with the ideal network for a given blockmodel (model,approach,...) and parititions</td></tr>
+<tr valign="top"><td><code>nIter</code></td>
+<td>
+The vector of number of iterations used - one value for each starting partition that was optimized. It can show that <code>maxiter</code> is to low if a lot of these values have the value of <code>maxiter</code></td></tr>
+<tr valign="top"><td><code>checked.par</code></td>
+<td>
+If selected - A list of checked parititions. If <code>merge.save.skip.par</code> is <code>TRUE</code>, this list also includs the partitions in <code>skip.par</code>.</td></tr>
+<tr valign="top"><td><code>call</code></td>
+<td>
+The call used to call the function.</td></tr>
+<tr valign="top"><td><code>initial.param</code></td>
+<td>
+If selected - The inital parameters used.</td></tr>
+</table>
+
+<h3>Warning</h3>
+
+<p>
+This function can be extremly slow. The time complexity is incrising with the number od units and the number of clusters. It is advaisable to firtst time the function on a smaller network.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+ŽIBERNA, Aleš (2007): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. <a href="http://dx.doi.org/10.1016/j.socnet.2006.04.002">http://dx.doi.org/10.1016/j.socnet.2006.04.002</a>.
+</p>
+<p>
+ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. <a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>.
+</p>
+<p>
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuška (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+</p>
+<p>
+BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, http://vlado.fmf.uni lj.si/pub/networks/pajek/ (accessed January 6, 2006).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="crit.fun.html">crit.fun</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="opt.par.html">opt.par</a></code>,<code><a href="plot.mat.html">plot.opt.more.par</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+n&lt;-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+net&lt;-matrix(NA,ncol=n,nrow=n)
+clu&lt;-rep(1:2,times=c(3,5))
+tclu&lt;-table(clu)
+net[clu==1,clu==1]&lt;-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
+net[clu==1,clu==2]&lt;-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
+net[clu==2,clu==1]&lt;-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
+net[clu==2,clu==2]&lt;-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+
+#we select a random parition and then optimise it
+
+all.par&lt;-nkpartitions(n=n, k=length(tclu)) #forming the partitions
+all.par&lt;-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
+
+#optimizing one partition
+res&lt;-opt.par(M=net,clu=all.par[sample(1:length(all.par),size=1)],approach="ss",blocks="com")
+plot(res) #Hopefully we get the original partition
+
+#optimizing 10 random chosen partitions which are suplied to opt.these.par
+res&lt;-opt.these.par(M=net,partitions=all.par[sample(1:length(all.par),size=10)],approach="ss",blocks="com")
+plot(res) #Hopefully we get the original partition
+
+#optimizing 10 random chosen partitions with opt.random.par
+res&lt;-opt.random.par(M=net,k=2,npar=10,approach="ss",blocks="com")
+plot(res) #Hopefully we get the original partition
+</pre>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,85 @@
+<html><head><title>The function for generating random partitions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>genRandomPar(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   genRandomPar">
+<param name="keyword" value=" The function for generating random partitions">
+</object>
+
+
+<h2>The function for generating random partitions</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The function generates random partitions. The function is meant to be caled by the function <code><a href="opt.random.par.html">opt.random.par</a></code>
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf, addParam = list(genPajekPar = TRUE, probGenMech = NULL))
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>k</code></td>
+<td>
+Number of clusters (by modes)</td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+Number of units (by modes)</td></tr>
+<tr valign="top"><td><code>seed</code></td>
+<td>
+Seed for generating random numbers (partitions)</td></tr>
+<tr valign="top"><td><code>mingr</code></td>
+<td>
+Minimal alowed group size</td></tr>
+<tr valign="top"><td><code>maxgr</code></td>
+<td>
+Maximal alowed group size</td></tr>
+<tr valign="top"><td><code>addParam</code></td>
+<td>
+This has to be a list with the following parameters (any or all can be missing, then the default values (see usage) are used):<br>
+"genPajekPar" - Should the partitions be generated as in Pajek (Batagelj and Mrvar, 2006). If <code>FALSE</code>, all partitions are selected completly at random while making sure that the partitions have the required number of clusters. <br>
+"probGenMech" - Here the probabilities for 4 diferent generating mechanichems can be specified. If this is not specified, the value is set to <code>c(1/3,1/3,1/3,0)</code> if <code>genPajekPar</code> is <code>TRUE</code> and to <code>c(0,0,0,1)</code> if if <code>genPajekPar</code> is <code>FALSE</code>. The first 3 mechanisems are the same as implemetned in Pajek (the second one has almost all units in only one cluster)  and the fourth is completly random (from uniform distribution).
+</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A random partition in the format required by <code><a href="opt.random.par.html">opt.random.par</a></code>. If a netowork has several modes, than a list of partitions, one for each mode.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, http://vlado.fmf.uni lj.si/pub/networks/pajek/ (accessed January 6, 2006).
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="opt.random.par.html">opt.random.par</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.6 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,115 @@
+<html><head><title>Computing the threshold</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>find.m(blockmodeling)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   find.m">
+<param name="keyword" value="R:   find.m2">
+<param name="keyword" value="R:   find.cut">
+<param name="keyword" value=" Computing the threshold">
+</object>
+
+
+<h2>Computing the threshold</h2>
+
+
+<h3>Description</h3>
+
+<p>
+The functions compute the maxsimum value of <code>m/cut</code> where a ceratin block is still classified as <code>alt.blocks</code> and not "null".
+The difference between <code>find.m</code> and <code>find.m2</code> it that <code>find.m</code> uses an optimizational approach and is faster and more precise than <code>find.m2</code>. However, <code>find.m</code> only supports regular ("reg") and complete ("com") as <code>alt.blocks</code>, while <code>find.m2</code> supports all block types. Also, <code>find.m</code> does not always work, sepecially if <code>cormat</code> is not "none".
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+find.m(M, clu, alt.blocks = "reg", diag = !is.list(clu), cormet = "none", FUN = "max", half = TRUE)
+find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE, ...)
+find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>M</code></td>
+<td>
+A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.</td></tr>
+<tr valign="top"><td><code>clu</code></td>
+<td>
+A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode</td></tr>
+<tr valign="top"><td><code>alt.blocks</code></td>
+<td>
+Only one of allowed blocktypes, as alternative to the null block:<br>
+"com" - complete block<br>
+"rdo", "cdo" - row and column-dominant blocks (binary, valued, and implicit approach only)<br>
+"reg" - (f-)regular block<br>
+"rre", "cre" - row and column-(f-)regular blocks<br>
+"rfn", "cfn" - row and column-dominant blocks (binary, valued, and implicit approach only)<br>
+"den" - density block (binary approach only)<br>
+"avg" - average block (valued approach only)</td></tr>
+<tr valign="top"><td><code>diag</code></td>
+<td>
+(default = <code>TRUE</code>) Should the special stauts of diagonal be acknowladged.</td></tr>
+<tr valign="top"><td><code>cormet</code></td>
+<td>
+Which metho should be used to correct for diferent maxismum error contributins?<br>
+"none" - no correction<br>
+"censor" - censor values larger than m<br>
+"correct" -  so that the maxsimum possible error contribution of the cell is the same regardles of a condition (either that somthing must be o or at least m)</td></tr>
+<tr valign="top"><td><code>FUN</code></td>
+<td>
+(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks.</td></tr>
+<tr valign="top"><td><code>cuts</code></td>
+<td>
+The cuts which should be evaluatated. If <code>cuts="all"n</code> (default), all unique values are evaluated</td></tr>
+<tr valign="top"><td><code>neval</code></td>
+<td>
+Number of different <code>m</code> values to be evaluated.</td></tr>
+<tr valign="top"><td><code>half</code></td>
+<td>
+Should the returned value of m be one half of the value where the incosnistencies are the same.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Other parameters to crit.fun</td></tr>
+</table>
+
+<h3>Value</h3>
+
+<p>
+A matrix of maximal <code>m/cut</code> values.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Aleš Žiberna
+</p>
+
+
+<h3>References</h3>
+
+<p>
+ŽIBERNA, Aleš (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. <a href="http://dx.doi.org/10.1016/j.socnet.2006.04.002">http://dx.doi.org/10.1016/j.socnet.2006.04.002</a>.
+</p>
+<p>
+ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. <a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>.
+</p>
+<p>
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuška (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="crit.fun.html">crit.fun</a></code> and maybe also <code><a href="opt.par.html">opt.par</a></code>,<code><a href="opt.random.par.html">opt.random.par</a></code>,<code><a href="opt.random.par.html">opt.these.par</a></code>,<code><a href="check.these.par.html">check.these.par</a></code>,<code><a href="plot.mat.html">plot.mat</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>blockmodeling</em> version 0.1.5 <a href="00Index.html">Index]</a></div>
+
+</body></html>
