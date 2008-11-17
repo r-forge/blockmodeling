@@ -1,0 +1,46 @@
+body 			{margin-left:0; margin-top:0; background: white;}
+
+table			{border-style: none; font-family: Verdana, Ariel, sans-serif;}
+
+.naslov			{background-color: Lightblue; text-align: center; font-size: 24pt; font-weigth: bold;
+			padding-top: 1cm; padding-bottom: 1cm}
+.podnaslov		{font-size: 16pt; font-variant: small-caps; color: Black; font-weigth: bold;}
+
+.podpodnaslov		{font-size: 14pt; font-variant: color: Black; font-weigth: bold;}
+
+
+a:link			{text-decoration: none; color: #007FCC}
+a:visited		{text-decoration: none; color: #007FCC}
+a:hover			{text-decoration: none; color: #00CCFF}
+a:active		{text-decoration: none; color: #007FCC}
+
+.kazalo_glava		{ 
+			font-family: Verdana, Ariel, sans-serif; 
+			font-weight: bold; 
+			font-size: 12pt; 
+			color: Black;
+			border-top: 2px solid #9dafba; 
+			border-bottom: 2px solid #9dafba; 
+			}
+
+.kazalo			{ 
+			font-family: Verdana, Ariel, sans-serif; 
+			font-weight: bold; 
+			font-size: 12pt; 
+			color: #999999;
+			border-top: 2px solid #9dafba; 
+			border-bottom: 2px solid #9dafba; 
+			}
+							
+.kazalo		a:link		{ color: #999999; text-decoration: none}
+.kazalo		a:visited	{ color: #999999; text-decoration: none}
+.kazalo		a:hover		{ color: Black; text-decoration: none}
+.kazalo		a:active	{ color: Red; text-decoration: none}
+
+.tekst			{font-family: Verdana, Ariel, sans-serif; font-size: 11pt;}
+.tekst_small		{font-family: Verdana, Ariel, sans-serif; font-size: 9pt;}
+
+
+.poudari		{font-style: oblique; color: OrangeRed; font-weigth: 900;}
+
+.noga			{background-color: #9dafba; text-align: center; font-size: 10pt; font-weigth: bold;}
