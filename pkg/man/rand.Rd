@@ -23,5 +23,5 @@ crand2(clu1, clu2)
   The value of Rand Index (corrected/adjusted for chance)
 }
 \references{Hubert L. in Arabie P. (1985): Comparing Partitions. Journal of Classification, 2, 193-218.}
-\author{Aleö éiberna}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
 \keyword{cluster}% at least one, from doc/KEYWORDS

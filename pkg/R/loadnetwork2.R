@@ -1,6 +1,8 @@
 "loadnetwork2" <-
-function(file,useSparseMatrix=NULL,minN=50){
-  if(is.character(file)) file<-file(description=file,open="r")
+function(filename,useSparseMatrix=NULL,minN=50){
+  if(is.character(filename)){
+  	file<-file(description=filename,open="r")
+  } else file<-filename
   n<-read.table(file=file,nrows=1)
   if(length(n)==2){
     n<-as.numeric(n[2])

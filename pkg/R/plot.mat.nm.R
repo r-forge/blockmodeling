@@ -1,6 +1,10 @@
 "plot.mat.nm" <-
-function(M,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
-	if(is.null(main.title)) main.title <- paste("Matrix",deparse(substitute(M)))
+function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
+	if(is.null(main.title)){
+		objName<-deparse(substitute(M))
+		if(objName=="x")objName<-deparse(substitute(x))
+		main.title <- paste("Matrix",objName)
+	}
 	if(!is.null(par)){
 		par.def<-par(no.readonly = TRUE) 
 		par(par.set)

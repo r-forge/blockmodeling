@@ -13,36 +13,85 @@
 The main function \code{plot.mat} plots a (optionally partitioned) matrix. If the matrix is partitioned, the rows and columns of the matrix are rearranged according to the partitions. Other functions are only wrappers for \code{plot.mat} for convenience when plotting the results of the corresponding functions. The \code{plot.mat.nm} plots two matrices based on M, normalized by rows and columns, next to each other.
 }
 \usage{
-plot.mat(M, clu = NULL, ylab = "", xlab = "", main = NULL, print.val = !length(table(M)) <= 2, print.0 = FALSE, plot.legend = !print.val && !length(table(M)) <= 2, print.legend.val = "out", print.digits.legend = 2, print.digits.cells = 2, print.cells.mf = NULL , outer.title = !plot.legend, title.line = ifelse(outer.title, -1.5, 7), mar = c(0.5, 7, 8.5, 0) + 0.1, cex.val = "default", val.x.coor.cor = 0, val.y.coor.cor = 0, cex.legend = 1, legend.title = "Legend", cex.axes = "default", print.axes.val = NULL, print.x.axis.val = !is.null(colnames(M)), print.y.axis.val = !is.null(rownames(M)), x.axis.val.pos = 1.1, y.axis.val.pos = -0.1, cex.main = par()$cex.main, cex.lab = par()$cex.lab, yaxis.line = -1.5, xaxis.line = -1, legend.left = 0.4, legend.up = 0.03, legend.size = 1/10, legend.text.hor.pos = 0.5, par.line.width = 3, par.line.col = "blue", IM.dens = NULL,IM = NULL,	dens.leg = c(null=20), blackdens = 70, plotLines =TRUE,...)
+plot.mat(x=M, M=x, clu = NULL, ylab = "", xlab = "", main = NULL,
+   print.val = !length(table(M)) <= 2, print.0 = FALSE,
+   plot.legend = !print.val && !length(table(M)) <= 2,
+   print.legend.val = "out", print.digits.legend = 2,
+   print.digits.cells = 2, print.cells.mf = NULL,
+   outer.title = !plot.legend,
+   title.line = ifelse(outer.title, -1.5, 7),
+   mar = c(0.5, 7, 8.5, 0) + 0.1, cex.val = "default",
+   val.y.coor.cor = 0, val.x.coor.cor = 0, cex.legend = 1,
+   legend.title = "Legend", cex.axes = "default",
+   print.axes.val = NULL,
+   print.x.axis.val = !is.null(colnames(M)),
+   print.y.axis.val = !is.null(rownames(M)),
+   x.axis.val.pos = 1.1, y.axis.val.pos = -0.1,
+   cex.main = par()$cex.main, cex.lab = par()$cex.lab,
+   yaxis.line = -1.5, xaxis.line = -1, legend.left = 0.4,
+   legend.up = 0.03, legend.size = 1/min(dim(M)),
+   legend.text.hor.pos = 0.5, par.line.width = 3,
+   par.line.col = "blue", IM.dens = NULL, IM = NULL, wnet = 1,
+   wIM = NULL,
+   use.IM = length(dim(IM))==length(dim(M))|!is.null(wIM),
+   dens.leg = c(null = 100),
+   blackdens = 70, plotLines = TRUE, ...)
+  
+plot.mat.nm(x=M, M=x, ..., main.title = NULL,
+   title.row = "Row normalized", 
+   title.col = "Column normalized",
+   main.title.line = -2, par.set = list(mfrow = c(1, 2)))
 
-plot.mat.nm(M,...)
+\method{plot}{mat}(x=M, M=x, clu = NULL, ylab = "", xlab = "",
+   main = NULL, print.val = !length(table(M)) <= 2,
+   print.0 = FALSE,
+   plot.legend = !print.val && !length(table(M)) <= 2,
+   print.legend.val = "out", print.digits.legend = 2,
+   print.digits.cells = 2, print.cells.mf = NULL,
+   outer.title = !plot.legend,
+   title.line = ifelse(outer.title, -1.5, 7),
+   mar = c(0.5, 7, 8.5, 0) + 0.1, cex.val = "default",
+   val.y.coor.cor = 0, val.x.coor.cor = 0, cex.legend = 1,
+   legend.title = "Legend", cex.axes = "default",
+   print.axes.val = NULL,
+   print.x.axis.val = !is.null(colnames(M)),
+   print.y.axis.val = !is.null(rownames(M)),
+   x.axis.val.pos = 1.1, y.axis.val.pos = -0.1,
+   cex.main = par()$cex.main, cex.lab = par()$cex.lab,
+   yaxis.line = -1.5, xaxis.line = -1, legend.left = 0.4,
+   legend.up = 0.03, legend.size = 1/min(dim(M)),
+   legend.text.hor.pos = 0.5, par.line.width = 3,
+   par.line.col = "blue", IM.dens = NULL, IM = NULL, wnet = 1,
+   wIM = NULL,
+   use.IM = length(dim(IM)) == length(dim(M)) | !is.null(wIM),
+   dens.leg = c(null = 100), blackdens = 70, plotLines = TRUE,
+   ...)
 
-S3 method for class 'crit.fun':
-plot(x, main = NULL, ...)
+\method{plot}{crit.fun}(x, main = NULL, ...)
 
-S3 method for class 'opt.par':
-plot(x, main = NULL, which = 1, ...)
+\method{plot}{opt.par}(x, main = NULL, which = 1, ...)
 
-S3 method for class 'opt.par.mode':
-plot(x, main = NULL, which = 1, ...)
+\method{plot}{opt.par.mode}(x, main = NULL, which = 1, ...)
 
-S3 method for class 'opt.more.par':
-plot(x, main = NULL, which = 1, ...)
+\method{plot}{opt.more.par}(x, main = NULL, which = 1, ...)
 
-S3 method for class 'opt.more.par.mode':
-plot(x, main = NULL, which = 1, ...)
+\method{plot}{opt.more.par.mode}(x, main = NULL, which = 1, ...)
 
-S3 method for class 'check.these.par':
-plot(x, main = NULL, which = 1, ...)
+\method{plot}{check.these.par}(x, main = NULL, which = 1, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{A result from a corespodning function}
-  \item{M}{A matrix or similar object representing a network}
+  \item{x}{A result from a corespodning function or a matrix or similar object representing a network}
+  \item{M}{A matrix or similar object representing a network - either x or M must be supplied - both are here to make the code compatible with generic and with older functions}
   \item{clu}{A partition}
   \item{ylab}{Label for y axis}
   \item{xlab}{Label for x axis}
   \item{main}{Main title}
+  \item{main.title}{Main title in nm version}
+  \item{main.title.line}{The line in which main title is printed in nm version}
+  \item{title.row}{Title for the row-normalized matrix in nm version}
+  \item{title.col}{Title for the column-normalized matrix in nm version}
+  \item{par.set}{A list of possible ploting paramters (to \code{par}) to be used in nm version}
   \item{print.val}{Should the values be printed in the matrix}
   \item{print.0}{If \code{print.val=TRUE} Should the 0s be printed in the matrix}
   \item{plot.legend}{Should the legend for shades be ploted}
@@ -79,18 +128,22 @@ plot(x, main = NULL, which = 1, ...)
   \item{dens.leg}{It is used to translate the \code{IM} into \code{IM.dens}.}
   \item{blackdens}{At which density should the values on dark colurs of lines be printed in white.}
   \item{plotLines}{Should the lines in the matrix be printed - default TRUE, best set to FALSE for larger networks.}
+  \item{which}{Which (if there are more than one) of optimal solutions to plot}
+  \item{wnet}{Specifies which net (if more) should be ploted - used if M is an array.}
+  \item{wIM}{Specifies which IM (if more) should be used for ploting (defualt = wnet) - used if IM is an array.}
+  \item{use.IM}{Specifies if IM should IM be used for ploting? be used for ploting?}
   \item{\dots}{Aditional arguments to \code{plot.default} for \code{plot.mat} and also to \code{plot.mat} for other functions}
 }
 \value{
   The functions are used for their side affect - plotting.
 }
 \references{
-ŽIBERNA, Aleš (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{Å½IBERNA, AleÅ¡}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-ŽIBERNA, Aleš. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{Å½IBERNA, AleÅ¡}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 }
-\author{Aleš Žiberna}
-\seealso{\code{\link{crit.fun}},\code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{check.these.par}}}
+\author{\enc{AleÅ¡ Å½iberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, \code{\link{check.these.par}}}
 \examples{
 #Generation of the network
 n<-20
@@ -106,7 +159,9 @@ net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
 plot.mat(M=net, clu=clu)
 class(net)<-"mat"
 plot(net, clu=clu)
-#See corespodning functions for examples for other plotting functions presented, that are esentially only the wrappers for "plot.max"
+#See corespodning functions for examples for other plotting 
+#functions
+#presented, that are esentially only the wrappers for "plot.max"
 }
 \keyword{graphs}% at least one, from doc/KEYWORDS
 \keyword{hplot}% at least one, from doc/KEYWORDS

@@ -3,7 +3,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Computes the criterion function for a given network and partition}
 \description{
-The function computes the value of a criterion function for a given network and partition for Generalized blockmodeling. (éiberna, 2006) based on other parameters (see below).
+The function computes the value of a criterion function for a given network and partition for Generalized blockmodeling. (≈Ωiberna, 2006) based on other parameters (see below).
 }
 \usage{
 crit.fun(M, clu, approach, ...)
@@ -12,7 +12,7 @@ crit.fun(M, clu, approach, ...)
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
   \item{clu}{A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode}
-  \item{approach}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in éiberna (2006). Possible values are:\cr
+  \item{approach}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in ≈Ωiberna (2006). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
@@ -46,7 +46,7 @@ crit.fun(M, clu, approach, ...)
   numerical values (usually) larger then parameter m and lower the the maximum value in M}
   \item{mindim}{(default = 2) Minimal dimension (number of rows or columns) demanded for row and column-dominant and -functional blocks.}
   \item{mindimreg}{(default = \code{FALSE}) Should the mindim argument also be used for (row or coulum-)(f-)regular blocks}
-  \item{blockWeights}{Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor \code{blockWeights = c(name.of.block.type1=weight,...)}. If some of the block types used are not listed, they are given weight 1.}
+  \item{blockWeights}{Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor\cr \code{blockWeights = c(name.of.block.type1=weight,...)}\cr If some of the block types used are not listed, they are given weight 1.}
   \item{positionWeights}{weigths for positions in the blockmodel (the dimensions must be the same as the error matrix). For now this is a matix (two-dimensional) even for multi-relational networks.}
   \item{save.err.v}{(default = \code{FALSE}) Should the error vector for all allowed block types in each block be saved?}
   \item{BLOCK.CV}{An array with the same dimmesions as  \code{BLOCKS} of central values  for pre-specified homogenity (sum of squares and absolute deviations) approach. For multi-relational networks, it can be a list of such arrays.}
@@ -71,17 +71,18 @@ crit.fun(M, clu, approach, ...)
   \item{ERR.V}{If selected. The error vector of errors for all allowed block types by blocks. The dimmensions are [rows, columns (,relations - if more than 1)]. Each cell contains a list of errors by block types}
 }
 \references{
-éIBERNA, Aleö (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{check.these.par}},\code{\link{plot.crit.fun}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{opt.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, \code{\link{check.these.par}}, \code{\link{plot.crit.fun}}}
 \examples{
-#generating a simple network corresponding to the simple Sum of squares structural equivalence with blockmodel:
+#generating a simple network corresponding to the simple Sum of squares
+#structural equivalence with blockmodel:
 # null com
 # null null
 n<-20
@@ -111,13 +112,18 @@ net[net>4]<-4
 net[net<0]<-0
 
 #computation of criterion function with the correct partition
-res<-crit.fun(M=net,clu=clu,approach="val",blocks=c("null","com"),m=4)
+res<-crit.fun(M=net,clu=clu,approach="val",
+   blocks=c("null","com"),m=4)
 res$err #the error is relativly small
-res$IM  #The image corresponds to the one used for generation of the network
+res$IM 
+#The image corresponds to the one used for generation of
+#the network
 plot(res)
 
 #computation of criterion function with random partition
-res.rnd<-crit.fun(M=net,clu=clu.rnd,approach="val",blocks=c("null","com"),m=4)
+res.rnd<-crit.fun(M=net,clu=clu.rnd,approach="val",
+   blocks=c("null","com")
+ , m=4)
 res.rnd$err #the error is larger
 res.rnd$IM #all blocks are probably null
 plot(res.rnd)

@@ -1,6 +1,7 @@
 "loadmatrix" <-
-structure(function(file){
-  if(is.character(file)) file<-file(description=file,open="r")
+structure(function(filename){
+  if(is.character(filename)) {file<-file(description=filename,open="r")
+  }else file<-filename
 nn<-read.table(file=file,nrows=1)
 if (length(nn) == 2)
   { xx<-read.table(file=file,nrows=nn[[2]],fill=TRUE)
@@ -12,7 +13,7 @@ if (length(nn) == 2)
    {xxrow<-read.table(file=file,nrows=nn[[3]],fill=TRUE)
     xxcol<-read.table(file=file,nrows=nn[[2]]-nn[[3]],fill=TRUE)
     n<-read.table(file=file,skip=1,nrows=nn[[3]])
-    n<-as.matrix(a)
+    n<-as.matrix(n)
     rownames(n)<-xxrow[[2]]
     colnames(n)<-xxcol[[2]] }
   as.matrix(n)

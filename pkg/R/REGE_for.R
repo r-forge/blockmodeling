@@ -27,46 +27,6 @@ REGE.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
-REGE.2m.for<-function(
-    M, #netowrk in form of a matrix or array (in case of several relations)
-   iter = 3,
-   E1 = 1,#initial similiarity between row units (default 1 among all vertices).
-   E2 = 1 #initial similiarity between column units (default 1 among all vertices).
-){
-	if(is.array(M)){
-		dM<-dim(M)
-		dnM<-dimnames(M)
-		if (length(dM)==3) {
-			NR<-dM[3]
-			N<-dM[1:2]
-		} else {
-			if(length(dM)==2) {
-				NR<-1
-				N<-dM
-			} else stop("An array has wrong dimensions")
-		}
-	} else stop("M must be an array")
-  M<-structure(as.double(M),dim=dM)
-  dimnames(M)<-dnM
-  
-  E1<-matrix(E1,ncol=N[1], nrow=N[1])
-  E2<-matrix(E2,ncol=N[2], nrow=N[2])
-  res<-.Fortran("rege2m",M = M, E1 = E1, E2 = E2, N = as.integer(N), NR = as.integer(NR), iter = as.integer(iter))
-  E1all<-array(NA,dim=c(dim(E1),2))
-  E1all[,,1]<-E1
-  E1all[,,2]<-res$E1
-  dimnames(E1all)<-list(dimnames(M)[[1]],dimnames(M)[[1]],c("initial","final"))
-  E2all<-array(NA,dim=c(dim(E2),2))
-  E2all[,,1]<-E2
-  E2all[,,2]<-res$E2  
-  dimnames(E2all)<-list(dimnames(M)[[2]],dimnames(M)[[2]],c("initial","final"))
-  return(list(E1=E1all[,,"final"],E2=E2all[,,"final"],E1all=E1all,E2all=E2all,M=M,iter=iter))
-}
-
-
-
-
-
 
 REGD.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)

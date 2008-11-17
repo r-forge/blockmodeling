@@ -1,6 +1,7 @@
 "plot.mat" <-
 function(
-	M, #M should be a matrix or similar object
+	x=M, #x should be a matrix or similar object
+	M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
 	clu=NULL,	#partition
 	ylab="",
 	xlab="",
@@ -52,7 +53,7 @@ function(
  		IM<-IM[wIM,,]
  	}
 
- 	if(class(M)!="matrix"){
+ 	if(class(M)!="matrix"&&class(M)!="mat"){
 		pack<-attr(class(M),"package")
 		if(!(is.null(pack))&&pack=="Matrix"){
 			if(require(Matrix)){
@@ -64,7 +65,11 @@ function(
  	if(length(dim(M))>2)M<-M[wnet,,]
 	dm<-dim(M)
 
-	if(is.null(main)) main <- paste("Matrix",deparse(substitute(M)))
+	if(is.null(main)){
+		objName<-deparse(substitute(M))
+			if(objName=="x")objName<-deparse(substitute(x))
+		main <- paste("Matrix",objName)
+	}
 	#if(length(main)>26)
 
 	if(is.logical(print.axes.val)){

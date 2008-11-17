@@ -1,13 +1,13 @@
 "loadnetwork" <-
-function(file,useSparseMatrix=NULL,minN=50){
-  n<-read.table(file=file,nrows=1)
+function(filename,useSparseMatrix=NULL,minN=50){
+  n<-read.table(file=filename,nrows=1)
   if(length(n)==2){
     n<-as.numeric(n[2])
-    vnames<-read.table(file=file,skip=1,nrows=n,as.is =TRUE)[,2]
+    vnames<-read.table(file=filename,skip=1,nrows=n,as.is =TRUE)[,2]
     if(all(is.na(vnames))){
         vnames<-NULL
     } else vnames[is.na(vnames)]<-""
-    rLines<-readLines(con=file)
+    rLines<-readLines(con=filename)
     nl<-length(rLines)
     ind.stars<-which(regexpr(pattern="*", text=rLines,fixed=TRUE)>0)
     nstars<-length(ind.stars)
@@ -41,7 +41,7 @@ function(file,useSparseMatrix=NULL,minN=50){
     }
     for(i in 2:nstars){
       nrows<-ifelse(i==nstars,-1,ind.stars[i+1]-ind.stars[i]-1)
-      ties<-read.table(file=file,skip=ind.stars[i],nrows=nrows)
+      ties<-read.table(file=filename,skip=ind.stars[i],nrows=nrows)
       ncols<-dim(ties)[2]
       if(ncols==2){
       	ties<-cbind(ties,1)
@@ -61,12 +61,12 @@ function(file,useSparseMatrix=NULL,minN=50){
       n12<-as.numeric(n[2])
       n1<-as.numeric(n[3])
       n2<-n12-n1
-      vnames1<-read.table(file=file,skip=1,nrows=n12)[,2]
-    vnames<-read.table(file=file,skip=1,nrows=n12,as.is =TRUE)[,2]
+      vnames1<-read.table(file=filename,skip=1,nrows=n12)[,2]
+    vnames<-read.table(file=filename,skip=1,nrows=n12,as.is =TRUE)[,2]
     if(all(is.na(vnames))){
         vnames<-NULL
     } else vnames[is.na(vnames)]<-""
-    rLines<-readLines(con=file)
+    rLines<-readLines(con=filename)
     nl<-length(rLines)
     ind.stars<-which(regexpr(pattern="*", text=rLines,fixed=TRUE)>0)
     nstars<-length(ind.stars)
@@ -87,7 +87,7 @@ function(file,useSparseMatrix=NULL,minN=50){
     }
     for(i in 2:nstars){
       nrows<-ifelse(i==nstars,-1,ind.stars[i+1]-ind.stars[i]-1)
-      ties<-read.table(file=file,skip=ind.stars[i],nrows=nrows)
+      ties<-read.table(file=filename,skip=ind.stars[i],nrows=nrows)
       ncols<-dim(ties)[2]
       if(ncols==2){
       	ties<-cbind(ties,1)

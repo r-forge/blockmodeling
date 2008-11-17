@@ -17,7 +17,7 @@ ircNorm(M, eps = 10^-12, maxiter = 1000)
 \value{
   Normalized matrix.
 }
-\author{Aleö éiberna}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
 \examples{
 
 A<-matrix(runif(100),ncol=10)

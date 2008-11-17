@@ -6,7 +6,9 @@
 The functions computed the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network. Several options for treating the diagonal values are supported.
 }
 \usage{
-sedist(M, method = "default", fun = "default", fun.on.rows = "default", handle.interaction = "switch", ...)
+sedist(M, method = "default", fun = "default",
+   fun.on.rows = "default", handle.interaction = "switch",
+   use = "pairwise.complete.obs", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,9 +17,10 @@ sedist(M, method = "default", fun = "default", fun.on.rows = "default", handle.i
   \item{fun}{Which function should be used to comput distacnes (given as character), .}
   \item{fun.on.rows}{For non-standard function - does the function compute measure on rows (such as \code{cor}, \code{cov},...) of the data matrix (as opposed to computing measure on columns (such as \code{dist}).}
   \item{handle.interaction}{How should the interaction between the vertices analysed be handled:\cr
-						"switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]\cr
-						"ignore" (diagonal) - Diagonal is ignored\cr
-						"none" - the matrix is used "as is"}
+       "switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]\cr
+       "ignore" (diagonal) - Diagonal is ignored\cr
+       "none" - the matrix is used "as is"}
+  \item{use}{For use with methods "cor" and "cov", for other methods (the default option should be used if handle.interaction=="ignore"), "pairwise.complete.obs" are always used, if stats.dist.cor.cov=TRUE}
   \item{\dots}{Additional arguments to \code{fun}}
 }
 \details{
@@ -31,10 +34,11 @@ Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for 
 
 Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
 }
-\author{Aleö éiberna}
-\seealso{\code{\link{hist}}, \code{\link{REGE}}, \code{\link{crit.fun}},\code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{check.these.par}},\code{\link{plot.mat}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{opt.random.par}}}
 \examples{
-#generating a simple network corresponding to the simple Sum of squares structural equivalence with blockmodel:
+#generating a simple network corresponding to the simple Sum of squares
+#structural equivalence with blockmodel:
 # null com
 # null null
 n<-20

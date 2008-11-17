@@ -18,7 +18,7 @@ export(one2two, two2one)
 export(recode, formatA)
 export(fun.by.blocks)
 export(loadnetwork, loadnetwork2, loadmatrix, loadvector, loadvector2, savematrix, savenetwork, savevector, loadpajek)
-export(REGD.for, REGD.ow.for, REGE, REGE.for, REGE.nm.for, REGE.nm.diag.for, REGE.ow.for, REGE.ownm.for, REGE.ownm.diag.for, REGE.ow, REGE.FC, REGE.FC.ow, REGD.ne.for, REGD.ow.ne.for,REGE.ne.for, REGE.nm.ne.for, REGE.ow.ne.for, REGE.ownm.ne.for, REGE.2m.for) #REGE - some White's
+export(REGD.for, REGD.ow.for, REGE, REGE.for, REGE.nm.for, REGE.nm.diag.for, REGE.ow.for, REGE.ownm.for, REGE.ownm.diag.for, REGE.ow, REGE.FC, REGE.FC.ow, REGD.ne.for, REGD.ow.ne.for,REGE.ne.for, REGE.nm.ne.for, REGE.ow.ne.for, REGE.ownm.ne.for) #REGE - some White's
 
 S3method(plot,check.these.par)
 S3method(plot,crit.fun)

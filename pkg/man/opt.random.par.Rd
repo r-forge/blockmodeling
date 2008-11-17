@@ -4,13 +4,29 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Optimizes a set of partitions based on the value of a criterion function.}
 \description{
-The function optimizes a set partitions based on the value of a criterion function  (see \code{\link{crit.fun}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (éiberna, 2006) based on other parameters (see below).
+The function optimizes a set partitions based on the value of a criterion function  (see \code{\link{crit.fun}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (≈Ωiberna, 2006) based on other parameters (see below).
 The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 A list of paritions can be specified (\code{opt.these.par}) or the number of clusters and a number of partitions to generate (\code{opt.random.par}).
 }\usage{
-opt.random.par(M, k, n = NULL, rep, return.all = FALSE, return.err = TRUE, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = NULL, save.initial.param = TRUE, skip.par = NULL, save.checked.par = TRUE, merge.save.skip.par = any(!is.null(skip.par), save.checked.par), skip.allready.checked.par = TRUE, check.skip = "iter", print.iter = FALSE, max.iden = 10, seed = NULL, parGenFun = genRandomPar, mingr = 1, maxgr = Inf, addParam = list(genPajekPar = TRUE, probGenMech = NULL), maxTriesToFindNewPar = rep * 10, ...)
+opt.random.par(M, k, n = NULL, rep, return.all = FALSE,
+   return.err = TRUE, maxiter = 50, m = NULL, approach,
+   trace.iter = FALSE, switch.names = NULL,
+   save.initial.param = TRUE, skip.par = NULL,
+   save.checked.par = TRUE,
+   merge.save.skip.par = any(!is.null(skip.par), save.checked.par),
+   skip.allready.checked.par = TRUE, check.skip = "iter",
+   print.iter = FALSE, max.iden = 10, seed = NULL,
+   parGenFun = genRandomPar, mingr = 1, maxgr = Inf,
+   addParam = list(genPajekPar = TRUE, probGenMech = NULL),
+   maxTriesToFindNewPar = rep * 10, ...)
 
-opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE, skip.allready.checked.par = TRUE, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = TRUE, save.initial.param = TRUE, skip.par = NULL, save.checked.par = !is.null(skip.par), merge.save.skip.par = all(!is.null(skip.par), save.checked.par), check.skip = "never", print.iter = FALSE, ...)
+opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE,
+   skip.allready.checked.par = TRUE, maxiter = 50, m = NULL,
+   approach, trace.iter = FALSE, switch.names = TRUE,
+   save.initial.param = TRUE, skip.par = NULL,
+   save.checked.par = !is.null(skip.par),
+   merge.save.skip.par = all(!is.null(skip.par), save.checked.par),
+   check.skip = "never", print.iter = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,7 +39,7 @@ opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE, skip.allread
   \item{return.err}{Should the error for each optimized partition be returned}
   \item{maxiter}{Maximum number of iterations}
   \item{m}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach.}
-  \item{approach}{One of the approaches described in éiberna (2007). Possible values are:\cr
+  \item{approach}{One of the approaches described in ≈Ωiberna (2007). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
@@ -38,7 +54,7 @@ opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE, skip.allread
   \item{skip.allready.checked.par}{If \code{TRUE},the partitions that were already checked when runing \code{opt.par} form different statrting points will be skiped.}
   \item{check.skip}{When should the check be preformed:\cr
   "all"  - before every call to 'crit.fun' (Time demanding)\cr
-	"iter" - at the end of eack iteratiton\cr
+  "iter" - at the end of eack iteratiton\cr
   "opt.par"  - before every call to \code{opt.par}, when starting the optimization of a new partition.\cr
   "never" - never}
   \item{print.iter}{Should the progress of each iteration be printed?}
@@ -67,19 +83,20 @@ This function can be extremly slow. The time complexity is incrising with the nu
 }
 
 \references{
-éIBERNA, Aleö (2007): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2007): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 
-BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, http://vlado.fmf.uni lj.si/pub/networks/pajek/ (accessed January 6, 2006).
+BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, \url{http://vlado.fmf.uni lj.si/pub/networks/pajek/} (accessed January 6, 2006).
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{crit.fun}},\code{\link{check.these.par}},\code{\link{opt.par}},\code{\link{plot.opt.more.par}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}}, \code{\link{check.these.par}}, \code{\link{opt.par}}, \code{\link{plot.opt.more.par}}}
 \examples{
-n<-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+n<-8 #if larger, the number of partitions increases dramaticaly,
+     #as does if we increase the number of clusters
 net<-matrix(NA,ncol=n,nrow=n)
 clu<-rep(1:2,times=c(3,5))
 tclu<-table(clu)
@@ -90,19 +107,25 @@ net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
 
 #we select a random parition and then optimise it
 
-all.par<-nkpartitions(n=n, k=length(tclu)) #forming the partitions
-all.par<-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
+all.par<-nkpartitions(n=n, k=length(tclu))
+#forming the partitions
+all.par<-lapply(apply(all.par,1,list),function(x)x[[1]])
+# to make a list out of the matrix
 
 #optimizing one partition
-res<-opt.par(M=net,clu=all.par[sample(1:length(all.par),size=1)],approach="ss",blocks="com")
+res<-opt.par(M=net,
+   clu=all.par[[sample(1:length(all.par),size=1)]],
+   approach="ss",blocks="com")
 plot(res) #Hopefully we get the original partition
 
-#optimizing 10 random chosen partitions which are suplied to opt.these.par
-res<-opt.these.par(M=net,partitions=all.par[sample(1:length(all.par),size=10)],approach="ss",blocks="com")
+#optimizing 10 random chosen partitions with opt.these.par
+res<-opt.these.par(M=net,
+   partitions=all.par[sample(1:length(all.par),size=10)],
+   approach="ss", blocks="com")
 plot(res) #Hopefully we get the original partition
 
 #optimizing 10 random chosen partitions with opt.random.par
-res<-opt.random.par(M=net,k=2,npar=10,approach="ss",blocks="com")
+res<-opt.random.par(M=net,k=2,rep=10,approach="ss",blocks="com")
 plot(res) #Hopefully we get the original partition
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS

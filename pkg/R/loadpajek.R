@@ -1,5 +1,6 @@
-loadpajek<-function(file){
-	if(is.character(file)) file<-file(description=file,open="r")
+loadpajek<-function(filename){
+	if(is.character(filename)) {file<-file(description=filename,open="r")
+	}else file<-filename
 	res<-list(Networks=list(),Partitions=list(),Vectors=list(),Permutation=list())
 	nblanklines=0
 	while(TRUE){

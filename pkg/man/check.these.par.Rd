@@ -3,16 +3,17 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Computes the value of a criterion function for a given network and a set of partitions}
 \description{
-The function computes the value of a criterion function for a given network and a set of partitions for Generalized blockmodeling. (éiberna, 2006) based on other parameters (see below and \code{\link{crit.fun}}).
+The function computes the value of a criterion function for a given network and a set of partitions for Generalized blockmodeling. (≈Ωiberna, 2006) based on other parameters (see below and \code{\link{crit.fun}}).
 }
 \usage{
-check.these.par(M, partitions, approach, return.err = TRUE, save.initial.param = TRUE, force.fun = NULL, ...)
+check.these.par(M, partitions, approach, return.err = TRUE,
+  save.initial.param = TRUE, force.fun = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
   \item{partitions}{A list of partitions. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode.}
-  \item{approach}{One of the approaches described in éiberna (2006). Possible values are:\cr
+  \item{approach}{One of the approaches described in ≈Ωiberna (2006). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
@@ -36,18 +37,19 @@ This function is usually used to check all possible partitions. If the number of
 }
 
 \references{
-éIBERNA, Aleö (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, \code{\link{nkpartitions}}, \code{\link{nkpar}}, \code{\link{plot.check.these.par}} }
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{opt.these.par}}, \code{\link{nkpartitions}}, \code{\link{plot.check.these.par}} }
 
 \examples{
-n<-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+n<-8 # if larger, the number of partitions increases dramaticaly,
+     # as does if we increase the number of clusters
 net<-matrix(NA,ncol=n,nrow=n)
 clu<-rep(1:2,times=c(3,5))
 tclu<-table(clu)
@@ -58,9 +60,12 @@ net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
 
 #computation of criterion function with the correct partition
 nkpar(n=n, k=length(tclu)) #computing the number of partitions
-all.par<-nkpartitions(n=n, k=length(tclu)) #forming the partitions
-all.par<-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
-res<-check.these.par(M=net,partitions=all.par,approach="ss",blocks="com")
+all.par<-nkpartitions(n=n, k=length(tclu))
+#forming the partitions
+all.par<-lapply(apply(all.par,1,list),function(x)x[[1]])
+# to make a list out of the matrix
+res<-check.these.par(M=net,partitions=all.par,approach="ss",
+   blocks="com")
 plot(res) #we get the original partition
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS

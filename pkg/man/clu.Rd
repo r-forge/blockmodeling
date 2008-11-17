@@ -6,17 +6,17 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling}
 \description{
-Function for extraction of clu (partition), all best clus (partitions), IM (image or blockmodel) and err (total error or inconsistency) for objects, returend by functions \code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}}, and \code{\link{check.these.par}}
+Function for extraction of clu (partition), all best clus (partitions), IM (image or blockmodel) and err (total error or inconsistency) for objects, returend by functions \code{\link{opt.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, and \code{\link{check.these.par}}
 }
 \usage{
 clu(res, which = 1, ...)
 IM(res, which = 1, ...)
 err(res, ...)
-partition(res)
+partitions(res)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{res}{Resoult of function \code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}}, or \code{\link{check.these.par}}}
+  \item{res}{Resoult of function \code{\link{opt.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, or \code{\link{check.these.par}}}
   \item{which}{From which (if there are more than one) "best" solution whould the element be extracted. Warning! \code{which} grater than the number of "best" partitions produces an error.}
   \item{\dots}{Not used}
 }
@@ -25,17 +25,18 @@ partition(res)
 }
 
 \references{
-éIBERNA, Aleö (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{crit.fun}},\code{\link{check.these.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{plot.opt.par}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}}, \code{\link{check.these.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, \code{\link{plot.opt.par}}}
 \examples{
-n<-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+n<-8 #if larger, the number of partitions increases dramaticaly,
+     #as does if we increase the number of clusters
 net<-matrix(NA,ncol=n,nrow=n)
 clu<-rep(1:2,times=c(3,5))
 tclu<-table(clu)
@@ -46,9 +47,13 @@ net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
 
 #we select a random parition and then optimise it
 
-all.par<-nkpartitions(n=n, k=length(tclu)) #forming the partitions
-all.par<-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
-res<-opt.par(M=net,clu=all.par[[sample(1:length(all.par,size=1)]],approach="ss",blocks="com")
+all.par<-nkpartitions(n=n, k=length(tclu))
+#forming the partitions
+all.par<-lapply(apply(all.par,1,list),function(x)x[[1]])
+# to make a list out of the matrix
+res<-opt.par(M=net,
+   clu=all.par[[sample(1:length(all.par),size=1)]],
+   approach="ss",blocks="com")
 plot(res) #Hopefully we get the original partition
 clu(res) #Hopefully we get the original partition
 err(res) #Error

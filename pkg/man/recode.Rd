@@ -18,7 +18,7 @@ recode(x, oldcode = sort(unique(x)), newcode)
 \value{
   A recoded vector
 }
-\author{Aleö éiberna}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
 \examples{
 x<-rep(1:3,times=1:3)
 newx<-recode(x,oldcode=1:3,newcode=c("a","b","c"))

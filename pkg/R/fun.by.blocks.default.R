@@ -1,5 +1,5 @@
 "fun.by.blocks.default" <-
-function(M, clu, ignore.diag = identical(ss(diag(M)), 0)&&!is.list(clu), FUN = "mean",sortNames=TRUE)
+function(x=M, M=x, clu, ignore.diag = identical(ss(diag(M)), 0)&&!is.list(clu), FUN = "mean",sortNames=TRUE,...)
 {
     if(is.list(clu)){
       nmode<-length(clu)

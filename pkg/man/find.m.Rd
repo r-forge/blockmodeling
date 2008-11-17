@@ -9,8 +9,10 @@ The functions compute the maxsimum value of \code{m/cut} where a ceratin block i
 The difference between \code{find.m} and \code{find.m2} it that \code{find.m} uses an optimizational approach and is faster and more precise than \code{find.m2}. However, \code{find.m} only supports regular ("reg") and complete ("com") as \code{alt.blocks}, while \code{find.m2} supports all block types. Also, \code{find.m} does not always work, sepecially if \code{cormat} is not "none".
 }
 \usage{
-find.m(M, clu, alt.blocks = "reg", diag = !is.list(clu), cormet = "none", FUN = "max", half = TRUE)
-find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE, ...)
+find.m(M, clu, alt.blocks = "reg", diag = !is.list(clu),
+    cormet = "none", half = TRUE, FUN = "max")
+find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE,
+    ms = NULL, ...)
 find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -29,24 +31,25 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
   \item{cormet}{Which metho should be used to correct for diferent maxismum error contributins?\cr
       "none" - no correction\cr
       "censor" - censor values larger than m\cr
-			"correct" -  so that the maxsimum possible error contribution of the cell is the same regardles of a condition (either that somthing must be o or at least m)}
+      "correct" -  so that the maxsimum possible error contribution of the cell is the same regardles of a condition (either that somthing must be o or at least m)}
   \item{FUN}{(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks.}
   \item{cuts}{The cuts which should be evaluatated. If \code{cuts="all"n} (default), all unique values are evaluated}
   \item{neval}{Number of different \code{m} values to be evaluated.}
   \item{half}{Should the returned value of m be one half of the value where the incosnistencies are the same.}
+  \item{ms}{The values of m where the function should be evaluated.}
   \item{\dots}{Other parameters to crit.fun}
 }
 \value{
   A matrix of maximal \code{m/cut} values.
 }
 \references{
-éIBERNA, Aleö (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{crit.fun}} and maybe also \code{\link{opt.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{check.these.par}},\code{\link{plot.mat}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}} and maybe also \code{\link{opt.par}}, \code{\link{plot.mat}}}
 \keyword{cluster}% at least one, from doc/KEYWORDS

@@ -3,11 +3,16 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Optimizes a partition based on the value of a criterion function.}
 \description{
-The function optimizes a partition based on the value of a criterion function (see \code{\link{crit.fun}}) for a given network and blockmodel for Generalized blockmodeling (éiberna, 2006) based on other parameters (see below).
+The function optimizes a partition based on the value of a criterion function (see \code{\link{crit.fun}}) for a given network and blockmodel for Generalized blockmodeling (≈Ωiberna, 2006) based on other parameters (see below).
 The optimization is done through local optimization, where the neighbourhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 }
 \usage{
-opt.par(M, clu, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.names = TRUE, save.initial.param = TRUE, skip.par = NULL, save.checked.par = !is.null(skip.par), merge.save.skip.par = all(!is.null(skip.par), save.checked.par), check.skip = "never", ...)
+opt.par(M, clu, maxiter = 50, m = NULL, approach,
+   trace.iter = FALSE, switch.names = NULL,
+   save.initial.param = TRUE, skip.par = NULL,
+   save.checked.par = !is.null(skip.par),
+   merge.save.skip.par = all(!is.null(skip.par),
+   save.checked.par), check.skip = "never", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,21 +20,21 @@ opt.par(M, clu, maxiter = 50, m = NULL, approach, trace.iter = FALSE, switch.nam
   \item{clu}{A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode}
   \item{maxiter}{Maxsimum number of iterations allowed}
   \item{m}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach.}
-  \item{approach}{One of the approaches described in éiberna (2006). Possible values are:\cr
+  \item{approach}{One of the approaches described in ≈Ωiberna (2006). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
   "ss" - sum of squares homogenity blockmodeling, and\cr
   "ad" - absolute deviations homogenity blockmodeling.}
   \item{trace.iter}{Should the result of each iteration (and not only of the best one) be saved}
-  \item{switch.names}{Should  partitions that differ only in diferent names of positions be treated as different. It should be set to \code{TRUE} only if a asymetric blockmodel via \code{BLOCKS} is specified.}
+  \item{switch.names}{Should  partitions that differ only in diferent names of positions be treated as different. It should be set to \code{TRUE} only if a asymetric blockmodel via \code{BLOCKS} is specified. The default \code{NULL} tries to find that.}
   \item{save.initial.param}{Should the inital parameters (\code{approach},...) be saved}
   \item{skip.par}{The partitions that are not allowed or were already checked and should therfire be skiped.}
   \item{save.checked.par}{Should the checked partitions be saved. For example, so that they can be used in the next call as \code{skip.par}}
   \item{merge.save.skip.par}{Should the checked partitions be merged with skiped ones?}
   \item{check.skip}{When should the check be preformed:\cr
   "all"  - before every call to 'crit.fun'\cr
-	"iter" - at the end of eack iteratiton\cr
+  "iter" - at the end of eack iteratiton\cr
   "never" - never}
   \item{use.for.opt}{Should FORTRAN function be used for optimization if possible. If FORTRAN function is used, the speed is dramatically increast, however some the output is slightly different and the plotting function might not work. FORTRAN subrutines are available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines - e.g. using function \code{parOK} to allow only certain kinds of partitions), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.}
     \item{use.for}{(default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.}
@@ -53,17 +58,18 @@ This function can be extremly slow. The time complexity is incrising with the nu
 }
 
 \references{
-éIBERNA, Aleö (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-éIBERNA, Aleö. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{≈ΩIBERNA, Ale≈°}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, Anuöka (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anu≈°ka}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 }
 
-\author{Aleö éiberna}
-\seealso{\code{\link{crit.fun}},\code{\link{check.these.par}},\code{\link{opt.random.par}},\code{\link{opt.these.par}},\code{\link{plot.opt.par}}}
+\author{\enc{Ale≈° ≈Ωiberna}{Ales Ziberna}}
+\seealso{\code{\link{crit.fun}}, \code{\link{check.these.par}}, \code{\link{opt.random.par}}, \code{\link{opt.these.par}}, \code{\link{plot.opt.par}}}
 \examples{
-n<-8 #if larger, the number of partitions increases dramaticaly, as does if we increase the number of clusters
+n<-8 #if larger, the number of partitions increases dramaticaly,
+     #as does if we increase the number of clusters
 net<-matrix(NA,ncol=n,nrow=n)
 clu<-rep(1:2,times=c(3,5))
 tclu<-table(clu)
@@ -75,8 +81,11 @@ net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
 #we select a random parition and then optimise it
 
 all.par<-nkpartitions(n=n, k=length(tclu)) #forming the partitions
-all.par<-lapply(apply(all.par,1,list),function(x)x[[1]]) # to make a list out of the matrix
-res<-opt.par(M=net,clu=all.par[[sample(1:length(all.par,size=1)]],approach="ss",blocks="com")
+all.par<-lapply(apply(all.par,1,list),function(x)x[[1]])
+# to make a list out of the matrix
+res<-opt.par(M=net,
+   clu=all.par[[sample(1:length(all.par),size=1)]],
+   approach="ss",blocks="com")
 plot(res) #Hopefully we get the original partition
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS
