@@ -18,8 +18,8 @@ crit.fun(M, clu, approach, ...)
   "imp" - implicit blockmodeling,\cr
   "ss" - sum of squares homogenity blockmodeling, and\cr
   "ad" - absolute deviations homogenity blockmodeling.}
-  \item{\dots}{Several arguments, which are explaind below. They are actually used by the function \code{gen.crit.fun}, however since this functions is not intented to be called directly, it also has no help files. Therefore these arguments are described below. Which are needed depends on the \code{approach} selected}
-  \item{blocks}{A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For approaches "bin", and "val", at least two should be selected. Possible values are are:\cr
+  \item{\dots}{Several other arguments, which are explaind below. They are actually used by the function \code{gen.crit.fun}, however since this function is not intented to be called directly, it also has no help files. Therefore these arguments are described below. Which are needed depends on the \code{approach} selected:\cr\cr
+  \bold{\code{blocks}}:  A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For approaches "bin", and "val", at least two should be selected. Possible values are are:\cr
   "null" - null or empty block\cr
   "com" - complete block\cr
   "rdo", "cdo" - row and column-dominant blocks (binary, valued, and implicit approach only)\cr
@@ -29,34 +29,37 @@ crit.fun(M, clu, approach, ...)
   "den" - density block (binary approach only)\cr
   "avg" - average block (valued and implicit approach only)\cr
   "dnc" - do not care block - the error is always zero\cr
-  The ordering is important, since if several block types have identical error, the first on the list is selected.}
-  \item{BLOCKS}{An alternative to \code{blocks}. A pre-specified blockmodel. An array with dimensions three dimensions (see example below). The second and the third repreent the clusters (for rows and columns), while the first is as long as the maxsimum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values \code{NA}. The values in the array should be the ones from above. For multi-relational networks, it can be a list of such arrays.}
-  \item{m}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values.}
-  \item{cut}{(default = \code{min(M[M > 0])}) The threshold used for binerizing the network for use with binary blockmodeling. All values with values lower than \code{cut} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values.}
-  \item{FUN}{(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings.}
-  \item{norm}{Should the block errors (inconsistencies) be normalized with the size of the blocks, the block error does not depend on block size? The default is \code{FALSE}. Original version of implicit approach suggests \code{TRUE}, however the default is \code{FALSE} even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.}
-  \item{normMto2rel} {Create two-realation netowrk from one relational network through row and column normalization.  The default is \code{FALSE}}
-  \item{sameModel} {Should we damand the same blockmodel for all relations. If set to TRUE, it demands that accros all relations the ideal block on the same position in the matrix BLOCKS should be chosen. Usually, these positions are occupied by the same blocks. If not, use with caution. The default is the value of \code{normMto2rel}.}
-  \item{normbym}{ The default is \code{FALSE} for valued and implicit approach, elsewher not used. Original version of implicit approach suggests \code{TRUE}, however the default is \code{FALSE} even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.}
-  \item{allow.max0}{Should the maximum that is the basis for calculation of inconsistencies in implicit blockmodeling be allowed to be 0. If FALSE, the maximum is in such case set to the maximum of the network (if maximum of a block is 0) or to the maxsimum of the block (if row or column maxismum is 0)Used only in implicit blockmodeling. If \code{TRUE}, the incosistency of an ideal null block is 0 for all block types. The default is \code{FALSE} if null blocks are incluede in the allowed blocks in at least one block and \code{TRUE} otherwise.}
-  \item{allow.dom0}{Should the dominant row or column (in row- or column-dominant blocks) be allowed to be 0. Used only in implicit blockmodeling. The default is \code{FALSE}.}
-  \item{max.con.val} {Should the largest values be cencored, limited to (larger values set to) - resonoble values are:\cr
-  "non" - (the default) no transformation is done\cr
-  "m" - (the default for implicit blockmodeling) the maximum value equals the value of the parameter m\cr
-  numerical values (usually) larger then parameter m and lower the the maximum value in M}
-  \item{mindim}{(default = 2) Minimal dimension (number of rows or columns) demanded for row and column-dominant and -functional blocks.}
-  \item{mindimreg}{(default = \code{FALSE}) Should the mindim argument also be used for (row or coulum-)(f-)regular blocks}
-  \item{blockWeights}{Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor\cr \code{blockWeights = c(name.of.block.type1=weight,...)}\cr If some of the block types used are not listed, they are given weight 1.}
-  \item{positionWeights}{weigths for positions in the blockmodel (the dimensions must be the same as the error matrix). For now this is a matix (two-dimensional) even for multi-relational networks.}
-  \item{save.err.v}{(default = \code{FALSE}) Should the error vector for all allowed block types in each block be saved?}
-  \item{BLOCK.CV}{An array with the same dimmesions as  \code{BLOCKS} of central values  for pre-specified homogenity (sum of squares and absolute deviations) approach. For multi-relational networks, it can be a list of such arrays.}
-  \item{CV.use}{An array with the same dimmesions as  \code{BLOCKS.CV} with instuctions how to treat these centarl values. For multi-relational networks, it can be a list of such arrays. Possible alternatives are:\cr
+  The ordering is important, since if several block types have identical error, the first on the list is selected.\cr\cr
+  \bold{\code{BLOCKS}}:  An alternative to \code{blocks}. A pre-specified blockmodel. An array with dimensions three dimensions (see example below). The second and the third repreent the clusters (for rows and columns), while the first is as long as the maxsimum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values \code{NA}. The values in the array should be the ones from above. For multi-relational networks, it can be a list of such arrays.\cr\cr
+  \bold{\code{m}}:  Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values.\cr\cr
+  \bold{\code{cut}}:  (default = \code{min(M[M > 0])}) The threshold used for binerizing the network for use with binary blockmodeling. All values with values lower than \code{cut} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values.\cr\cr
+  \bold{\code{FUN}}:  (default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings.\cr\cr
+  \bold{\code{norm}}:  Should the block errors (inconsistencies) be normalized with the size of the blocks, the block error does not depend on block size? The default is \code{FALSE}. Original version of implicit approach suggests \code{TRUE}, however the default is \code{FALSE} even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.\cr\cr
+  \bold{\code{normbym}}:   The default is \code{FALSE} for valued and implicit approach, elsewher not used. Original version of implicit approach suggests \code{TRUE}, however the default is \code{FALSE} even for this approach based on better results in simulations. For multi-relational networks, it can be a vector.\cr\cr
+  \bold{\code{allow.max0}}:  Should the maximum that is the basis for calculation of inconsistencies in implicit blockmodeling be allowed to be 0. If FALSE, the maximum is in such case set to the maximum of the network (if maximum of a block is 0) or to the maxsimum of the block (if row or column maxismum is 0)Used only in implicit blockmodeling. If \code{TRUE}, the incosistency of an ideal null block is 0 for all block types. The default is \code{FALSE} if null blocks are incluede in the allowed blocks in at least one block and \code{TRUE} otherwise.\cr\cr
+  \bold{\code{allow.dom0}}:  Should the dominant row or column (in row- or column-dominant blocks) be allowed to be 0. Used only in implicit blockmodeling. The default is \code{FALSE}.\cr\cr
+  \bold{\code{normMto2rel}}:  Create two-realation netowrk from one relational network through row and column normalization.  The default is \code{FALSE}:\cr\cr
+  \bold{\code{sameModel}}:   Should we damand the same blockmodel for all relations. If set to TRUE, it demands that accros all relations the ideal block on the same position in the matrix BLOCKS should be chosen. Usually, these positions are occupied by the same blocks. If not, use with caution. The default is the value of \code{normMto2rel}.\cr\cr
+  \bold{\code{max.con.val}}:  Should the largest values be cencored, limited to (larger values set to) - resonoble values are:
+    "non" - (the default) no transformation is done\cr
+    "m" - (the default for implicit blockmodeling) the maximum value equals the value of the parameter m\cr
+  numerical values (usually) larger then parameter m and lower the the maximum value in M.\cr\cr
+
+
+  \bold{\code{mindim}}:  (default = 2) Minimal dimension (number of rows or columns) demanded for row and column-dominant and -functional blocks.\cr\cr
+  \bold{\code{mindimreg}}:  (default = \code{FALSE}) Should the mindim argument also be used for (row or coulum-)(f-)regular blocks\cr\cr
+  \bold{\code{blockWeights}}:  Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor\cr \code{blockWeights = c(name.of.block.type1=weight,...)}\cr If some of the block types used are not listed, they are given weight 1.\cr\cr
+  \bold{\code{positionWeights}}:  weigths for positions in the blockmodel (the dimensions must be the same as the error matrix). For now this is a matix (two-dimensional) even for multi-relational networks.\cr\cr
+  \bold{\code{save.err.v}}:  (default = \code{FALSE}) Should the error vector for all allowed block types in each block be saved?\cr\cr
+  \bold{\code{BLOCK.CV}}:  An array with the same dimmesions as  \code{BLOCKS} of central values  for pre-specified homogenity (sum of squares and absolute deviations) approach. For multi-relational networks, it can be a list of such arrays.\cr\cr
+  \bold{\code{CV.use}}:  An array with the same dimmesions as  \code{BLOCKS.CV} with instuctions how to treat these centarl values. For multi-relational networks, it can be a list of such arrays. Possible alternatives are:\cr
   "fixed" - the central value is fixed to the value specified in \code{BLOCKS.CV}.\cr
   "min" - the central value specified in \code{BLOCKS.CV} is the minimal possible central value for a block. The central value for the block is computed as the maximum of the value specified in \code{BLOCKS.CV} and the empirical value computed based on tie values in the block.\cr
   "max" - the central value specified in \code{BLOCKS.CV} is the maximal possible central value for a block. The central value for the block is computed as the minimum of the value specified in \code{BLOCKS.CV} and the empirical value computed based on tie values in the block.\cr
-  "free" - the central value is free, the value specified in \code{BLOCKS.CV} is igneored. The central value for the block is computed as the empirical value computed based on tie values in the block.\cr}
-  \item{use.for}{(default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.}
-  \item{diag}{(default = \code{TRUE}) Should the special stauts of diagonal be acknowladged.}
+  "free" - the central value is free, the value specified in \code{BLOCKS.CV} is igneored. The central value for the block is computed as the empirical value computed based on tie values in the block.\cr\cr
+  \bold{\code{use.for}}:  (default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr
+  \bold{\code{diag}}:  (default = \code{TRUE}) Should the special stauts of diagonal be acknowladged.
+  }
 }
 %\details{
 %}

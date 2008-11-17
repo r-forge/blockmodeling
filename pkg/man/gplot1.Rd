@@ -20,7 +20,6 @@ gplot2(M, uselen = TRUE, usecurve = TRUE, edge.len = 0.001,
   \item{M}{A matix (array) of a graph or set thereof.  This data may be valued. }
   \item{diag}{ boolean indicating whether or not the diagonal should be treated as valid data.  Set this true if and only if the data can contain loops.  \code{diag} is \code{FALSE} by default. }
   \item{rel.thresh}{ real number indicating the lower relative (compared to the highest value) threshold for tie values.  Only ties of value >\code{thresh} are displayed.  By default, \code{thresh}=0.}
-  \item{mode}{ the vertex placement algorithm; this must correspond to a \code{gplot.layout} function. }
   \item{displaylabels}{ boolean; should vertex labels be displayed? }
   \item{boxed.labels}{ boolean; place vertex labels within boxes? }
   \item{arrowhead.cex}{An expansion factor for edge arrowheads.}
@@ -31,7 +30,9 @@ gplot2(M, uselen = TRUE, usecurve = TRUE, edge.len = 0.001,
   \item{edge.len}{ if \code{uselen==TRUE}, curved edge lengths are scaled by \code{edge.len}. }
   \item{uselen}{ boolean; should we use \code{edge.len} to rescale edge lengths? }
   \item{usecurve}{ boolean; should we use \code{edge.curve}? }
-  \item{\dots}{ additional arguments to \code{\link{plot}}. }
+  \item{\dots}{ additional arguments to \code{\link{plot}} or \code{gplot} from package \code{sna}:\cr\cr
+  \bold{\code{mode}}:  the vertex placement algorithm; this must correspond to a \code{gplot.layout} function from package \code{sna}.
+  }
 }
 
 \value{
