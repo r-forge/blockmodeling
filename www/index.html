@@ -1,12 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
   <link rel="stylesheet" type="text/css" href="stil.css">
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Blockmodeling</title></head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>blockmodeling</title></head>
 
 <body>
 <table width="100%">
  <tbody><tr>
-  <td colspan="2" class="naslov">Blockmodeling<br /> &nbsp; <small>An R package for Generalized and classical blockmodeling of valued networks</small></td>
+  <td colspan="2" class="naslov"><B><CODE>blockmodeling</CODE></B><br /> &nbsp; <small>An R package for Generalized and classical blockmodeling of valued networks</small></td>
 
  </tr>
 
@@ -47,7 +47,7 @@
 <p /><br />
 <span class="podpodnaslov">Basic description</span>
 <br />
-This package is primarily meant as an implementation of Generalized blockmodeling. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other “utility” functions are provided.
+The package <CODE>blockmodeling</CODE> is primarily meant as an implementation of Generalized blockmodeling for valued networks. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided.
 <p />
 This is an early testing version, which probably includes numerous bugs. If you find one (or more), please report to:
 email: ales{dot}ziberna{at}gmail{dot}com <br />
@@ -55,11 +55,13 @@ email: ales{dot}ziberna{at}gmail{dot}com <br />
 
 <span class="podpodnaslov">Warning</span>
 <p />
-Some functions are extremely slow. They are practically unusable for networks with more than 30 units and 4 groups (AMD Athlon 1600 XP-M). These are: opt.these.par, opt.random.par, check.these.par (if there is a very large number of partitions). However, sum of squares homogeneity blockmodeling is relatively fast (also when used with above functions) when used with complete blocks only (structural equivalence). Networks with more than 100 units (in each more for two-mode data) can be analyzed in reasonable time (few hours).
+Some functions are extremely slow. They are practically unusable for networks with more than 30 units and 4 groups (AMD Athlon 1600 XP-M). These are: <CODE>opt.these.par</CODE>,<CODE> opt.random.par</CODE>, <CODE>check.these.par</CODE> (if there is a very large number of partitions). However, sum of squares homogeneity blockmodeling is relatively fast (also when used with above functions) when used with complete blocks only (structural equivalence). Networks with more than 100 units (in each more for two-mode data) can be analyzed in reasonable time (few hours).
 <p /><br />
 
 
 <span class="podpodnaslov">Downloads</span>
+<p />
+Version 0.1.7 is now (from November 17, 2008) available on <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a>. This also means that <CODE>blockmodeling</CODE> can now be instaled using <CODE>install.packages</CODE> using the CRAN repository.
 <p />
 The versions from 0.1.6 can be downloaded from <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a>. There the package is available in 3 formats:
 <ul>
