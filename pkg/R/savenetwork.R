@@ -3,11 +3,13 @@ structure(function(n,filename,twomode="default",symetric=NULL){
 	rowNames<-rownames(n)
 	colNames<-colnames(n)
 	if(require(Matrix)){
+		if(class(n)=="mat") n<-unclass(n)
 		n <- as(n,"dgTMatrix")
 		useMatrix<-TRUE
 	}else{
 		pack<-attr(class(n),"package")
 		if(!(is.null(pack))&&pack=="Matrix") stop("The supplied object needs Matrix packege, but the package is not available.")
+		useMatrix<-FALSE
 	}
 	if(dim(n)[1]!=dim(n)[2]){
 		twomode<-2

@@ -59,7 +59,7 @@ function(
 			if(require(Matrix)){
 				M<-as.matrix(M)
 			} else stop("The supplied object needs Matrix packege, but the package is not available (install it!!!).")
-		} else stop("Cannot convert package of class ",class(M)," to class 'matrix'.")
+		} else stop("Cannot convert object of class ",class(M)," to class 'matrix'.")
 	}
 
  	if(length(dim(M))>2)M<-M[wnet,,]
