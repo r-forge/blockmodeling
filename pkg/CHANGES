@@ -2,6 +2,9 @@ Name: blockmodeling
 Title: An R package for Generalized and classical blockmodeling of valued networks
 Version: 0.1.7
 
+November 20, 2008:
+A minor but in savenetwork fixed.
+
 November 14, 2008:
 New version: 0.1.7
 Severali minor bugs fixed.
