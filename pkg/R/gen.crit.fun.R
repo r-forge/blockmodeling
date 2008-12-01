@@ -388,8 +388,10 @@ function(
 		}
 
 
-		if(!is.null(m))assign(x="exm",value=m,envir=parent.frame())
-		if(nr>1) fun<-c(fun,"Lm<-m\n")
+		if(!is.null(m)){
+			assign(x="exm",value=m,envir=parent.frame())
+			if(nr>1) fun<-c(fun,"Lm<-m\n")
+		}
 		
 		
 		for(i1 in 1:k[1]){
@@ -398,7 +400,7 @@ function(
 					if(nmode<=2||{cl<-cut(c(i1,i2),breaks=c(0,cumsum(kmode))+0.5,labels=FALSE);cl[1]!=cl[2]}){
 						if(nr>1){
 #							Lm[inr]->m
-							fun<-c(fun,"m<-Lm[",inr,"]\n")
+							if(!is.null(m)) fun<-c(fun,"m<-Lm[",inr,"]\n")
 							LFUN[inr]->FUN
 							Lcut[inr]->cut
 							LBLOCKS[[inr]]->BLOCKS

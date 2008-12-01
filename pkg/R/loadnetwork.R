@@ -19,13 +19,13 @@ function(filename,useSparseMatrix=NULL,minN=50){
     
     if(useSparseMatrix){
     	if(require(Matrix)){
-    		M<-Matrix(0,nrow=n12,ncol=n12,sparse=TRUE)
+    		M<-Matrix(0,nrow=n,ncol=n,sparse=TRUE)
     	}else{
     		warning("Matrix package is not installed. Ordanary (dense) matrices will be used instead of sparse onse")
-    		M<-matrix(0,nrow=n12,ncol=n12)
+    		M<-matrix(0,nrow=n,ncol=n)
     	}
     }else{
-	M<-matrix(0,nrow=n12,ncol=n12)       
+	M<-matrix(0,nrow=n,ncol=n)       
     }
     
     
