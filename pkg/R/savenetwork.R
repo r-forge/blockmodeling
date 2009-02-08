@@ -1,6 +1,6 @@
 "savenetwork" <-
 structure(function(n,filename,twomode="default",symetric=NULL){
-	if(grep(patt="w32",x=version["os"])){
+	if(length(grep(patt="w32",x=version["os"]))){
 		eol<-"\n"
 	}else{eol<-"\r\n"}
 	rowNames<-rownames(n)
@@ -25,7 +25,7 @@ structure(function(n,filename,twomode="default",symetric=NULL){
 	
 	if ((dim(n)[1] == dim(n)[2]) & (twomode!=2)){
 	  cat(paste("*Vertices",dim(n)[1]),eol, file = filename);
-	  cat(paste(seq(1,length=dim(n)[1]),eol,' "',rowNames,'"',sep=""), file = filename,append=TRUE);
+	  cat(paste(seq(1,length=dim(n)[1]),' "',rowNames,'"',eol,sep=""), file = filename,append=TRUE);
 	  if(useMatrix){
 	  	nDf<-as.data.frame(attributes(n)[c("i","j","x")])
 	  	nDf[,c("i","j")]<-nDf[,c("i","j")]+1
