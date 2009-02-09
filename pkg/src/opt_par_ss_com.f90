@@ -1,6 +1,7 @@
 subroutine optparsscom(M,clu,diag,maxiter,n,k,err,E,BM,cluM,nbest,iter,printIter)
 	INTEGER iter, maxiter, n, clu, nclu, bnclu, iclu, k, i, j, ii, jj, cluM, nbest, nA, nAD, tnA, tnAD, bnA, bnAD, bclu, oldiclu
-	DOUBLE PRECISION M, E, BM, err, mean, sumA, sumAD, sumA2, sumAD2, tsumA, tsumAD, tsumA2, tsumAD2, tE, tBM, terr, bsumA, bsumAD, bsumA2, bsumAD2, bE, bBM, berr
+	DOUBLE PRECISION M, E, BM, err, mean, sumA, sumAD, sumA2, sumAD2, tsumA, tsumAD, tsumA2, tsumAD2, tE, tBM, terr, bsumA, bsumAD
+	DOUBLE PRECISION bsumA2, bsumAD2, bE, bBM, berr
 	LOGICAL diag, imp, printIter
 	DIMENSION M(n,n), clu(n), E(k,k), BM(k,k), cluM(50,n), sumA(k,k), sumAD(k), sumA2(k,k), sumAD2(k), nA(k,k), nAD(k)
 	DIMENSION tE(k,k), tBM(k,k),  tsumA(k,k), tsumAD(k), tsumA2(k,k), tsumAD2(k), tnA(k,k), tnAD(k), bE(k,k), bBM(k,k), bclu(n)
