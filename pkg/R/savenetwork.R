@@ -1,5 +1,5 @@
 "savenetwork" <-
-structure(function(n,filename,twomode="default",symetric=NULL){
+structure(function(n,filename,twomode="default",symetric=NULL,cont=FALSE){
 	if(length(grep(patt="w32",x=version["os"]))){
 		eol<-"\n"
 	}else{eol<-"\r\n"}
@@ -24,8 +24,8 @@ structure(function(n,filename,twomode="default",symetric=NULL){
 	pack<-attr("package",class(n))
 	
 	if ((dim(n)[1] == dim(n)[2]) & (twomode!=2)){
-	  cat(paste("*Vertices",dim(n)[1]),eol, file = filename);
-	  cat(paste(seq(1,length=dim(n)[1]),' "',rowNames,'"',eol,sep=""), file = filename,append=TRUE);
+	  cat(paste("*Vertices",dim(n)[1]),eol, file = filename,append=cont);
+	  cat(paste(seq(1,length=dim(n)[1]),' "',rowNames,'"',eol,sep=""), file = filename,append=TRUE,sep="");
 	  if(useMatrix){
 	  	nDf<-as.data.frame(attributes(n)[c("i","j","x")])
 	  	nDf[,c("i","j")]<-nDf[,c("i","j")]+1
@@ -55,7 +55,7 @@ structure(function(n,filename,twomode="default",symetric=NULL){
 		  }
 	  } 
 	}else { 
-	  cat(paste("*Vertices",sum(dim(n)),dim(n)[1]),eol, file = filename);
+	  cat(paste("*Vertices",sum(dim(n)),dim(n)[1]),eol, file = filename,append=cont);
 	  cat(paste(1:dim(n)[1],' "',rowNames,'"',eol,sep=""), file = filename,append=TRUE);
 	  cat(paste(seq(dim(n)[1]+1,length=dim(n)[2]),' "',colNames,'"',eol,sep=""), file = filename,append=TRUE);
 	  cat("*Edges",eol, file = filename,append=TRUE);

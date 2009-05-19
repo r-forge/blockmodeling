@@ -255,7 +255,7 @@ function(
 		}
 
 		if(nr>1){
-			if(length(FUN)==1) approach<-rep(FUN,times=nr)			
+			if(length(FUN)==1) FUN<-rep(list(FUN),times=nr)			
 			if(length(approach)==1) approach<-rep(approach,times=nr)
 			if(length(m)==1) m<-rep(m,times=nr)
 			if(length(normbym)==1) normbym<-rep(normbym,times=nr)
@@ -401,7 +401,7 @@ function(
 						if(nr>1){
 #							Lm[inr]->m
 							if(!is.null(m)) fun<-c(fun,"m<-Lm[",inr,"]\n")
-							LFUN[inr]->FUN
+							LFUN[[inr]]->FUN
 							Lcut[inr]->cut
 							LBLOCKS[[inr]]->BLOCKS
 							LBLOCKS.CV[[inr]]->BLOCKS.CV
