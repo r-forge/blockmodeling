@@ -6,8 +6,7 @@ function(
 #	e1="default",	#weight of the error of binearized matrix
 #	e2="default",	#weight of the error of valued conenctions
 	approach,	#the approach used - can be one of "ss","ad","bin","val", "imp" (yet to be implementer) , "bv", "bi". A vector if different approaches should be used for different relations.
- 	cut = M[M>0],	#the cutting parameter used to binerize a valued network
-	m=NULL,	#suficient value for individual cells, can be specified as a number or a function of a block (or only one of its rows or coulms anslyzed) (max for implicit appraoch)
+	cut = if(length(dim(M))==2) min(M[M>0]) else apply(M,3,function(x)min(x[x>0])),	#the cutting parameter used to binerize a valued network	m=NULL,	#suficient value for individual cells, can be specified as a number or a function of a block (or only one of its rows or coulms anslyzed) (max for implicit appraoch)
 #	s="default",	#suficient value for colum and row statistics
 	FUN="max",	#function to calculate row and colum statistics
 	blocks=NULL,	#permissible block types and their ordering, can be also on of 'structural', 'regular', 'regular.ext' or 'all'. A list if different permissible block types and their ordering should be applied to different relations.
