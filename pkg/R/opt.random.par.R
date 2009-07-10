@@ -4,13 +4,14 @@ M,#matrix (network)
 k,#number of clusters/groups
 n=NULL,#the number of units in each mode (only necessary if mode is larger than 2)
 rep,#number of repetitions/different starting partitions to check
+approach,
+...,
 return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
 return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
 maxiter=50,#maximum number of iterations
-m=NULL,#suficient value individual cells
+#m=NULL,#suficient value individual cells
 #cut=min(M[M>0]),   #
 #BLOCKS=NULL,#array of permissible block types and their ordering for all blocks
-approach,
 trace.iter=FALSE,#save a result of each iteration or only the best (minimal error)
 switch.names=NULL,#should partitions that only differ in group names be considert equal (is c(1,1,2)==c(2,2,1))
 save.initial.param=TRUE,#should the initial parameters be saved
@@ -33,8 +34,7 @@ maxgr=Inf,	#maximal alowed group size
 addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for dthe default function "genRandomPar"
 genPajekPar = TRUE, 	#Should the partitions be generated as in Pajek (the other options is completly random)
 probGenMech = NULL),	#Here the probabilities for different mechanizems for specifying the partitions are set. If not set this is determined based on the previous parameter.
-maxTriesToFindNewPar=rep*10, 	#The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
-...
+maxTriesToFindNewPar=rep*10 	#The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
 ){
 
   dots<-list(...)
@@ -44,7 +44,7 @@ maxTriesToFindNewPar=rep*10, 	#The maximum number of partition try when trying t
 
 
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
-  optfun<-gen.opt.par(M=M,k=k,maxiter=maxiter,m=m,approach=approach,switch.names=switch.names,trace.iter=trace.iter,save.initial.param = save.initial.param,skip.par=skip.par,save.checked.par=save.checked.par,merge.save.skip.par=merge.save.skip.par,check.skip=check.skip,print.iter=print.iter,mingr=mingr,maxgr=maxgr,...)
+  optfun<-gen.opt.par(M=M,k=k,maxiter=maxiter, approach=approach,switch.names=switch.names,trace.iter=trace.iter,save.initial.param = save.initial.param,skip.par=skip.par,save.checked.par=save.checked.par,merge.save.skip.par=merge.save.skip.par,check.skip=check.skip,print.iter=print.iter,mingr=mingr,maxgr=maxgr,...)
   eval(optfun)
 
   nmode<-length(k)
@@ -148,7 +148,6 @@ maxTriesToFindNewPar=rep*10, 	#The maximum number of partition try when trying t
     clu=temppar,
     k=k,
     approach=approach,
-    m=m,
     skip.par=skip.par,
     ...
     )

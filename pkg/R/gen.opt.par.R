@@ -5,9 +5,10 @@ function(
 	k,	#number partitions for each mode
 #	e1,	#weight of the error of binearized matrix
 #	e2,	#weight of the error of valued conenctions
-	maxiter,	#maximum number of iterations
-	m,	#suficient value individual cells
 	approach,
+	...,	#other arguments to called functions - to 'crit.fun'
+	#m,	#suficient value individual cells
+	maxiter,	#maximum number of iterations
 	mingr=1,	#minimal alowed group size
 	maxgr=Inf,	#maximal alowed group size
 #	s="default",	#suficient value for colum and row statistics
@@ -32,9 +33,8 @@ function(
 	print.iter=TRUE,
 	check.switch=TRUE,
 	check.all=TRUE,
-	use.for.opt=TRUE,
+	use.for.opt=TRUE
 #	force.fun=NULL, #select the function used to evaluate partition
-	...	#other arguments to called functions - to 'crit.fun'
 ){
 	dots<-list(...)
 	nmode<-length(k)
@@ -121,10 +121,10 @@ function(
 
 
 
-	fun<-c("opt.par.tmp<-function(M=M,clu=clu,k=k,m=m,approach=approach,",if(!is.null(parOK)) "parOK=parOK, parOKaddParam = parOKaddParam,","...){\n")
+	fun<-c("opt.par.tmp<-function(M=M,clu=clu,k=k,approach=approach,",if(!is.null(parOK)) "parOK=parOK, parOKaddParam = parOKaddParam,","...){\n")
 	if(save.initial.param) fun<-c(fun,"initial.param<-tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return('error'))\n")	#saves the inital parameters
 
-	fun<-c(fun,"	critfun<-gen.crit.fun(M=M,k=k,m=m,approach=approach,changeT=TRUE,...)
+	fun<-c(fun,"	critfun<-gen.crit.fun(M=M,k=k,approach=approach,changeT=TRUE,...)
 
 	eval(critfun$fun1)\n")
 

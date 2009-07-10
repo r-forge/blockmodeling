@@ -2,14 +2,15 @@
 function(
 	M,	#matrix (network)
 	partitions,	#a list of partitions to check
+	approach,
+	...,
 	return.all=FALSE,	#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
 	return.err=TRUE,	#Should a vector of errors be returned
 	skip.allready.checked.par=TRUE,	#if 'TRUE',the partitions that were already checked when runing 'opt.par' form different statrting points will be skiped
 	maxiter=50,	#maximum number of iterations
-	m=NULL,	#suficient value individual cells
+	#m=NULL,	#suficient value individual cells
 	#cut=min(M[M>0]),   #
 	#BLOCKS=NULL,	#array of permissible block types and their ordering for all blocks
-	approach,
 	trace.iter=FALSE,	#save a result of each iteration or only the best (minimal error) (an argument of "gen.opt.par")
 	switch.names=NULL,	#should partitions that only differ in group names be considert equal (is c(1,1,2)==c(2,2,1))
 	save.initial.param=TRUE,	#should the initial parameters be saved
@@ -21,8 +22,8 @@ function(
 								# "iter" - at the end of eack iteratiton
 								# "opt.par"  - before every call to 'opt.par', implemented in opt.these.par and opt.random.par
 								# "never" - never
-	print.iter=FALSE,
-	...
+	print.iter=FALSE
+
 ){
 	if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
 	
