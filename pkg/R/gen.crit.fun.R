@@ -356,9 +356,8 @@ function(
 					}
 				}
 			}
-
-
-			misfun<-is.na(as.numeric(m))
+			
+			misfun<-is.character(m)|is.function(m)
 			mfun<-m
 
 	#		fun<-c(fun,"m <- ",m,"\n")
