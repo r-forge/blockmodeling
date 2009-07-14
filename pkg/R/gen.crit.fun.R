@@ -116,7 +116,7 @@ function(
 	if(nr==1){
 		directed<-nmode==2||!all(M==t(M))
 	} else{
-		directed<-!all(apply(M,3,function(x)all(x==t(x))))
+		directed<-nmode==2||!all(apply(M,3,function(x)all(x==t(x))))
 	}
 	
 	if(nr!=length(approach)){
@@ -266,6 +266,7 @@ function(
 		
 
 		if(any(approach=="imp")){
+			if(is.null(m)) m<-vector(NA,length=length(approach))
 			m[approach=="imp"]<-"max"
 			approach[approach=="imp"]<-"val"
 		}
