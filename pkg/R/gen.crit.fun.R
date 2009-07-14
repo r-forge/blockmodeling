@@ -226,8 +226,8 @@ function(
 
 
 
-		fun<-c(tmpfun,"<-function(M,clu,mindim=",mindim,if(use.weights)",blockWeights=bweights" else NULL, if(sameModel)",BLOCKS=expBLOCKS" else NULL,if(!is.null(positionWeights))",positionWeights=pWeights",if(!is.null(m))",m=exm","){\n")
-		if(changeT) {fun2<-c(tmpfun,"<-function(M,clu,mindim=",mindim,if(use.weights)",blockWeights=bweights" else NULL, if(sameModel)",BLOCKS=expBLOCKS" else NULL,if(!is.null(positionWeights))",positionWeights=pWeights",if(!is.null(m))",m=exm",",change",if(nmode==2)", modechange" else NULL,",res.old){\n")}
+		fun<-c(tmpfun,"<-function(M,clu,mindim=",mindim,if(use.weights)",blockWeights=bweights" else NULL, if(sameModel)",BLOCKS=expBLOCKS" else NULL,if(!is.null(positionWeights))",positionWeights=pWeights",if(any(approach%in%c("val","imp")))",m=exm","){\n")
+		if(changeT) {fun2<-c(tmpfun,"<-function(M,clu,mindim=",mindim,if(use.weights)",blockWeights=bweights" else NULL, if(sameModel)",BLOCKS=expBLOCKS" else NULL,if(!is.null(positionWeights))",positionWeights=pWeights",if(any(approach%in%c("val","imp")))",m=exm",",change",if(nmode==2)", modechange" else NULL,",res.old){\n")}
 		fun<-c(fun,"E<-array(NA,dim=c(",k[1],",",k[2],if(nr>1)c(",",nr)else NULL,"))\n","IM<-array(NA,dim=c(",k[1],",",k[2],if(nr>1)paste(",",nr,sep="")else NULL,"))\n")
 		if(changeT) {
 			fun2<-c(fun2,"E<-res.old$E\n",if(normMto2rel) "IM = res.old$completeIM\n" else "IM<-res.old$IM\n")	#image matrix - matrix of types of blocks #,dimnames=list(nclu,nclu)
@@ -266,9 +266,10 @@ function(
 		
 
 		if(any(approach=="imp")){
-			if(is.null(m)) m<-vector(NA,length=length(approach))
+			if(is.null(m)) m<-rep(1,times=length(approach))
 			m[approach=="imp"]<-"max"
 			approach[approach=="imp"]<-"val"
+			print(m)
 		}
 
 		if(any(approach %in% c("ad","ss"))){
@@ -358,7 +359,7 @@ function(
 				}
 			}
 			
-			misfun<-is.character(m)|is.function(m)
+			misfun<-!grepl(pattern="^[1234567890]+$",x=m)
 			mfun<-m
 
 	#		fun<-c(fun,"m <- ",m,"\n")
