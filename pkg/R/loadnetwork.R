@@ -3,7 +3,7 @@ function(filename,useSparseMatrix=NULL,minN=50){
   n<-read.table(file=filename,nrows=1)
   if(length(n)==2){
     n<-as.numeric(n[2])
-    vnames<-read.table(file=filename,skip=1,nrows=n,as.is =TRUE)[,2]
+    vnames<-read.table(file=filename,skip=1,nrows=n,as.is =TRUE,fill=TRUE)[,2]
     if(all(is.na(vnames))){
         vnames<-NULL
     } else vnames[is.na(vnames)]<-""
