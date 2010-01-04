@@ -13,7 +13,7 @@ sedist(M, method = "default", fun = "default",
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network must be one-mode.}
-  \item{method}{The method used to compute distances - any of the methods alloed by functions dist, cor or cov {all package::stats} or just "cor" or "cov" (given as character).}
+  \item{method}{The method used to compute distances - any of the methods alloed by functions dist, cor or cov (all package::stats) or just "cor" or "cov" (given as character).}
   \item{fun}{Which function should be used to comput distacnes (given as character), .}
   \item{fun.on.rows}{For non-standard function - does the function compute measure on rows (such as \code{cor}, \code{cov},...) of the data matrix (as opposed to computing measure on columns (such as \code{dist}).}
   \item{handle.interaction}{How should the interaction between the vertices analysed be handled:\cr

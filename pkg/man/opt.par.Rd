@@ -7,25 +7,31 @@ The function optimizes a partition based on the value of a criterion function (s
 The optimization is done through local optimization, where the neighbourhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 }
 \usage{
-opt.par(M, clu, maxiter = 50, m = NULL, approach,
-   trace.iter = FALSE, switch.names = NULL,
-   save.initial.param = TRUE, skip.par = NULL,
-   save.checked.par = !is.null(skip.par),
-   merge.save.skip.par = all(!is.null(skip.par),
-   save.checked.par), check.skip = "never", ...)
+opt.par(M, clu, approach, ..., maxiter = 50, trace.iter =
+         FALSE, switch.names = NULL, save.initial.param = TRUE,
+         skip.par = NULL, save.checked.par =
+         !is.null(skip.par), merge.save.skip.par =
+         all(!is.null(skip.par), save.checked.par), check.skip
+         = "never")
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
   \item{clu}{A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode}
   \item{maxiter}{Maxsimum number of iterations allowed}
-  \item{m}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach.}
   \item{approach}{One of the approaches described in Žiberna (2006). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
   "ss" - sum of squares homogenity blockmodeling, and\cr
   "ad" - absolute deviations homogenity blockmodeling.}
+  \item{\dots}{Argumets passed to other functions, see \code{\link{crit.fun}} and arguments to function \code{gen.crit.fun} (as this function is not intented to be called directly, it also has no help files). Some might be obligatory, e.g. argument \code{m} when using Valued blockmodeling approach.Therefore these arguments are described below:\cr\cr
+  \bold{\code{use.for.opt}}:  Should FORTRAN function be used for optimization if possible. If FORTRAN function is used, the speed is dramatically increast, however some the output is slightly different and the plotting function might not work. FORTRAN subrutines are available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines - e.g. using function \code{parOK} to allow only certain kinds of partitions), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
+  \bold{\code{use.for}}:  (default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
+  \bold{\code{check.switch}}:  If \code{TRUE} (the default), the neighborhood of the selected partition also includes the partitions that can be obtained by exchanging (switching) two units from diferent clusters).\cr\cr
+  \bold{\code{check.all}}:  If \code{TRUE} (the default), all partitions in the neighborhood of the selected partition are first evaluated and the current partition than changes to the one with the lowest value of the criterion function (if lower than that of the current partition). If \code{FALSE}, the first partition with the criterion lower the current partition becomes the new current partition (and the iteration terminates).\cr\cr
+  }  
   \item{trace.iter}{Should the result of each iteration (and not only of the best one) be saved}
   \item{switch.names}{Should  partitions that differ only in diferent names of positions be treated as different. It should be set to \code{TRUE} only if a asymetric blockmodel via \code{BLOCKS} is specified. The default \code{NULL} tries to find that.}
   \item{save.initial.param}{Should the inital parameters (\code{approach},...) be saved}
@@ -36,12 +42,6 @@ opt.par(M, clu, maxiter = 50, m = NULL, approach,
   "all"  - before every call to 'crit.fun'\cr
   "iter" - at the end of eack iteratiton\cr
   "never" - never}
-  \item{\dots}{Argumets passed to other functions, see \code{\link{crit.fun}} and arguments to function \code{gen.crit.fun}. As this function is not intented to be called directly, it also has no help files. Therefore these arguments are described below:\cr\cr
-  \bold{\code{use.for.opt}}:  Should FORTRAN function be used for optimization if possible. If FORTRAN function is used, the speed is dramatically increast, however some the output is slightly different and the plotting function might not work. FORTRAN subrutines are available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines - e.g. using function \code{parOK} to allow only certain kinds of partitions), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
-  \bold{\code{use.for}}:  (default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
-  \bold{\code{check.switch}}:  If \code{TRUE} (the default), the neighborhood of the selected partition also includes the partitions that can be obtained by exchanging (switching) two units from diferent clusters).\cr\cr
-  \bold{\code{check.all}}:  If \code{TRUE} (the default), all partitions in the neighborhood of the selected partition are first evaluated and the current partition than changes to the one with the lowest value of the criterion function (if lower than that of the current partition). If \code{FALSE}, the first partition with the criterion lower the current partition becomes the new current partition (and the iteration terminates).\cr\cr
-  }
 }
 \value{
   \item{M}{The matrix of the network analyzed}

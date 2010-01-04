@@ -93,6 +93,8 @@ function(
 			lines.col<-cumsum(tclu)[-length(tclu)]*1/dm[2]
 			lines.row<-1-lines.col
 		}else if(is.list(clu)&&length(clu)==2){
+            if(is.null(clu[[1]])) clu[[1]]<-rep(1,times=dm[1])
+            if(is.null(clu[[2]])) clu[[2]]<-rep(1,times=dm[2])
 			tclu.r<-table(clu[[1]])
 			tclu.c<-table(clu[[2]])
 			or.r<-order(clu[[1]])
@@ -160,25 +162,22 @@ function(
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,density=dens,border=if(plotLines)"black" else NA)
   }
 	if(!is.null(clu)){	#ploting the lines between clusters
-		segments(x0=-0.1,x1=1,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
-		segments(y0=0,y1=1.1,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
+		if(length(lines.row)) segments(x0=-0.1,x1=1,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)        
+		if(length(lines.col)) segments(y0=0,y1=1.1,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
 	}
 	if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1)
 	if(print.x.axis.val) text(y=x.axis.val.pos, x = (1:dm[2])/dm[2]-1/dm[2]/2 +val.x.coor.cor, srt=90, labels = xaxe, cex=cex.x.axis,adj=0)
 	title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
 	if(print.val){	#ploting the values in the cells if selected
-		norm.val<-as.vector(M)/max(M)
+		norm.val<-as.vector(M)/max(abs(M))
 		col.text<-1-round(abs(norm.val))
 
 		if(!print.0) col.text[as.vector(M)==0]<-0
-
 		if(length(table(col.text))==2) {
 			col.labels<-c("white","black")
 		} else col.labels<-c("white")
-
 		col.text<-as.character(factor(col.text,labels=col.labels))
     if(!is.null(IM.dens)&&!all(IM.dens==-1)) col.text[col.text=="white"&dens>0&dens<blackdens]<-"black"
-
 		col.text[col.text=="black"&norm.val<0]<-"red"
 		if(!print.0) col.text[as.vector(M)==0]<-"transparent"
 
@@ -193,7 +192,7 @@ function(
 			}
 		}else multi <- print.cells.mf
 		M.plot<-round(M*multi)
-
+        
 		text(x=(xleft+xright)/2+val.x.coor.cor,y=(ytop+ybottom)/2+val.y.coor.cor, labels=as.vector(M.plot),col=col.text,cex=ifelse(cex.val=="default",min(10/max(dm),1),cex.val))
 		if(multi!=1) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
 	}

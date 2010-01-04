@@ -2,8 +2,14 @@ Name: blockmodeling
 Title: An R package for Generalized and classical blockmodeling of valued networks
 Version: 0.1.7
 
+February 8, 2009:
+A bug fixed in savevector, savenetwork and savematrix. Now these functions should aslo work on non-windows systems.
+
+December 1, 2008:
+Several bugs fixed (in functions: gen.crit.fun, plot.mat, loadnetwork)
+
 November 20, 2008:
-A minor but in savenetwork fixed.
+A minor bug in savenetwork fixed.
 
 November 14, 2008:
 New version: 0.1.7

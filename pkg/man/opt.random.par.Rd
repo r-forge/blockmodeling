@@ -8,25 +8,25 @@ The function optimizes a set partitions based on the value of a criterion functi
 The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 A list of paritions can be specified (\code{opt.these.par}) or the number of clusters and a number of partitions to generate (\code{opt.random.par}).
 }\usage{
-opt.random.par(M, k, n = NULL, rep, return.all = FALSE,
-   return.err = TRUE, maxiter = 50, m = NULL, approach,
-   trace.iter = FALSE, switch.names = NULL,
-   save.initial.param = TRUE, skip.par = NULL,
-   save.checked.par = TRUE,
-   merge.save.skip.par = any(!is.null(skip.par), save.checked.par),
-   skip.allready.checked.par = TRUE, check.skip = "iter",
-   print.iter = FALSE, max.iden = 10, seed = NULL,
-   parGenFun = genRandomPar, mingr = 1, maxgr = Inf,
-   addParam = list(genPajekPar = TRUE, probGenMech = NULL),
-   maxTriesToFindNewPar = rep * 10, ...)
+   opt.random.par(M, k, n = NULL, rep, approach, ..., return.all =
+   FALSE, return.err = TRUE, maxiter = 50, trace.iter =
+   FALSE, switch.names = NULL, save.initial.param = TRUE,
+   skip.par = NULL, save.checked.par = TRUE,
+   merge.save.skip.par = any(!is.null(skip.par),
+   save.checked.par), skip.allready.checked.par = TRUE,
+   check.skip = "iter", print.iter = FALSE, max.iden =
+   10, seed = NULL, parGenFun = genRandomPar, mingr = 1,
+   maxgr = Inf, addParam = list(genPajekPar = TRUE,
+   probGenMech = NULL), maxTriesToFindNewPar = rep * 10)
 
-opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE,
-   skip.allready.checked.par = TRUE, maxiter = 50, m = NULL,
-   approach, trace.iter = FALSE, switch.names = TRUE,
+opt.these.par(M, partitions, approach, ..., return.all = FALSE,
+   return.err = TRUE, skip.allready.checked.par = TRUE,
+   maxiter = 50, trace.iter = FALSE, switch.names = NULL,
    save.initial.param = TRUE, skip.par = NULL,
    save.checked.par = !is.null(skip.par),
-   merge.save.skip.par = all(!is.null(skip.par), save.checked.par),
-   check.skip = "never", print.iter = FALSE, ...)
+   merge.save.skip.par = all(!is.null(skip.par),
+   save.checked.par), check.skip = "never", print.iter =
+   FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,16 +35,21 @@ opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE,
   \item{n}{The vector of the number of units in each mode (only necessary if mode is larger than 2.}
   \item{rep}{The number of repetitions/different starting partitions to check.}
   \item{partitions}{A list of partitions. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode.}
-  \item{return.all}{If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.}
-  \item{return.err}{Should the error for each optimized partition be returned}
-  \item{maxiter}{Maximum number of iterations}
-  \item{m}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach.}
   \item{approach}{One of the approaches described in Žiberna (2007). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
   "imp" - implicit blockmodeling,\cr
   "ss" - sum of squares homogenity blockmodeling, and\cr
   "ad" - absolute deviations homogenity blockmodeling.}
+  \item{\dots}{Argumets passed to other functions, see \code{\link{crit.fun}} and arguments to function \code{gen.crit.fun} (as this function is not intented to be called directly, it also has no help files). Some might be obligatory, e.g. argument \code{m} when using Valued blockmodeling approach.Therefore these arguments are described below:\cr\cr
+  \bold{\code{use.for.opt}}:  Should FORTRAN function be used for optimization if possible. If FORTRAN function is used, the speed is dramatically increast, however some the output is slightly different and the plotting function might not work. FORTRAN subrutines are available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines - e.g. using function \code{parOK} to allow only certain kinds of partitions), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
+  \bold{\code{use.for}}:  (default = \code{TRUE}) Should FORTRAN subrutines be used where available (available for only very special cases, currently only for using "ss" aproach and only complete blocks. If you are using such setting and some special features (these are not implemented in FORTRAN subrutines), it's safer to set it to FASLE, as the fuction may miss that these features are not implemented in FORTRAN subrutines and use them nevertheless, leading to wrong results.\cr\cr
+  \bold{\code{check.switch}}:  If \code{TRUE} (the default), the neighborhood of the selected partition also includes the partitions that can be obtained by exchanging (switching) two units from diferent clusters).\cr\cr
+  \bold{\code{check.all}}:  If \code{TRUE} (the default), all partitions in the neighborhood of the selected partition are first evaluated and the current partition than changes to the one with the lowest value of the criterion function (if lower than that of the current partition). If \code{FALSE}, the first partition with the criterion lower the current partition becomes the new current partition (and the iteration terminates).\cr\cr
+  }  
+  \item{return.all}{If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.}
+  \item{return.err}{Should the error for each optimized partition be returned}
+  \item{maxiter}{Maximum number of iterations}
   \item{trace.iter}{Should the result of each iteration (and not only of the best one) be saved}
   \item{switch.names}{Should  partitions that differ only in diferent names of positions be treated as different. It should be set to \code{TRUE} only if a asymetric blockmodel via \code{BLOCKS} is specified.}
   \item{save.initial.param}{Should the inital parameters (\code{approach},...) be saved}
@@ -64,8 +69,7 @@ opt.these.par(M, partitions, return.all = FALSE, return.err = TRUE,
   \item{mingr}{Minimal alowed group size}
   \item{maxgr}{Maximal alowed group size}
   \item{addParam}{A list of additional parameters for function specified above. In the usage section they are specified for the dthe default function \code{\link{genRandomPar}}:}
-    \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep*1000}}
-  \item{\dots}{Argumets passed to other functions, see \code{\link{crit.fun}}}
+  \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep*1000}}
 }
 
 \value{

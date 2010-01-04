@@ -43,7 +43,7 @@ function(
 
 	nmode<-length(k)
 	
-  	optfun<-gen.opt.par(M=M,k=k,maxiter=maxiter,m=m,approach=approach,switch.names=switch.names,trace.iter=trace.iter,save.initial.param = save.initial.param,skip.par=skip.par,save.checked.par=save.checked.par,merge.save.skip.par=merge.save.skip.par,check.skip=check.skip,print.iter=print.iter,...)
+  	optfun<-gen.opt.par(M=M,k=k,maxiter=maxiter,approach=approach,switch.names=switch.names,trace.iter=trace.iter,save.initial.param = save.initial.param,skip.par=skip.par,save.checked.par=save.checked.par,merge.save.skip.par=merge.save.skip.par,check.skip=check.skip,print.iter=print.iter,...)
 
 	on.exit({
 		res1 <- res[which(err==min(err, na.rm = TRUE))]

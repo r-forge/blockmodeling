@@ -6,9 +6,9 @@
 \alias{loadvector}
 \alias{loadvector2}
 \alias{loadpajek}
-\alias{savevector}
 \alias{savenetwork}
 \alias{savematrix}
+\alias{savevector}
 \alias{savecluster}
 \alias{savepajek}
 \title{Functions for loading and writing Pajek files}
@@ -48,8 +48,8 @@ loadpajek(filename)
 
 savenetwork(n, filename, twomode = "default", symetric = NULL, cont=FALSE)
 savematrix(n, filename, twomode = 1, cont=FALSE)
-savevector(v, filename, cont=FALSE))
-savecluster(v, filename, cont=FALSE))
+savevector(v, filename, cont=FALSE)
+savecluster(v, filename, cont=FALSE)
 savepajek(pajekList,filename,twomode="default",asMatrix=FALSE,symetric=NULL)
 
 }
@@ -62,7 +62,7 @@ savepajek(pajekList,filename,twomode="default",asMatrix=FALSE,symetric=NULL)
   \item{twomode}{1 for one-mode networks and 2 for two-mode networks. Default sets the argument to 1 for square matrices and to 2 for others.}
   \item{symetric}{If true, only the lower part of the matrix is used and the values are interpreted as "Edges", not "Arcs". When used in \code{savepajek} function it applies to all networks.}
   \item{v}{A vector}
-  \item{cont}{A logical constant indicating if the output should be appended to a file instead of creating a new file. Included so that the function could be used within savepajek function. Not intended to be used/set by user.}
+  \item{cont}{A logical constant indicating if the output should be appended to a file instead of creating a new file. Included so that the function could be used within \code{savepajek}  function. Not intended to be used/set by user.}
   \item{pajekList}{A list containing one or more lists with the following names (exact): "Networks", "Partitions", "Vectors", "Permutations" and "Clusters". Each list should contain elements that correspond to Pajek objects  ("Networks" matrices and the other lists vectors), meaning that they can be written to Pajek files using the other save* functions . The content is written to Pajek ".paj" file.}
   \item{asMatrix}{A logical constant indicating if the networks should be written in matrix format (as in ".mat" file) instead in the network (*Arcslist or *Edgelist) format (as in ".mat" file).}
 }
