@@ -51,7 +51,7 @@ function(
       IM<-best1$E
       IM[,] <- 'com'
       best1$IM<-IM
-			res<-list(M=res$M,best=c(list(best1=best1), if(res$nbest>1) apply(res$cluM[seq(res$nbest),],1,function(x)list(clu=x))[-1]else NULL),nIter=res$iter)
+			res<-list(M=res$M,best=c(list(best1=best1), if(res$nbest>1) apply(res$cluM[seq(min(res$nbest,50)),],1,function(x)list(clu=x))[-1]else NULL),nIter=res$iter)
 			class(res)<-'opt.par'
 			return(res)
 		}")
