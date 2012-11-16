@@ -1,0 +1,14 @@
+Name: blockmodeling
+Title: An R package for generalized and classical blockmodeling of valued networks
+Version: 0.2.2
+
+November 15, 2012
+Version: 0.2.2
+Added posibility to differentially weight relations, block type and positions or based on specially designed weights.
+Added additional block types in C the blocks are now limited to: "nul", "com", "reg", "cre", "rre","dnc"
+Multicore support through package doParallel for function optRandomParC.
+
+February 9, 2012
+Version: 0.2.1
+Added optParMultiC - function for searching whole neighbourhood before moving to the next partition
+Added valued blockmodeling in C (the blocks are still limited to nul, com and reg)

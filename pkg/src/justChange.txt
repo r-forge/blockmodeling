@@ -1,0 +1,53 @@
+		/* is it justified to have two options for that */
+		*perr=0.0;
+		for(int iColClu=0;iColClu<*pnColClus;iColClu++){
+			int colChange = (iColClu==pcolCluChange[0])|(iColClu==pcolCluChange[1]);
+			for(int iRowClu=0;iRowClu<*pnRowClus;iRowClu++){
+				if(colChange | (iRowClu==prowCluChange[0])|(iRowClu==prowCluChange[1])){
+					ind2d=iColClu*(*pnRowClus) + iRowClu;
+
+					for(iRel=0; iRel<(*pnRel);iRel++){
+						iDiag = (iColClu==iRowClu)? pdiag[iRel]: 0;
+						ind3d= (ind2d*(*pnRel)+ iRel);
+						minBlockErrVal = INFINITY;
+						minBlockErrInd=0;
+						for(iBlockType=0;iBlockType<(pnBlockTypeByBlock[ind3d]);iBlockType++){
+
+							ind4d=ind3d*(*pmaxBlockTypes)+iBlockType;
+							pEarr[ind4d]=pBlockErr[papproaches[iRel]][pblocks[ind4d]][iDiag](pM,*pnr,*pnc,iRel,pnUnitsRowClu[iRowClu],pnUnitsColClu[iColClu],(prowParArr + iRowClu*(*pnr)),(pcolParArr +iColClu*(*pnc)),pregFun[ind4d],phomFun[iRel],pusePreSpec[ind4d],ppreSpecM[ind4d]);
+
+							if((!(*psameIM))&& (pEarr[ind4d]<minBlockErrVal)){
+								minBlockErrVal=pEarr[ind4d];
+								minBlockErrInd=ind4d;
+							}
+						}
+						if(!(*psameIM)){
+							pEM[ind3d]=minBlockErrVal;
+							pIM[ind3d]=pblocks[minBlockErrInd];
+							*perr+=minBlockErrVal;
+						}
+					}
+					if(*psameIM){
+						minBlockErrVal=INFINITY;
+						minBlockErrInd=0;
+						for(iBlockType=0;iBlockType<(*pmaxBlockTypes);iBlockType++){
+							pEMarrAllRel[iBlockType]=0.0;
+							for(int iRel=0; iRel<(*pnRel);iRel++){
+								pEMarrAllRel[iBlockType]+=pEarr[(ind2d*(*pnColClus)+ iRel)*(*pmaxBlockTypes)+iBlockType];
+							}
+							if(pEMarrAllRel[iBlockType]<minBlockErrVal){
+								minBlockErrVal=pEMarrAllRel[iBlockType];
+								minBlockErrInd=iBlockType;
+							}
+						}
+
+						for(iRel=0; iRel<(*pnRel);iRel++){
+							ind3d= (ind2d*(*pnColClus)+ iRel);
+							pEM[ind3d]=pEarr[ind3d + minBlockErrInd];
+							pIM[ind3d]=pblocks[ind3d + minBlockErrInd];
+							*perr+=pEM[ind3d];
+						}
+					}
+				}
+			}
+		}
