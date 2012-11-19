@@ -81,9 +81,9 @@ formatPreSpecM<-function(preSpecMorg,dB,blocks){
 computeCombWeights<-function(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights){
     if(!is.null(combWeights)){
         if(dim(combWeights)==dB) {
-        	combWeights<-array(as.double(combWeights),dim=dim(combWeights))
-        	return(combWeights)
-       	}
+            combWeights<-array(as.double(combWeights),dim=dim(combWeights))
+            return(combWeights)
+        }
         warning("Dimmensions of the combWeights does not match the dimmensions of blocks!\nIt will not be used!\nIf possible it will be computed using other weights!")
     }
     combWeights<-array(as.double(1),dim=dB)
@@ -791,6 +791,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
   }
 
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
+  parallel<-FALSE
 
   
   if(is.null(mingr)){
@@ -824,6 +825,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
   if(!is.null(seed))set.seed(seed)
   
   on.exit({
+    if(parallel) stopCluster()
     res1 <- res[which(err==min(err, na.rm = TRUE))]
     best<-NULL
     best.clu<-NULL
@@ -878,7 +880,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     })
   
   if(nCores==1||!require(doParallel)){
-  	  if(nCores!=1) warning("Only single core is used as package 'doParallel' is not available")
+      if(nCores!=1) warning("Only single core is used as package 'doParallel' is not available")
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
         find.unique.par<-TRUE
@@ -925,13 +927,13 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         }else{
              registerDoParallel(nCores)
         }
-        
+        parallel<-TRUE
         nC<-getDoParWorkers()
-        oneRep<-function(i){
+        oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,nC,...){
             if(printRep & (i%%nC==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
             temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
 
-            skip.par<-c(skip.par,list(temppar))
+            #skip.par<-c(skip.par,list(temppar))
             if(useOptParMultiC){
                 tres <- optParMultiC(M=M, clu=temppar,  ...)
             }else  tres <- optParC(M=M, clu=temppar,  ...)
@@ -940,7 +942,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 #            nIter[i]<-res[[i]]$resC$nIter
             return(list(tres))
         }
-        res<-foreach(i=1:rep,.combine=list) %dopar% oneRep(i)
+        res<-foreach(i=1:rep,.combine=c) %dopar% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
