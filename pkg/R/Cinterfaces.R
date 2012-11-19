@@ -825,7 +825,6 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
   if(!is.null(seed))set.seed(seed)
   
   on.exit({
-    if(parallel) stopCluster()
     res1 <- res[which(err==min(err, na.rm = TRUE))]
     best<-NULL
     best.clu<-NULL
@@ -922,10 +921,11 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
       }
    } else {
         library(doParallel)
-        if(nCores==0){
-             registerDoParallel()
-        }else{
-             registerDoParallel(nCores)
+        if(!getDoParRegistered()){
+            if(nCores==0){
+                nCores<-detectCores()-1                    
+            }
+            registerDoParallel(nCores)
         }
         parallel<-TRUE
         nC<-getDoParWorkers()
