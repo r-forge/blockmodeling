@@ -54,10 +54,10 @@ double ad(double *px, int n, double preSpecVal);
 double adP(double *px, int n, double preSpecVal);
 double ad0(double *px, int n, double preSpecVal);
 
-int random(int n);
+int randomInt(int n);
 
 /* A function with returns a random number on the interval [0, n-1]*/
-int random(int n)
+int randomInt(int n)
 {
 	int r;
 	r = (int) (unif_rand()*n);
@@ -70,7 +70,7 @@ void randomCall(int *n, int *r);
 
 void randomCall(int *n, int *r){
 	GetRNGstate();	/* Get .Random.seed from R */
-	*r = random(*n);
+	*r = randomInt(*n);
 	PutRNGstate(); /* Write .Random.seed in R */
 }
 
@@ -1639,7 +1639,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 /* Rprintf("Start loop cluster 1\n"); */
 
 				/* to make the order of evaluation random - start*/
-				rnd=random(*pnRowClus-iRndClu);
+				rnd=randomInt(*pnRowClus-iRndClu);
 				iClu=rndClusters[rnd];
 				prowCluChange[0]=iClu;
 
@@ -1664,7 +1664,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 				for(int iRndUnit=0;iRndUnit < pnUnitsRowClu[iClu];iRndUnit++){
 /*Rprintf("Start loop unit in cluster 1\n");*/
 					/* to make the order of evaluation random - start */
-					rnd=random(pnUnitsRowClu[iClu]-iRndUnit);
+					rnd=randomInt(pnUnitsRowClu[iClu]-iRndUnit);
 /*Rprintf("OK 1.01\n");*/
 					iUnit=rndUnitsInClu[rnd];
 /*Rprintf("OK 1.02\n");*/
@@ -1698,7 +1698,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 					for(int iRndClu2=0;iRndClu2<(*pnRowClus-1);iRndClu2++){
 /*Rprintf("Start loop cluster 2\n");*/
 						/* to make the order of evaluation random - start*/
-						rnd=random(*pnRowClus - 1 - iRndClu2);
+						rnd=randomInt(*pnRowClus - 1 - iRndClu2);
 /*Rprintf("rnd = %i, *pnRowClus - 1 - iRndClu2= %i\n", rnd, *pnRowClus - 1 - iRndClu2);			*/
 						iClu2=rndClusters2[rnd];
 						prowCluChange[1]=iClu2;
@@ -1786,7 +1786,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 							for(int iRndUnit2=0;iRndUnit2 < pnUnitsRowClu[iClu2];iRndUnit2++){
 /*Rprintf("Start loop unit in cluster 2\n");*/
 								/* to make the order of evaluation random - start*/
-								rnd=random(pnUnitsRowClu[iClu2]-iRndUnit2);
+								rnd=randomInt(pnUnitsRowClu[iClu2]-iRndUnit2);
 /*Rprintf("rnd = %i, pnUnitsRowClu[iClu2]-iRndUnit2= %i\n", rnd, pnUnitsRowClu[iClu2]-iRndUnit2);*/
 
 								iUnit2=rndUnitsInClu2[rnd];
@@ -2228,7 +2228,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*Rprintf("Start loop cluster 1\n");*/
 
 				/* to make the order of evaluation random - start*/
-/*				rnd=random(*pnRowClus-iRndClu);
+/*				rnd=randomInt(*pnRowClus-iRndClu);
 				iClu=rndClusters[rnd];
 
 				rndClusters[rnd]=rndClusters[*pnRowClus-iRndClu-1]; */
@@ -2254,7 +2254,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*				for(int iRndUnit=0;iRndUnit < pnUnitsRowClu[iClu];iRndUnit++){					*/
 /*Rprintf("Start loop unit in cluster 1\n");*/
 					/* to make the order of evaluation random - start */
-/*					rnd=random(pnUnitsRowClu[iClu]-iRndUnit);
+/*					rnd=randomInt(pnUnitsRowClu[iClu]-iRndUnit);
 					iUnit=rndUnitsInClu[rnd];
 					rndUnitsInClu[rnd]=rndUnitsInClu[pnUnitsRowClu[iClu] - iRndUnit - 1];
 */
@@ -2290,7 +2290,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 						if(iClu==iClu2) continue;
 /*Rprintf("Start loop cluster 2\n");*/
 						/* to make the order of evaluation random - start*/
-/*						rnd=random(*pnRowClus - 1 - iRndClu2);	*/
+/*						rnd=randomInt(*pnRowClus - 1 - iRndClu2);	*/
 /*Rprintf("rnd = %i, *pnRowClus - 1 - iRndClu2= %i\n", rnd, *pnRowClus - 1 - iRndClu2);			*/
 /*						iClu2=rndClusters2[rnd];
 						rndClusters2[rnd]=rndClusters2[*pnRowClus - 2 - iRndClu2]; 		*/
@@ -2359,7 +2359,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 									*psameErr += 1;
 
 
-									if(random(*psameErr) == 0){
+									if(randomInt(*psameErr) == 0){
 										updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
 
 										parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, pbestrowPar);
@@ -2369,7 +2369,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 												pbestRowParMatrix[(*psameErr)*(*pnc)+i] = pbestrowPar[i];
 											}
 										}else{
-											rnd=random(*psameErr);
+											rnd=randomInt(*psameErr);
 											if (rnd< *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
 													pbestRowParMatrix[rnd*(*pnc)+i] = pbestrowPar[i];
@@ -2384,7 +2384,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 												pbestRowParMatrix[(*psameErr)*(*pnc)+i] = ptemprowPar[i];
 											}
 										}else{
-											rnd=random(*psameErr);
+											rnd=randomInt(*psameErr);
 											if (rnd< *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
 													pbestRowParMatrix[rnd*(*pnc)+i] = ptemprowPar[i];
@@ -2438,7 +2438,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 							for(int iUnit2=0;iUnit2 < pnUnitsRowClu[iClu2];iUnit2++){
 /*Rprintf("Start loop unit in cluster 2\n");*/
 								/* to make the order of evaluation random - start*/
-/*								rnd=random(pnUnitsRowClu[iClu2]-iRndUnit2);		*/
+/*								rnd=randomIntpnUnitsRowClu[iClu2]-iRndUnit2);		*/
 /*Rprintf("rnd = %i, pnUnitsRowClu[iClu2]-iRndUnit2= %i\n", rnd, pnUnitsRowClu[iClu2]-iRndUnit2);*/
 
 /*								iUnit2=rndUnitsInClu2[rnd];
@@ -2485,7 +2485,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 										*psameErr += 1;
 
 
-										if(random(*psameErr) == 0){
+										if(randomInt(*psameErr) == 0){
 											updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
 
 											parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, pbestrowPar);
@@ -2495,7 +2495,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 													pbestRowParMatrix[(*psameErr)*(*pnc)+i] = pbestrowPar[i];
 												}
 											}else{
-												rnd=random(*psameErr);
+												rnd=randomInt(*psameErr);
 												if (rnd< *pmaxPar){
 													for(int i=0;i<(*pnc);i++){
 														pbestRowParMatrix[rnd*(*pnc)+i] = pbestrowPar[i];
@@ -2510,7 +2510,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 													pbestRowParMatrix[(*psameErr)*(*pnc)+i] = ptemprowPar[i];
 												}
 											}else{
-												rnd=random(*psameErr);
+												rnd=randomInt(*psameErr);
 												if (rnd< *pmaxPar){
 													for(int i=0;i<(*pnc);i++){
 														pbestRowParMatrix[rnd*(*pnc)+i] = ptemprowPar[i];
