@@ -734,7 +734,7 @@ double homComIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 			}
 		}
 
-		double res=phom[homFun][usePreSpecVal](px,nrb*ncb,preSpecVal);
+		double res=phom[homFun][usePreSpecVal](px,nrb*(ncb-1),preSpecVal);
 		free(px);
 		return(res);
 	}
@@ -757,7 +757,7 @@ double homNul(const double *pM, const int nr, const int nc, const int relN,const
 			k++;
 		}
 	}
-	double res=phom[homFun][2](px,nrb*ncb,preSpecVal);
+	double res=phom[homFun][2](px,nrb*ncb,0);
 	free(px);
 	return(res);
 }
@@ -789,7 +789,7 @@ double homNulDiag(const double *pM, const int nr, const int nc, const int relN,c
 				k++;
 			}
 		}
-		double res=phom[homFun][2](px,nrb*ncb,preSpecVal)+phom[homFun][0](pdiag,nrb,0);
+		double res=phom[homFun][2](px,nrb*(ncb-1),0)+phom[homFun][0](pdiag,nrb,0);
 		free(px);
 		free(pdiag);
 		return(res);
@@ -819,7 +819,7 @@ double homNulIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 			}
 		}
 
-		double res=phom[homFun][2](px,nrb*ncb,preSpecVal);
+		double res=phom[homFun][2](px,nrb*(ncb-1),0);
 		free(px);
 		return(res);
 	}
@@ -1619,7 +1619,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 			/* copy temp results to permanent  - end*/
 
 			improve=0;
-			*psameErr = 0;
+			*psameErr = 1;
 
 
 
@@ -1968,8 +1968,6 @@ void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const
 
 
 
-/* for now this function moves to improved partition as soon as it findes one */
-/* however, the "move" is selected randomly, while it is true that "moves" are tried before "exchanges" */
 void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
@@ -2056,9 +2054,9 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 		int *pbestrowPar= (int *) malloc((*pnc)*sizeof(int));
 
 /* the next 3 lines are not necesarry */
-/*		for(int i=0;i<(*pnc);i++){*/
-/*			pbestrowPar[i] = prowPar[i];*/
-/*		}*/
+		for(int i=0;i<(*pnc);i++){
+			pbestrowPar[i] = prowPar[i];
+		}
 
 		/* image matrix */
 		int *pbestIM;
@@ -2163,7 +2161,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 
 		int improve=1;
 /*Rprintf("OK1\n");*/
-		*psameErr = 0;
+		*psameErr = 1;
 
 		/* loop until no impovement is found */
 		*pnIter=0;
@@ -2317,7 +2315,8 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 							ptemprowParArr[iClu*(*pnr)+iUnit]=ptemprowParArr[iClu*(*pnr)+ptempnUnitsRowClu[iClu]];
 
 /*Rprintf("iClu = %i, iClu2= %i, iUnit=%i\n", iClu, iClu2, iUnit);*/
-/*Rprintf("nClu = %i, nCluOld= %i, nClu2 = %i, nCluOld2= %i\n", ptempnUnitsRowClu[iClu], pnUnitsRowClu[iClu], ptempnUnitsRowClu[iClu2], pnUnitsRowClu[iClu2]); */
+/*Rprintf("nClu = %i, nCluOld= %i, nClu2 = %i, nCluOld2= %i\n", ptempnUnitsRowClu[iClu], pnUnitsRowClu[iClu], ptempnUnitsRowClu[iClu2], pnUnitsRowClu[iClu2]);*/
+/*Rprintf("prowCluChange: %i, %i \n", prowCluChange[0], prowCluChange[1]);*/
 /*for(int i1=0;i1<(*pnRowClus);i1++){*/
 /*	Rprintf("cluster = %i, unitsCluster= %i: ", i1, ptempnUnitsRowClu[i1]);*/
 /*	for(int i2=0;i2<(ptempnUnitsRowClu[i1]);i2++){*/
@@ -2329,9 +2328,29 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 							/* here the new partition is evaluated*/
 							critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
 /*Rprintf("Error after move = %.2f\n", *ptemperr);*/
+/*Rprintf("Error array and blocks:\n");*/
+/*int ind2d, ind3d, ind4d;*/
+/*for(int iColClu=0;iColClu<*pnColClus;iColClu++){*/
+/*	Rprintf("\niColClu = %i\n", iColClu);*/
+/*	for(int iRowClu=0;iRowClu<*pnRowClus;iRowClu++){*/
+/*		Rprintf("iRowClu = %i\n", iRowClu);*/
+/*		ind2d=iColClu*(*pnRowClus) + iRowClu;*/
+/*		for(int iRel=0; iRel<(*pnRel);iRel++){*/
+/*			Rprintf("iRel = %i:\n", iRel);*/
+/*			ind3d= (ind2d*(*pnRel)+ iRel);*/
+/*			for(int iBlockType=0;iBlockType<(pnBlockTypeByBlock[ind3d]);iBlockType++){*/
+/*				ind4d=ind3d*(*pmaxBlockTypes)+iBlockType;*/
+/*				Rprintf("Blocktype = %i, err = %.5f \n", pblocks[ind4d], ptempEarr[ind4d]);*/
+/*			}*/
+/*		}*/
+/*	}*/
+/*}*/
+
+
 /*Rprintf("OK3\n");*/
 							if (*ptemperr< (*pbesterr)) {
-								*psameErr=0;
+/*								Rprintf("Error after move = %.2f\n", *ptemperr);*/
+								*psameErr=1;
 								*pbesterr= *ptemperr;
 
 								updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
@@ -2358,18 +2377,21 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 								if (*ptemperr == (*pbesterr)) {
 									*psameErr += 1;
 
-
-									if(randomInt(*psameErr) == 0){
+									int randTemp=randomInt(*psameErr);
+/*									Rprintf("Error after move = %.2f\n", *ptemperr);*/
+/*									Rprintf("rndUpdate = %i\n", randTemp);*/
+									if(randTemp == 0){
 										updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
 
 										parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, pbestrowPar);
 
-										if(*psameErr < *pmaxPar){
+										if(*psameErr <= *pmaxPar){
 											for(int i=0;i<(*pnc);i++){
-												pbestRowParMatrix[(*psameErr)*(*pnc)+i] = pbestrowPar[i];
+												pbestRowParMatrix[((*psameErr)-1)*(*pnc)+i] = pbestrowPar[i];
 											}
 										}else{
 											rnd=randomInt(*psameErr);
+/*											Rprintf("rndOverwrite = %i\n", rnd);*/
 											if (rnd< *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
 													pbestRowParMatrix[rnd*(*pnc)+i] = pbestrowPar[i];
@@ -2379,12 +2401,14 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 									} else{
 										parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, ptemprowPar);
 
-										if(*psameErr < *pmaxPar){
+										if(*psameErr <= *pmaxPar){
 											for(int i=0;i<(*pnc);i++){
-												pbestRowParMatrix[(*psameErr)*(*pnc)+i] = ptemprowPar[i];
+												pbestRowParMatrix[((*psameErr)-1)*(*pnc)+i] = ptemprowPar[i];
 											}
 										}else{
 											rnd=randomInt(*psameErr);
+/*											Rprintf("Error after move = %.2f\n", *ptemperr);*/
+/*											Rprintf("rndOverwrite = %i\n", rnd);*/
 											if (rnd< *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
 													pbestRowParMatrix[rnd*(*pnc)+i] = ptemprowPar[i];
@@ -2454,6 +2478,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*Rprintf("OK2-2\n");*/
 /*Rprintf("iClu = %i, iClu2= %i, iUnit=%i, iUnit2=%i\n", iClu, iClu2, iUnit, iUnit2);*/
 /*Rprintf("nClu = %i, nCluOld= %i, nClu2 = %i, nCluOld2= %i\n", ptempnUnitsRowClu[iClu], pnUnitsRowClu[iClu], ptempnUnitsRowClu[iClu2], pnUnitsRowClu[iClu2]);*/
+/*Rprintf("prowCluChange: %i, %i \n", prowCluChange[0], prowCluChange[1]);*/
 /*for(int i1=0;i1<(*pnRowClus);i1++){*/
 /*	Rprintf("cluster = %i, unitsCluster= %i: ", i1, ptempnUnitsRowClu[i1]);*/
 /*	for(int i2=0;i2<(ptempnUnitsRowClu[i1]);i2++){*/
@@ -2465,11 +2490,11 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 
 								critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
 /*Rprintf("OK3-2\n");*/
-/* Rprintf("Error after exchange = %.2f\n", *ptemperr); */
-
+/* Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
 
 								if (*ptemperr< (*pbesterr)) {
-									*psameErr=0;
+/*									Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
+									*psameErr=1;
 									*pbesterr= *ptemperr;
 
 									updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
@@ -2484,18 +2509,22 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 									if (*ptemperr == (*pbesterr)) {
 										*psameErr += 1;
 
-
-										if(randomInt(*psameErr) == 0){
+										int randTemp=randomInt(*psameErr);
+/*										Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
+/*										Rprintf("rndUpdate = %i\n", randTemp);*/
+										if(randTemp == 0){
 											updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
 
 											parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, pbestrowPar);
 
-											if(*psameErr < *pmaxPar){
+											if(*psameErr <= *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
-													pbestRowParMatrix[(*psameErr)*(*pnc)+i] = pbestrowPar[i];
+													pbestRowParMatrix[((*psameErr)-1)*(*pnc)+i] = pbestrowPar[i];
 												}
 											}else{
 												rnd=randomInt(*psameErr);
+/*												Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
+/*												Rprintf("rndOverwrite = %i\n", rnd);*/
 												if (rnd< *pmaxPar){
 													for(int i=0;i<(*pnc);i++){
 														pbestRowParMatrix[rnd*(*pnc)+i] = pbestrowPar[i];
@@ -2505,12 +2534,14 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 										} else{
 											parArr2Vec(pnc, pnRowClus, ptempnUnitsRowClu, ptemprowParArr, ptemprowPar);
 
-											if(*psameErr < *pmaxPar){
+											if(*psameErr <= *pmaxPar){
 												for(int i=0;i<(*pnc);i++){
-													pbestRowParMatrix[(*psameErr)*(*pnc)+i] = ptemprowPar[i];
+													pbestRowParMatrix[((*psameErr)-1)*(*pnc)+i] = ptemprowPar[i];
 												}
 											}else{
 												rnd=randomInt(*psameErr);
+/*												Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
+/*												Rprintf("rndOverwrite = %i\n", rnd);*/
 												if (rnd< *pmaxPar){
 													for(int i=0;i<(*pnc);i++){
 														pbestRowParMatrix[rnd*(*pnc)+i] = ptemprowPar[i];
@@ -2577,8 +2608,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 		free(ptemprowPar);
 	}
      PutRNGstate(); /* Write .Random.seed in R */
-
-/*
+     /*
 Rprintf("nIter = %i\n", *pnIter);
 Rprintf("prowPar: ");
 for( int i=0;i<*pnc;i++){

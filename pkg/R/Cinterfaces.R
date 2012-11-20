@@ -140,7 +140,7 @@ formatUsePreSpecM<-function(usePreSpecMorg,preSpecM,dB,blocks){
 }
 
 
-critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, rowCluChange=c(0,0), colCluChange=c(0,0), sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, save.initial.param=TRUE,relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL){
+critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, rowCluChange=c(0,0), colCluChange=c(0,0), sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, save.initial.param=TRUE,relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, returnEnv=FALSE){
     if(save.initial.param){
         initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
     }else initial.param<-NULL
@@ -287,7 +287,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     resC<-.C("critFun", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode=as.integer(isTwoMode), isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=as.integer(rowCluChange), colCluChange=as.integer(colCluChange), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM,combWeights=combWeights,NAOK=TRUE)
     
     
-    res<-c(list(M=M), resC[c("err","EM","Earr")], list(IM=IMaddNames(resC$IM)), list(clu=orgClu), initial.param, list(call=match.call()))
+    res<-c(list(M=M), resC[c("err","EM","Earr")], list(IM=IMaddNames(resC$IM)), list(clu=orgClu), initial.param, list(call=match.call()), if(returnEnv)list(env= environment()) else NULL)
 }
 
 
@@ -741,10 +741,10 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         clu<- resC$rowPar
 #    }
     if(resC$sameErr < 50){
-        bestRowParMatrix<-resC$bestRowParMatrix[(1:(resC$sameErr+1)),]
+        bestRowParMatrix<-resC$bestRowParMatrix[(1:(resC$sameErr)),]
     } else {
         bestRowParMatrix<-resC$bestRowParMatrix[,(1:maxPar)]
-        warning("More than ", resC$sameErr+1 , " partitions with the same error were found. Only ",maxPar," partitions are returned!")
+        warning(resC$sameErr , " partitions with the same error were found. Only ",maxPar," partitions are returned!")
     }
     res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),bestRowParMatrix=bestRowParMatrix, list(resC=resC))
 
@@ -878,8 +878,8 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     return(res)
     })
   
-  if(nCores==1||!require(doParallel)){
-      if(nCores!=1) warning("Only single core is used as package 'doParallel' is not available")
+  if(nCores==1||!require(doParallel)||!require(doRNG)){
+      if(nCores!=1) warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
         find.unique.par<-TRUE
@@ -921,6 +921,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
       }
    } else {
         library(doParallel)
+        library(doRNG)
         if(!getDoParRegistered()){
             if(nCores==0){
                 nCores<-detectCores()-1                    
@@ -930,19 +931,22 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         parallel<-TRUE
         nC<-getDoParWorkers()
         oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,nC,...){
-            if(printRep & (i%%nC==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
+            if(printRep) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
             temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
 
             #skip.par<-c(skip.par,list(temppar))
+            
             if(useOptParMultiC){
-                tres <- optParMultiC(M=M, clu=temppar,  ...)
-            }else  tres <- optParC(M=M, clu=temppar,  ...)
-
+                tres <- try(optParMultiC(M=M, clu=temppar,  ...))
+            }else  tres <- try(optParC(M=M, clu=temppar,  ...))
+            if(class(tres)=="try-error"){
+                tres<-list("try-error"=tres, err=Inf, nIter=Inf, startPart=temppar)
+            }
 #            err[i]<-res[[i]]$err
 #            nIter[i]<-res[[i]]$resC$nIter
             return(list(tres))
         }
-        res<-foreach(i=1:rep,.combine=c) %dopar% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
+        res<-foreach(i=1:rep,.combine=c) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
