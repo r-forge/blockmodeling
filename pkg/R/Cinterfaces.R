@@ -879,7 +879,12 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     })
   
   if(nCores==1||!require(doParallel)||!require(doRNG)){
-      if(nCores!=1) warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
+      if(nCores!=1) {
+        oldWarn<-options("warn")
+        options(warn=1)
+      	warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
+      	options(warn=oldWarn)
+      }
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
         find.unique.par<-TRUE
