@@ -741,12 +741,12 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         clu<- resC$rowPar
 #    }
     if(resC$sameErr < 50){
-        bestRowParMatrix<-resC$bestRowParMatrix[(1:(resC$sameErr)),]
+        bestRowParMatrix<-resC$bestRowParMatrix[,(1:(resC$sameErr)),drop=FALSE]
     } else {
         bestRowParMatrix<-resC$bestRowParMatrix[,(1:maxPar)]
         warning(resC$sameErr , " partitions with the same error were found. Only ",maxPar," partitions are returned!")
     }
-    res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),bestRowParMatrix=bestRowParMatrix, list(resC=resC))
+    res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),list(bestRowParMatrix=bestRowParMatrix), list(resC=resC))
 
 }
 
@@ -882,8 +882,8 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
       if(nCores!=1) {
         oldWarn<-options("warn")
         options(warn=1)
-      	warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
-      	options(warn=oldWarn)
+        warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
+        options(warn=oldWarn)
       }
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
