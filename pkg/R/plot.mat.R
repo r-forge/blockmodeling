@@ -45,6 +45,10 @@ function(
     dens.leg=c(null=100),
     blackdens=70,
     plotLines = FALSE, #Should the lines in the matrix be printed (best set to FALSE for larger networks)
+    x0ParLine=-0.1,
+    x1ParLine=1,
+    y0ParLine=0,
+    y1ParLine=1.1,
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
@@ -221,8 +225,8 @@ function(
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,density=dens,border=if(plotLines)"black" else NA)
   }
     if(!is.null(clu)){  #ploting the lines between clusters
-        segments(x0=-0.1,x1=1,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
-        segments(y0=0,y1=1.1,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
+        segments(x0=x0ParLine,x1=x1ParLine,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
+        segments(y0=y0ParLine,y1=y1ParLine,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
     }
     if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1)
     if(print.x.axis.val) text(y=x.axis.val.pos, x = (1:dm[2])/dm[2]-1/dm[2]/2 +val.x.coor.cor, srt=90, labels = xaxe, cex=cex.x.axis,adj=0)
