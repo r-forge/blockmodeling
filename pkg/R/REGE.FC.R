@@ -5,6 +5,7 @@ function(M,E=1,iter=3,until.change=TRUE,use.diag=TRUE,normE=FALSE){
 	if(!use.diag)diag(M)<-0
 	Eall<-array(NA,dim=c(n,n,iter+1)) #An array of 'iter' similiaritie matrices
 	Eall[,,1]<-E
+	diag(Eall[,,1])<-1
 	B<-(M+t(M))>0
 	Match<-array(NA,dim=rep(n,4))
 	Max<-array(NA,dim=rep(n,4))

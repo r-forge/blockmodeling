@@ -5,9 +5,10 @@ function(M,E=1,iter=3,until.change=TRUE,use.diag=TRUE){
 	if(length(dim(M))==2)M<-array(M,dim=c(n,n,1))
 	nr<-dim(M)[3]
 	if(!use.diag){for(ir in 1:nr) diag(M[,,ir])<-0}
-
+	
 	Eall<-array(NA,dim=c(n,n,iter+1)) #An array of 'iter' similiaritie matrices
 	Eall[,,1]<-E
+	diag(Eall[,,1])<-1
 	for(it in 1:iter){
 		for(i in 2:n){
 			for(j in 1:(i-1)){

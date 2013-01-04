@@ -8,6 +8,7 @@ function(M,E=1,iter=3,until.change=TRUE,use.diag=TRUE,normE=FALSE){
 
 	Eall<-array(NA,dim=c(n,n,iter+1)) #An array of 'iter' similiaritie matrices
 	Eall[,,1]<-E
+	diag(Eall[,,1])<-1
 	for(it in 1:iter){
 		for(i in 2:n){
 			for(j in 1:(i-1)){
