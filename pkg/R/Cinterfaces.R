@@ -764,7 +764,9 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
 "optRandomParC" <-function(M, 
 k,#number of clusters/groups
 rep,#number of repetitions/different starting partitions to check
-save.initial.param=TRUE, 
+save.initial.param=TRUE,  #save the initial parametrs of this call
+save.initial.param.opt=FALSE,  #save the initial parametrs for calls to optParC or optParMultiC
+deleteMs=TRUE, #delete networks/matrices from results of optParC or optParMultiC to save space
 max.iden=10, #the maximum number of results that should be saved (in case there are more than max.iden results with minimal error, only the first max.iden will be saved)
 switch.names=NULL,#should partitions that only differ in group names be considert equal (is c(1,1,2)==c(2,2,1))
 return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
@@ -791,8 +793,6 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
   }
 
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
-  parallel<-FALSE
-
   
   if(is.null(mingr)){
     if(is.null(dots$minUnitsRowCluster)){
@@ -916,8 +916,12 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 
         if(printRep==1) cat("Starting partition:",unlistPar(temppar),"\n")
         if(useOptParMultiC){
-            res[[i]]<-optParMultiC(M=M, clu=temppar,  ...)
-        }else  res[[i]]<-optParC(M=M, clu=temppar,  ...)
+            res[[i]]<-optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt, ...)
+        }else  res[[i]]<-optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...)
+        if(deleteMs){
+            res[[i]]$M<-NULL
+            res[[i]]$resC$M<-NULL
+        }
 
         err[i]<-res[[i]]$err
         nIter[i]<-res[[i]]$resC$nIter
@@ -933,7 +937,6 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             }
             registerDoParallel(nCores)
         }
-        parallel<-TRUE
         nC<-getDoParWorkers()
         oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,nC,...){
             if(printRep) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
@@ -942,10 +945,14 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             #skip.par<-c(skip.par,list(temppar))
             
             if(useOptParMultiC){
-                tres <- try(optParMultiC(M=M, clu=temppar,  ...))
-            }else  tres <- try(optParC(M=M, clu=temppar,  ...))
+                tres <- try(optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
+            }else  tres <- try(optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
             if(class(tres)=="try-error"){
                 tres<-list("try-error"=tres, err=Inf, nIter=Inf, startPart=temppar)
+            }
+            if(deleteMs){
+                tres$M<-NULL
+                tres$resC$M<-NULL
             }
 #            err[i]<-res[[i]]$err
 #            nIter[i]<-res[[i]]$resC$nIter
