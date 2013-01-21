@@ -772,6 +772,7 @@ switch.names=NULL,#should partitions that only differ in group names be consider
 return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
 return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
 seed=NULL,#the seed for random generation of partitions
+RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
 parGenFun = genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
 mingr=NULL, #minimal alowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
 maxgr=NULL, #maximal alowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
@@ -786,7 +787,6 @@ n=NULL, #the number of units by "modes". It is used only for generating random p
 nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object
 ... #paramters to optParC
 ){
-
   dots<-list(...)
   if(is.null(switch.names)){
     switch.names<-is.null(dots$BLOCKS)
@@ -822,7 +822,9 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     n<-dim(M)[1:2]
   } else warning("Number of nodes by modes can not be determined. Parameter 'n' must be supplied!!!")
 
-  if(!is.null(seed))set.seed(seed)
+  if(!is.null(RandomSeed)){
+  	.Random.seed <-  RandomSeed
+  } else if(!is.null(seed))set.seed(seed)
   
   on.exit({
     res1 <- res[which(err==min(err, na.rm = TRUE))]
@@ -873,7 +875,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
       initial.param<-NULL
     } else initial.param=list(initial.param)
   
-    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param)
+    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, Random.seed=.Random.seed)
     class(res)<-"opt.more.par"
     return(res)
     })
