@@ -875,7 +875,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
       initial.param<-NULL
     } else initial.param=list(initial.param)
   
-    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, Random.seed=.Random.seed)
+    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, list(Random.seed=.Random.seed))
     class(res)<-"opt.more.par"
     return(res)
     })
@@ -960,7 +960,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 #            nIter[i]<-res[[i]]$resC$nIter
             return(list(tres))
         }
-        res<-foreach(i=1:rep,.combine=c) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
+        res<-foreach(i=1:rep,.combine=c, .packages='blockmodeling') %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
