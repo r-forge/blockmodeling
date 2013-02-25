@@ -84,7 +84,7 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
 			vnames[as.integer(line[1])]<-line[2]
     	}
     }else{
-    	vnames<-read.table(file=file,nrows=n,as.is =TRUE)[,2]
+    	vnames<-read.table(file=file,nrows=n12,as.is =TRUE)[,2]
     	type=""   	
     }
 
