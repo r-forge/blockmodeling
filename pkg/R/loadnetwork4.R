@@ -45,9 +45,9 @@ function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
           ties<-ties[,1:3]
         }
         ties<-apply(ties,2,as.numeric)
-        if(tolower(stars[i])=="*arcs"){
+        if(tolower(type)=="*arcs"){
           M[ties[,1:2]]<-ties[,3]
-        } else if(tolower(stars[i])=="*edges"){
+        } else if(tolower(type)=="*edges"){
           M[ties[,1:2]]<-ties[,3]
           M[ties[,2:1]]<-ties[,3]
         }
@@ -98,9 +98,9 @@ function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
           ties<-ties[,1:3]
         }
         ties<-apply(ties,2,as.numeric)
-        if(tolower(stars[i])=="*arcs"){
+        if(tolower(type)=="*arcs"){
           M[ties[,1:2]]<-ties[,3]
-        } else if(tolower(stars[i])=="*edges"){
+        } else if(tolower(type)=="*edges"){
           M[ties[,1:2]]<-ties[,3]
           M[ties[,2:1]]<-ties[,3]
         }
@@ -113,5 +113,5 @@ function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
     M<-M[1:n1,(n1+1):n12]    
   }
 
-
+  return(M)
 }
