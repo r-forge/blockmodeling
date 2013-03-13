@@ -37,7 +37,7 @@ TODO:
 /* Change these when you add new functions */
 #define nRegFun 3
 #define nHomFun 2
-#define nBlockTypes 6
+#define nBlockTypes 7
 #define nApproaches 3
 /* #define MaxNumOfDiffBlockTypes 10 */
 
@@ -938,7 +938,66 @@ double valRre(const double *pM, const int nr, const int nc, const int relN, cons
 
 
 
+/* a function for computing error of  the average/density block - values/binary blockmodeling*/
+double valAvg(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
 
+	double res=0.0;
+	int baseInd=relN*nr*nc;
+	int ind2d;
+
+	for(int j = 0; j<ncb; j++){
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			res += pM[ind2d+pRowInd[i]];
+		}
+	}
+	return(max(0,preSpecVal*ncb*nrb - res));
+}
+
+/* a function for computing error of  the average/density block - values/binary blockmodeling - diagonal*/
+double valAvgDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+
+	double res=0;
+	double diagRes=0;
+	int baseInd=relN*nr*nc;
+	int ind2d;
+
+	if(nrb==1){
+		return(0.0);
+	} else {
+		for(int j = 0; j<ncb; j++){
+			ind2d=baseInd+ nc*pColInd[j];
+			diagRes += pM[ind2d+pRowInd[j]];
+			for(int i = (j + 1); i<nrb; i++){
+				res += pM[ind2d+pRowInd[i]];
+				res += pM[baseInd+ nc*pColInd[i] + pRowInd[j]];
+			}
+		}
+		return(max(0,preSpecVal*ncb*(nrb - 1) - res) + min(diagRes,(preSpecVal*nrb-diagRes)));
+	}
+}
+
+
+/* a function for computing error of  the average/density block - values/binary blockmodeling -  diagonal ignore*/
+double valAvgIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+
+	double res=0;
+	int baseInd=relN*nr*nc;
+	int ind2d;
+
+	if(nrb==1){
+		return(0);
+	} else {
+		for(int j = 0; j<ncb; j++){
+			ind2d=baseInd+ nc*pColInd[j];
+			for(int i = (j + 1); i<nrb; i++){
+				res += pM[ind2d+pRowInd[i]];
+				res += pM[baseInd+ nc*pColInd[i] + pRowInd[j]];
+			}
+		}
+		return(max(0,preSpecVal*ncb*(nrb - 1) - res));
+	}
+}
 
 
 /* a function for computing error of  the complete block - valued blockmodeling*/
@@ -1192,9 +1251,14 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[0][4][1]=homRre;
 	pBlockErr[0][4][2]=homRre;
 
-	pBlockErr[0][5][0]=doNotCare;
-	pBlockErr[0][5][1]=doNotCare;
-	pBlockErr[0][5][2]=doNotCare;
+/*There is no difference between complete and "average" block for homogeneity blockmodeling*/	
+	pBlockErr[0][5][0]=homCom;
+	pBlockErr[0][5][1]=homComDiag;
+	pBlockErr[0][5][2]=homComIgnoreDiag;	
+
+	pBlockErr[0][6][0]=doNotCare;
+	pBlockErr[0][6][1]=doNotCare;
+	pBlockErr[0][6][2]=doNotCare;
 
 	pBlockErr[1][0][0]=binNul;
 	pBlockErr[1][0][1]=binNulDiag;
@@ -1215,10 +1279,15 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[1][4][0]=binRre;
 	pBlockErr[1][4][1]=binRre;
 	pBlockErr[1][4][2]=binRre;
-
-	pBlockErr[1][5][0]=doNotCare;
-	pBlockErr[1][5][1]=doNotCare;
-	pBlockErr[1][5][2]=doNotCare;
+	
+/*Functions for density (binary) block and for average valued blocks are the same*/	
+	pBlockErr[1][5][0]=valAvg;
+	pBlockErr[1][5][1]=valAvgDiag;
+	pBlockErr[1][5][2]=valAvgIgnoreDiag;
+	
+	pBlockErr[1][6][0]=doNotCare;
+	pBlockErr[1][6][1]=doNotCare;
+	pBlockErr[1][6][2]=doNotCare;
 
 	pBlockErr[2][0][0]=valNul;
 	pBlockErr[2][0][1]=valNulDiag;
@@ -1240,9 +1309,13 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[2][4][1]=valRre;
 	pBlockErr[2][4][2]=valRre;
 
-	pBlockErr[2][5][0]=doNotCare;
-	pBlockErr[2][5][1]=doNotCare;
-	pBlockErr[2][5][2]=doNotCare;
+	pBlockErr[2][5][0]=valAvg;
+	pBlockErr[2][5][1]=valAvgDiag;
+	pBlockErr[2][5][2]=valAvgIgnoreDiag;	
+
+	pBlockErr[2][6][0]=doNotCare;
+	pBlockErr[2][6][1]=doNotCare;
+	pBlockErr[2][6][2]=doNotCare;
 
 
 

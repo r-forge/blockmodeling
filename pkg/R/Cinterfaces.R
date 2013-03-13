@@ -1,5 +1,5 @@
 cStatus<-list(
-    blockTypes=c("nul", "com", "reg", "cre", "rre","dnc"), 
+    blockTypes=c("nul", "com", "reg", "cre", "rre", "avg", "dnc"), 
     regFuns=c("max","sum","mean"), 
     homFuns=c("ss", "ad"), 
     implementedApproaches=c("hom", "bin","val")
@@ -216,6 +216,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
+	blocks[blocks=="den"]<-"avg"
     blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
@@ -435,6 +436,7 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
     if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
+	blocks[blocks=="den"]<-"avg"
     blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
@@ -662,6 +664,7 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
+	blocks[blocks=="den"]<-"avg"
     blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
