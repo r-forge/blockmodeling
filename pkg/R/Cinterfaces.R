@@ -109,7 +109,9 @@ computeCombWeights<-function(combWeights, dB, blocks, relWeights, posWeights, bl
     if(!(is.numeric(blockTypeWeights)&all(names(blockTypeWeights)%in%cStatus$blockTypes))) stop("blockTypeWeights must be a numeric named vector with names from: ", paste(cStatus$blockTypes, collapse=", "))
     
     for(i in names(blockTypeWeights)){
-        combWeights[blocks==i]<-blockTypeWeights[i]* combWeights[blocks==i]
+		tWhich <- blocks==i
+		tWhich[is.na(tWhich)]<-FALSE
+        combWeights[tWhich]<-blockTypeWeights[i]* combWeights[tWhich]
     }
     return(combWeights)
 }
@@ -217,7 +219,6 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
 	blocks[blocks=="den"]<-"avg"
-    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
         IM<-array(as.integer(99),dim=dB[2:4])
@@ -281,7 +282,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     
 
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
-
+    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
     
     M<-apply(M,c(2,3),as.double)
     
@@ -437,7 +438,6 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
 	blocks[blocks=="den"]<-"avg"
-    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
         IM<-array(as.integer(99),dim=dB[2:4])
@@ -501,6 +501,7 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
     M<-apply(M,c(2,3),as.double)
     
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
+    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
     
     resC<-.C("optPar", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
     , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters, NAOK=TRUE)
@@ -665,7 +666,6 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
     blocks[blocks=="null"]<-"nul"
 	blocks[blocks=="den"]<-"avg"
-    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     if(is.null(IM)){
         IM<-array(as.integer(99),dim=dB[2:4])
@@ -728,6 +728,7 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     M<-apply(M,c(2,3),as.double)
     
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
+    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
     bestColParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[2])
     bestRowParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[1])

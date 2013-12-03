@@ -36,7 +36,8 @@ plot.mat(x=M, M=x, clu = NULL, ylab = "", xlab = "", main = NULL,
    wIM = NULL,
    use.IM = length(dim(IM))==length(dim(M))|!is.null(wIM),
    dens.leg = c(null = 100),
-   blackdens = 70, plotLines = FALSE, ...)
+   blackdens = 70, plotLines = FALSE, frameMatrix=TRUE,
+   x0ParLine=-0.1, x1ParLine=1, y0ParLine=0, y1ParLine=1.1, ...)
   
 plot.mat.nm(x=M, M=x, ..., main.title = NULL,
    title.row = "Row normalized", 
@@ -69,7 +70,7 @@ plot.array(x=M, M=x, ..., main.title=NULL,
    wIM = NULL,
    use.IM = length(dim(IM)) == length(dim(M)) | !is.null(wIM),
    dens.leg = c(null = 100), blackdens = 70, plotLines = FALSE,
-   ...)
+   frameMatrix=TRUE, ...)
 
 \method{plot}{crit.fun}(x, main = NULL, ...)
 
@@ -132,7 +133,12 @@ plot.array(x=M, M=x, ..., main.title=NULL,
   \item{IM}{The image (as obtaind with \code{crit.fun}) of the blockmodel. \code{dens.leg} is used to translate this image into \code{IM.dens}.}
   \item{dens.leg}{It is used to translate the \code{IM} into \code{IM.dens}.}
   \item{blackdens}{At which density should the values on dark colurs of lines be printed in white.}
+  \item{x0ParLine}{Coordinates for lines seperating clusters.}
+  \item{x1ParLine}{Coordinates for lines seperating clusters.}
+  \item{y0ParLine}{Coordinates for lines seperating clusters.}
+  \item{y1ParLine}{Coordinates for lines seperating clusters.}
   \item{plotLines}{Should the lines in the matrix be printed - default FALSE, best set to TRUE for very small networks.}
+  \item{frameMatrix}{Should the matrix be framed (if plotLines is FALSE) - default TRUE.}
   \item{which}{Which (if there are more than one) of optimal solutions to plot}
   \item{wnet}{Specifies which net (if more) should be ploted - used if M is an array.}
   \item{wIM}{Specifies which IM (if more) should be used for ploting (defualt = wnet) - used if IM is an array.}

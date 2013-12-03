@@ -45,6 +45,7 @@ function(
     dens.leg=c(null=100),
     blackdens=70,
     plotLines = FALSE, #Should the lines in the matrix be printed (best set to FALSE for larger networks)
+    frameMatrix=TRUE, #Should the matrix be framed (if plotLines is FALSE)
     x0ParLine=-0.1,
     x1ParLine=1,
     y0ParLine=0,
@@ -223,7 +224,8 @@ function(
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,border=if(plotLines)"black" else NA)
   }else{
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,density=dens,border=if(plotLines)"black" else NA)
-  }
+  } 
+  if(frameMatrix) rect(xleft=0, ybottom=0, xright=1, ytop=1, cex.lab=cex.lab,border="black")
     if(!is.null(clu)){  #ploting the lines between clusters
         segments(x0=x0ParLine,x1=x1ParLine,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
         segments(y0=y0ParLine,y1=y1ParLine,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
