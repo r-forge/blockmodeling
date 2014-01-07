@@ -159,12 +159,23 @@ function(
             lines.col<-cumsum(tclu)[-length(tclu)]*1/dm[2]
             lines.row<-1-lines.col
         }else if(is.list(clu)&&length(clu)==2){
-            tclu.r<-table(clu[[1]])
-            tclu.c<-table(clu[[2]])
-            or.r<-order(clu[[1]])
-            or.c<-order(clu[[2]])
-            lines.col<-cumsum(tclu.c)[-length(tclu.c)]*1/dm[2]
-            lines.row<- 1-cumsum(tclu.r)[-length(tclu.r)]*1/dm[1]
+			if(!is.null(clu[[1]])){
+				tclu.r<-table(clu[[1]])
+				or.r<-order(clu[[1]])
+				lines.row<- 1-cumsum(tclu.r)[-length(tclu.r)]*1/dm[1]
+			} else{
+				or.r<-1:dim(M)[1]
+				lines.row<-NULL
+			}
+			if(!is.null(clu[[2]])){
+				tclu.c<-table(clu[[2]])
+				or.c<-order(clu[[2]])
+				lines.col<-cumsum(tclu.c)[-length(tclu.c)]*1/dm[2]
+			} else{
+				or.c<-1:dim(M)[2]
+				lines.col<-NULL
+			}            
+            
         } else stop("Networks with more that 2 modes (ways) must convert to 1-mode networks before it is sent to this function.")
         M<-M[or.r,or.c]
     clu<-lapply(clu,function(x)as.numeric(factor(x)))
@@ -227,8 +238,8 @@ function(
   } 
   if(frameMatrix) rect(xleft=0, ybottom=0, xright=1, ytop=1, cex.lab=cex.lab,border="black")
     if(!is.null(clu)){  #ploting the lines between clusters
-        segments(x0=x0ParLine,x1=x1ParLine,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
-        segments(y0=y0ParLine,y1=y1ParLine,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
+        if(!is.null(lines.row)) segments(x0=x0ParLine,x1=x1ParLine,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
+        if(!is.null(lines.col)) segments(y0=y0ParLine,y1=y1ParLine,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
     }
     if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1)
     if(print.x.axis.val) text(y=x.axis.val.pos, x = (1:dm[2])/dm[2]-1/dm[2]/2 +val.x.coor.cor, srt=90, labels = xaxe, cex=cex.x.axis,adj=0)
