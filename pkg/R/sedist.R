@@ -18,6 +18,7 @@ function(
 {
 
 	method<-match.arg(method, choices=c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski","pearson", "kendall", "spearman","dist","cor", "cov", "default"))
+	handle.interaction<-match.arg(handle.interaction, choices=c("switch", "switch1", "switch2", "ignore", "none"))
 	if(handle.interaction=="switch2")handle.interaction<-"switch"
 	if(any(method=="default", fun=="default")){
 		if(all(method=="default", fun=="default")){
