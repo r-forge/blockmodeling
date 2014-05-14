@@ -7,7 +7,8 @@ function(
 #	stats.dist.cor.cov=TRUE,	#call "stats::dist", "stats::cor" or "stats::cov", not "dist", "cor" or "cov", if nonstandard functions are used, they should exemp the same arguments as those in package stats
 	handle.interaction="switch",	#how should the interaction between the vertices analysed be handled:
 						# "switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]
-						# "switch2" - the same as above, only that each pair occours only once
+						# "switch1" - the same as above, only that each pair occurs only once
+						# "switch2" - an alias for switch
 						# "ignore" (diagonal) - Diagonal is ignored
 						# "none" - the matrix is used "as is"
 	use = "pairwise.complete.obs",	#for use with methods "cor" and "cov", for other methods (the default option should be used if handle.interaction=="ignore"), "pairwise.complete.obs" are always used, if stats.dist.cor.cov=TRUE
@@ -15,7 +16,9 @@ function(
 	... #other argumets passed to fun
 )
 {
+
 	method<-match.arg(method, choices=c("euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski","pearson", "kendall", "spearman","dist","cor", "cov", "default"))
+	if(handle.interaction=="switch2")handle.interaction<-"switch"
 	if(any(method=="default", fun=="default")){
 		if(all(method=="default", fun=="default")){
 			fun<-"dist"
@@ -44,7 +47,15 @@ function(
 	if(n!=dim(M)[2]) stop("This function is suited for one-mode networks only")
   if(fun %in% c("cor", "cov")) usearg<-list(use=use) else usearg<-NULL #usearg
 
-	if(handle.interaction %in% c("switch","switch2")){
+	if(handle.interaction %in% c("switch","switch1")){
+		if(fun=="cor"){
+			cor1<-function(...)cor(...)[1,2]
+			fun<-"cor1"
+		}
+		if(fun=="cov"){
+			cor1<-function(...)cov(...)[1,2]
+			fun<-"cov1"
+		}
 		X<-cbind(M,t(M))
 		n<-dim(M)[1]
 		res<-matrix(NA,ncol=n,nrow=n)
@@ -58,6 +69,7 @@ function(
 			if(fun.on.rows)Xij<-t(Xij)
 			res[i,j]<-do.call(fun,args=c(list(x=Xij, method=method,...),usearg))
 		}
+		if(handle.interaction=="switch1" & fun=="dist" & !(method%in%c("maximum","binary"))) res<-res*sqrt((n-1)/n)
 		res<-as.dist(res)
 	}else{
 		if(handle.interaction=="ignore") diag(M)<-NA

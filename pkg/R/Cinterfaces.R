@@ -1,5 +1,7 @@
+# to do - here and in C-functions --> put functional blocks before regular !!!
+
 cStatus<-list(
-    blockTypes=c("nul", "com", "reg", "cre", "rre", "avg", "dnc"), 
+    blockTypes=c("nul", "com", "cfn", "rfn", "reg", "cre", "rre", "avg", "dnc"), #add before average 
     regFuns=c("max","sum","mean"), 
     homFuns=c("ss", "ad"), 
     implementedApproaches=c("hom", "bin","val")
@@ -57,7 +59,9 @@ formatPreSpecM<-function(preSpecMorg,dB,blocks){
     if(is.null(preSpecMorg)){
         preSpecM <- array(as.double(NA),dim=dB)
     } else if (is.vector(preSpecMorg)){
-        if(length(preSpecMorg)==dB[2]){
+        if(length(preSpecMorg)==1){
+			preSpecM <- array(as.double(preSpecMorg),dim=dB)
+		} else if(length(preSpecMorg)==dB[2]){
             preSpecM <- array(as.double(NA),dim=dB)
             for(i in 1:dB[2]){
                 preSpecM[,i,,]<-as.double(preSpecMorg[i])
