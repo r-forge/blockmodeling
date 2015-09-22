@@ -84,7 +84,7 @@ formatPreSpecM<-function(preSpecMorg,dB,blocks){
 
 computeCombWeights<-function(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights){
     if(!is.null(combWeights)){
-        if(dim(combWeights)==dB) {
+        if(all(dim(combWeights)==dB)){
             combWeights<-array(as.double(combWeights),dim=dim(combWeights))
             return(combWeights)
         }
@@ -174,7 +174,11 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
 
     if(is.null(isSym)){
         isSym<-integer(dM[3])
-        for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
+        if(isTwoMode) {
+            isSym[]<-FALSE
+        } else {
+            for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
+        }
     } else if(len(isSym)==1) isSym<-rep(isSym, dM[1])
 
     if(isTwoMode)diag<-FALSE
