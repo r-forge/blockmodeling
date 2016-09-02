@@ -322,7 +322,7 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
         }
         
         clu<-unlist(clu)
-        if(dM[1]!=length(clu)|dM[1]!=length(clu)){
+        if(dM[1]!=length(clu)|dM[2]!=length(clu)){
             warning("Two (and more) mode networks implemented through one mode networks!\nOnly partition, network and blocks arguments are converted if needed!\nIf usePrespecVal and similar arguments are arrays they must be in appropriate format - one mode network with two-mode network in upper right quadrant")
             #currently two mode networks are treated as a special case of one mode networks where 3 "quadrants" of the network are filled with zeros
             oldM<-M

@@ -37,7 +37,13 @@ function(x=M, M=x, clu, ignore.diag = "default", FUN = "mean",sortNames=TRUE,...
                 B<-iM[clu[[1]] == i, clu[[2]] == j, drop = FALSE]
                 if (nmode==1 && i == j && dim(B)[1] > 1 && ignore.diag)
                 diag(B) <- NA
-                IM.V[iNet,i, j] <- do.call(FUN, list(x = B,...))#, na.rm = TRUE
+                lpar<-list(x = B,...)
+                FUNchar<-FUN
+                if(!is.character(FUNchar)) FUNchar<-deparse(substitute(FUN))
+                if(FUNchar %in% c("mean","sum","min","max")){
+                  if(!("na.rm"%in%names(lpar))) lpar<-c(lpar, list(na.rm=TRUE))
+                }
+                IM.V[iNet,i, j] <- do.call(FUN, lpar)#, na.rm = TRUE
             }
         }
     }

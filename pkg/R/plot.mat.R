@@ -25,8 +25,8 @@ function(
     print.axes.val=NULL,    #should the axes values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
     print.x.axis.val=!is.null(colnames(M)), #should the x axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
     print.y.axis.val=!is.null(rownames(M)), #should the y axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
-    x.axis.val.pos = 1.1, #y coordiante of the x axis values
-    y.axis.val.pos = -0.1,  #x coordiante of the y axis values
+    x.axis.val.pos = 1.01, #y coordiante of the x axis values
+    y.axis.val.pos = -0.01,  #x coordiante of the y axis values
     cex.main=par()$cex.main,
     cex.lab=par()$cex.lab,
     yaxis.line=-1.5,    #the position of the y axis (the argument 'line')
@@ -50,6 +50,13 @@ function(
     x1ParLine=1,
     y0ParLine=0,
     y1ParLine=1.1,
+	colByUnits=NULL, #a vector (of 0s and 1s) indicating whether ties of a unit should be marked with a diferent (nonblack) color - only used for binary networks 
+	colByRow=NULL, #a vector (of 0s and 1s) indicating whether outgoing ties of a unit should be marked with a different (nonblack) color - only used for binary networks
+	colByCol=NULL, #a vector (of 0s and 1s) indicating whether incoming ties of a unit should be marked with a different (nonblack) color - only used for binary networks
+    mulCol = 2,
+    joinColOperator = "+",
+    colTies=FALSE,
+    maxValPlot=NULL, # maximal value used for determining the color of cells in the plot. This value and all higher (in absolute terms) will produce a pure black/red color
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
@@ -59,6 +66,9 @@ function(
         IM<-IM[wIM,,]
     }
     tempClu<-clu
+	
+
+	
     if(length(dim(M))>2){
         if(!is.null(wnet)){
             relDim<-which.min(dim(M))
@@ -133,8 +143,12 @@ function(
 
     if(is.null(main)){
         objName<-deparse(substitute(M))
-            if(objName=="x")objName<-deparse(substitute(x))
+        if(objName[1]=="x"){
+                objName<-deparse(substitute(x))
+        } 
+        if(length(objName)>1)  objName=""
         main <- paste("Matrix",objName)
+		if(nchar(main)>50) main<-substr(main,1,50)
     }
     #if(length(main)>26)
 
@@ -221,13 +235,48 @@ function(
     ybottom<- ytop - 1/dm[1]
     xright <- rep(x=(1:dm[2])/dm[2],each=dm[1])
     xleft <- xright - 1/dm[2]
-    aM<-abs(M)
-    max.aM<-max(aM)
-    if(max.aM!=0){
-        col<-grey(1-as.vector(aM)/max.aM)   #definin the color of rectangules
-    }else col<-matrix(grey(1),nrow=dm[1],ncol=dm[2])
-    asp<-dm[1]/dm[2]    #making sure that the cells are squares
-    col[M<0]<-paste("#FF",substr(col[M<0],start=4,stop=7),sep="")
+  
+   if(all(M %in% c(0,1))){
+#       browser()
+            mulCol<-mulCol
+        if(is.null(colByRow)&is.null(colByCol)) {
+            colByRow<-colByCol<-colByUnits
+        } else {
+            if(is.null(colByRow)){
+                colByRow<-rep(0, length(colByCol))
+                mulCol<-1
+            }
+            if(is.null(colByCol)){
+                colByCol<-rep(0, length(colByRow))
+            }
+            colByUnits<-TRUE
+        }
+        
+        col<-M
+        if(all(col %in% c(0,1))& (!is.null(colByUnits))){
+            newCol<-outer(colByRow,colByCol*mulCol,FUN=joinColOperator)
+            if(!is.null(clu)) newCol<-newCol[or.r,or.c]
+            if(colTies){
+                col[M>0]<-col[M>0]+newCol[M>0]
+            }else{
+                newCol[newCol>0]<-newCol[newCol>0]+1
+                col[M==0]<-col[M==0]+newCol[M==0]
+            }
+        }        
+    } else {
+        aM<-abs(M)
+        if(!is.null(maxValPlot)){
+          aM[aM>maxValPlot]<-maxValPlot
+        }
+        max.aM<-max(aM)
+        aMnorm<-as.vector(aM)/max.aM
+        if(max.aM!=0){
+            col<-grey(1-aMnorm)   #definin the color of rectangules
+        }else col<-matrix(grey(1),nrow=dm[1],ncol=dm[2])
+        col[M<0]<-paste("#FF",substr(col[M<0],start=4,stop=7),sep="")
+    }
+
+    asp<-dm[1]/dm[2]    #making sure that the cells are squares	
 
     par(mar=mar, xpd=NA)    #ploting
     plot.default(c(0,1),c(0,1),type="n",axes=FALSE,ann=F,xaxs="i",asp=asp,...)
@@ -246,7 +295,7 @@ function(
     title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
     if(print.val){  #ploting the values in the cells if selected
         norm.val<-as.vector(M)/max(abs(M))
-        col.text<-1-round(abs(norm.val))
+        col.text<-1-round(aMnorm)
 
         if(!print.0) col.text[as.vector(M)==0]<-0
 
@@ -328,6 +377,7 @@ function(
         objName<-deparse(substitute(M))
         if(objName=="x")objName<-deparse(substitute(x))
         main.title <- paste("Matrix",objName)
+		if(nchar(main)>50) main<-substr(main,1,50)
     }
     dM<-dim(M)
     relDim<-which.min(dM)
