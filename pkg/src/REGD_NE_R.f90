@@ -1,6 +1,6 @@
 ! REGDI.FOR 3/18/85 - DOUG WHITE'S REGULAR DISTANCES PROGRAM
       subroutine regdne(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, CM, Row, Col
+      DOUBLE PRECISION   R, B, DEG, SUM, CM, Row, Col, SUMM
       INTEGER NR, N, ITER, KR, JJ, II
       DIMENSION  DEG (N), SUM (N,N), R (N,N, NR), B (N,N), Row(N), Col(N)
 

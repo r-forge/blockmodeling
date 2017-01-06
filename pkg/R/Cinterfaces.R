@@ -146,6 +146,8 @@ formatUsePreSpecM<-function(usePreSpecMorg,preSpecM,dB,blocks){
 }
 
 
+
+########## warning -- this functions needs to be corrected to be more similar to optParC and optRandParC
 critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, rowCluChange=c(0,0), colCluChange=c(0,0), sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, save.initial.param=TRUE,relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, returnEnv=FALSE){
     if(save.initial.param){
         initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
@@ -160,8 +162,20 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     if(!is.list(clu))clu<-list(clu,clu)
     orgClu<-clu
     clu<-lapply(clu,function(x)as.integer(as.factor(x)))
-    nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
+    nUnitsInRCclu<-{
+        lapply(clu,function(x)as.integer(table(x)))
     nRCclu<-sapply(nUnitsInRCclu,length)
+
+    if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
+    if(nMode>1){
+        tmNclu<-sapply(clu,max)
+        for(iMode in 2:nMode){
+            clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+        }
+        
+        clu<-unlist(clu)    
+    }
+        
     rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
     for(i in clu[[1]]){
         rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==i)-1)
@@ -218,6 +232,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
             for(i in 1:dM[3]){
                 blocksArr[1,i,,]<-blocks
             }
+            blocks <- blocksArr
         } else stop("array ('blocks' argument) has a wrong number of dimmensions")
     }
     dB<-dim(blocks)

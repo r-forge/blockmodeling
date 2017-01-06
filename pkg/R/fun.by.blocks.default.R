@@ -35,8 +35,8 @@ function(x=M, M=x, clu, ignore.diag = "default", FUN = "mean",sortNames=TRUE,...
         for (i in k[[1]]) {
             for (j in k[[2]]) {
                 B<-iM[clu[[1]] == i, clu[[2]] == j, drop = FALSE]
-                if (nmode==1 && i == j && dim(B)[1] > 1 && ignore.diag)
-                diag(B) <- NA
+                if (nmode==1 && i == j &&  ignore.diag) diag(B) <- NA
+                #removed "dim(B)[1] > 1 &&" from condition above - produces NA's in IM in the diagonal blocks in case of dimension 1x1
                 lpar<-list(x = B,...)
                 FUNchar<-FUN
                 if(!is.character(FUNchar)) FUNchar<-deparse(substitute(FUN))

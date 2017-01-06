@@ -7,9 +7,13 @@ ircNorm<-function(M,eps=10^-12,maxiter=1000){
 	tmpM<-list(M,M)
 	while(diffM(M)>eps){
 		i=i+1
-		M<-sweep(M, side, apply(M, side, sum),FUN="/")	
-		M[is.nan(M)]<-0
-		if(max(c(M-tmpM[[side]])^2)<eps) break
+		sums<-apply(M, side, sum)
+		sums[sums==0]<-1
+		M<-sweep(M, side, sums,FUN="/")
+		if(max(c(M-tmpM[[side]])^2)<eps) {
+		    warning("The covergence (in terms of row/column sums beeing equal to 1 not possible. Covergence reach in terms of stability of matrix after each transformation.")
+		    break
+		}
 		tmpM[[side]]<-M
 		side<-3-side	
 		if(i>=maxiter){

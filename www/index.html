@@ -4,7 +4,7 @@
   <head>
     <link rel="stylesheet" type="text/css" href="stil.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="blockmodeling - An R package for Generalized and classical blockmodeling of valued networks">
+    <meta name="description" content="blockmodeling - An R Package for Generalized and Classical Blockmodeling of Valued Networks">
     <meta name="keywords" content="blockmodeling, valued blockmodeling, generalized blockmodeling, R-project, R package, valued networks">
     <title>blockmodeling</title>
   </head>
@@ -12,7 +12,7 @@
 <body>
 <table width="100%">
  <tbody><tr>
-  <td colspan="2" class="naslov"><B><CODE>blockmodeling</CODE></B><br /> &nbsp; <small>An R package for Generalized and classical blockmodeling of valued networks</small></td>
+  <td colspan="2" class="naslov"><B><CODE>blockmodeling</CODE></B><br /> &nbsp; <small>An R Package for Generalized and Classical Blockmodeling of Valued Networks</small></td>
 
  </tr>
 
@@ -32,29 +32,31 @@
 <p /><br />
 <span class="podpodnaslov">Basic description</span>
 <br />
-The package <CODE>blockmodeling</CODE> is primarily meant as an implementation of Generalized blockmodeling for valued networks. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided.
+The package <CODE>blockmodeling</CODE> is primarily meant as an implementation of Generalized blockmodeling for valued networks. It aslo supports multirelational and multilevel blockmodeling. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided. 
 <p />
-This is an early testing version, which probably includes numerous bugs. If you find one (or more), please report to:
+If you find any bugs, please report to:
 email: ales{dot}ziberna{at}gmail{dot}com <br/>
 <p /><br />
 
 <span class="podpodnaslov">Warning</span>
 <p />
-Some functions are extremely slow. They are practically unusable for networks with more than 30 units and 4 groups (AMD Athlon 1600 XP-M). These are: <CODE>opt.these.par</CODE>,<CODE> opt.random.par</CODE>, <CODE>check.these.par</CODE> (if there is a very large number of partitions). However, sum of squares homogeneity blockmodeling is relatively fast (also when used with above functions) when used with complete blocks only (structural equivalence). Networks with more than 100 units (in each more for two-mode data) can be analyzed in reasonable time (few hours).
+The version of the package available on CRAN is very old and is not really useful for generalzed blockmodeling (it is OK for indirect approaches). In this version, some functions are extremely slow. They are practically unusable for networks with more than 30 units and 4 groups (AMD Athlon 1600 XP-M). These are: <CODE>opt.these.par</CODE>,<CODE> opt.random.par</CODE>, <CODE>check.these.par</CODE> (if there is a very large number of partitions). However, sum of squares homogeneity blockmodeling is relatively fast (also when used with above functions) when used with complete blocks only (structural equivalence). Networks with more than 100 units (in each more for two-mode data) can be analyzed in reasonable time (few hours).
 <p />
-The latest version (only available on Rforge) however includes functions written in C (mainly <CODE>optParC</CODE>, <CODE>optParMultiC</CODE> and <CODE>optRandomParC</CODE>) which are therefore much faster. Using them analysis of networks with approximately 100 units is feasible (more if you are patient). However, as these have no help-files yet available, they are not included in the CRAN version. Please e-mail me if you need help using them.
+The latest version (only available on Rforge) however supports parallel computing and includes functions written in C (mainly <CODE>optParC</CODE>, <CODE>optParMultiC</CODE> and <CODE>optRandomParC</CODE>) which are therefore much faster. Using them analysis of networks with approximately 200 units is feasible (more if you are patient). However, as these have no help-files yet available, they are not included in the CRAN version. Please e-mail me if you need help using them.
 <p /><br />
 
 
 <span class="podpodnaslov">Downloads</span>
 <p />
-Version 0.1.8 is available on <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a>. However, this version might not include some patches or bug fixes. For the latest version it is advised to use the <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> repository. The <CODE>blockmodeling</CODE> package can be therefore now be instaled using <CODE>install.packages</CODE> using the <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a> repository by typing within R:
+The lates version (which does includes the latest upgrades and bug fixes) is available on <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> repository. The <CODE>blockmodeling</CODE> package can be therefore now be instaled using <CODE>install.packages</CODE> using the <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a> repository by typing within R:
 <br /><b><CODE>install.packages("blockmodeling")</CODE></b>
 <p />
-The latest version (which does include the latest patches and bug fixes) can also be downloaded from <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a>. The package here is build during the night. There the package is available in 2 formats: Package source (.tar.gz) and Windows binary (.zip).
+The this version can also be downloaded from <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a>. The package here is build during the night. There the package is available in 2 formats: Package source (.tar.gz) and Windows binary (.zip).
 <br />To install the package from <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> directly within R type:
 <br /><b><CODE>install.packages("blockmodeling",repos="http://R-Forge.R-project.org")</CODE></b>
 <p />
+
+Version 0.1.8 is available on <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a>. However, this version is very old and does not include  patches, upgrades or bug fixes. 
 Some old versions are also available <a href="http://www2.arnes.si/~aziber4/blockmodeling/pkgs/">here</a>, however mostly only as Package source and Windows binary.
 <p /><br />
 
@@ -83,9 +85,13 @@ WHITE, Douglas R.(2005): REGGE (web page). <a href="http://eclectic.ss.uci.edu/~
 <p />
 ŽIBERNA, Aleš (2008): Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, vol. 32, no. 1, p. 57-84.  [<a href="http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207">http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207</a>]
 <p />
-Žiberna, A. (2009):  Evaluation of Direct and Indirect Blockmodeling of Regular Equivalence in Valued Networks by Simulations. Metodološki zvezki 6(2), 99–134. [<a href="http://www.stat-d.si/mz/mz6.1/ziberna.pdf">http://www.stat-d.si/mz/mz6.1/ziberna.pdf</a>]
+ŽIBERNA, Aleš (2009):  Evaluation of Direct and Indirect Blockmodeling of Regular Equivalence in Valued Networks by Simulations. Metodološki zvezki 6(2), 99–134. [<a href="http://www.stat-d.si/mz/mz6.1/ziberna.pdf">http://www.stat-d.si/mz/mz6.1/ziberna.pdf</a>]
 <p />
-Žiberna, A. (2013):  Generalized Blockmodeling of Sparse Networks. <a href="http://www.stat-d.si/mz/Articles2013.html"> Metodološki zvezki 10(2) (use this link to find supplementary materials)</a>, 99–119. [<a href="http://www.stat-d.si/mz/mz10.1/Ziberna2013.pdf">http://www.stat-d.si/mz/mz10.1/Ziberna2013.pdf</a>]
+ŽIBERNA, Aleš (2013):  Generalized Blockmodeling of Sparse Networks. <a href="http://www.stat-d.si/mz/Articles2013.html"> Metodološki zvezki 10(2) (use this link to find supplementary materials)</a>, 99–119. [<a href="http://www.stat-d.si/mz/mz10.1/Ziberna2013.pdf">http://www.stat-d.si/mz/mz10.1/Ziberna2013.pdf</a>]
+<p />
+ŽIBERNA, Aleš (2014): Blockmodeling of Multilevel Networks. Social Networks 39 (October): 46–61.[<a href="http://dx.doi.org/10.1016/j.socnet.2014.04.002">http://dx.doi.org/10.1016/j.socnet.2014.04.002</a>]. <a href="https://arxiv.org/abs/1405.5978">arXiv - Author accepted manuscript</a
+<p />
+ŽIBERNA, Aleš, LAZEGA, Emmanuel (2016): Role Sets and Division of Work at Two Levels of Collective Agency: The Case of Blockmodeling a Multilevel (Inter-Individual and Inter-Organizational) Network. In Multilevel Network Analysis for the Social Sciences, edited by Emmanuel Lazega and Tom A. B. Snijders, 173–209. Methodos Series 12. Springer International Publishing. [<a href="http://dx.doi.org/10.1007/978-3-319-24520-1_8">http://dx.doi.org/10.1007/978-3-319-24520-1_8</a>].
 <p />
 
 <!-- Site Meter -->

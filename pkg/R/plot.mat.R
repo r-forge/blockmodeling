@@ -46,10 +46,10 @@ function(
     blackdens=70,
     plotLines = FALSE, #Should the lines in the matrix be printed (best set to FALSE for larger networks)
     frameMatrix=TRUE, #Should the matrix be framed (if plotLines is FALSE)
-    x0ParLine=-0.1,
-    x1ParLine=1,
-    y0ParLine=0,
-    y1ParLine=1.1,
+    x0ParLine=-0.1, #x coordinates for lines between row clusters
+    x1ParLine=1, #x coordinates for lines between row clusters
+    y0ParLine=0, #y coordinates for lines between col clusters
+    y1ParLine=1.1, #y coordinates for lines between col clusters
 	colByUnits=NULL, #a vector (of 0s and 1s) indicating whether ties of a unit should be marked with a diferent (nonblack) color - only used for binary networks 
 	colByRow=NULL, #a vector (of 0s and 1s) indicating whether outgoing ties of a unit should be marked with a different (nonblack) color - only used for binary networks
 	colByCol=NULL, #a vector (of 0s and 1s) indicating whether incoming ties of a unit should be marked with a different (nonblack) color - only used for binary networks
