@@ -162,8 +162,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     if(!is.list(clu))clu<-list(clu,clu)
     orgClu<-clu
     clu<-lapply(clu,function(x)as.integer(as.factor(x)))
-    nUnitsInRCclu<-{
-        lapply(clu,function(x)as.integer(table(x)))
+    nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
     nRCclu<-sapply(nUnitsInRCclu,length)
 
     if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
