@@ -57,6 +57,8 @@ function(
     joinColOperator = "+",
     colTies=FALSE,
     maxValPlot=NULL, # maximal value used for determining the color of cells in the plot. This value and all higher (in absolute terms) will produce a pure black/red color
+	  printMultipliedMessage = TRUE, # shold mutiplication message be printed when values were the printed tie values are multiplied
+	  replaceNAdiagWith0=TRUE, #Should the diagonal with only NAs be replace by 0s?
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
@@ -139,7 +141,8 @@ function(
             M<-as.matrix(M)
         }
     }
-
+  
+    if(replaceNAdiagWith0 & all(is.na(diag(M)))) diag(M)<-0
 
     if(is.null(main)){
         objName<-deparse(substitute(M))
@@ -322,7 +325,7 @@ function(
         M.plot<-round(M*multi)
 
         text(x=(xleft+xright)/2+val.x.coor.cor,y=(ytop+ybottom)/2+val.y.coor.cor, labels=as.vector(M.plot),col=col.text,cex=ifelse(cex.val=="default",min(10/max(dm),1),cex.val))
-        if(multi!=1) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
+        if(multi!=1 & printMultipliedMessage) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
     }
 
     if(plot.legend){    #ploting the legend if selected
