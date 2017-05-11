@@ -165,15 +165,15 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
     nRCclu<-sapply(nUnitsInRCclu,length)
 
-    if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
-    if(nMode>1){
-        tmNclu<-sapply(clu,max)
-        for(iMode in 2:nMode){
-            clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
-        }
+    # if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
+    # if(nMode>1){
+        # tmNclu<-sapply(clu,max)
+        # for(iMode in 2:nMode){
+            # clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+        # }
         
-        clu<-unlist(clu)    
-    }
+        # clu<-unlist(clu)    
+    # }
         
     rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
     for(i in clu[[1]]){
