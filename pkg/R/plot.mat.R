@@ -298,6 +298,7 @@ function(
     title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
     if(print.val){  #ploting the values in the cells if selected
         norm.val<-as.vector(M)/max(abs(M))
+        aMnorm<-abs(norm.val)
         col.text<-1-round(aMnorm)
 
         if(!print.0) col.text[as.vector(M)==0]<-0
@@ -380,7 +381,7 @@ function(
         objName<-deparse(substitute(M))
         if(objName=="x")objName<-deparse(substitute(x))
         main.title <- paste("Matrix",objName)
-		if(nchar(main)>50) main<-substr(main,1,50)
+		if(nchar(main.title)>50) main.title<-substr(main.title,1,50)
     }
     dM<-dim(M)
     relDim<-which.min(dM)

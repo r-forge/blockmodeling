@@ -1,5 +1,7 @@
 "err" <-
 function(res,...){
-	res$best[[1]]$err
+  if(is.null(res[["best"]])){
+    min(res$err)
+  }else res$best[[1]]$err
 }
 
