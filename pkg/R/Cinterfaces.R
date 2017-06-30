@@ -539,7 +539,7 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
 #    }
     res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),list(resC=resC))
     class(res)<-"optPar"
-
+    return(res)
 }
 
 
