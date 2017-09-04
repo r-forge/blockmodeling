@@ -774,7 +774,8 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         warning(resC$sameErr , " partitions with the same error were found. Only ",maxPar," partitions are returned!")
     }
     res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),list(bestRowParMatrix=bestRowParMatrix), list(resC=resC))
-
+	class(res)<-"optPar"
+    return(res)
 }
 
 
