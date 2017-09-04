@@ -31,6 +31,7 @@ S3method(plot,opt.more.par)
 S3method(plot,opt.more.par.mode)
 S3method(plot,opt.par)
 S3method(plot,opt.par.mode)
+S3method(plot,optPar)
 
 S3method(fun.by.blocks,opt.more.par)
 S3method(fun.by.blocks,default)
