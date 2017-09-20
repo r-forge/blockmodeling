@@ -99,7 +99,7 @@ computeCombWeights<-function(combWeights, dB, blocks, relWeights, posWeights, bl
     for(i in 1:dB[2]){
         combWeights[,i,,]<-combWeights[,i,,]*relWeights[i]
     }
-    posWeights<-as.double(posWeights)
+    posWeights<-array(as.double(posWeights), dim=dim(posWeights))
     if(all(dim(posWeights)!=dB[3:4])){
         if(length(posWeights)==1) posWeights<-array(posWeights,dim=dB[3:4]) else stop("To posWeights should have the same dimensions as block image!")  
     }
