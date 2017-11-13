@@ -42,7 +42,7 @@ function(
     wnet=NULL,      #which net (if more) should be ploted - used if M is an array
     wIM=NULL,   #which IM (if more) should be used for ploting (defualt = wnet) - used if IM is an array
     use.IM=length(dim(IM))==length(dim(M))|!is.null(wIM),   #should IM be used for ploting?
-    dens.leg=c(null=100),
+    dens.leg=c(null=100, nul=100),
     blackdens=70,
     plotLines = FALSE, #Should the lines in the matrix be printed (best set to FALSE for larger networks)
     frameMatrix=TRUE, #Should the matrix be framed (if plotLines is FALSE)
@@ -282,7 +282,7 @@ function(
     asp<-dm[1]/dm[2]    #making sure that the cells are squares	
 
     par(mar=mar, xpd=NA)    #ploting
-    plot.default(c(0,1),c(0,1),type="n",axes=FALSE,ann=F,xaxs="i",asp=asp,...)
+    plot.default(c(0,1),c(0,1),type="n",axes=FALSE,ann=FALSE,xaxs="i",asp=asp,...)
   if(is.null(IM.dens)||all(IM.dens==-1)){
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,border=if(plotLines)"black" else NA)
   }else{
