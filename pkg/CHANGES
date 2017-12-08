@@ -1,6 +1,12 @@
 Name: blockmodeling
 Title: An R package for generalized and classical blockmodeling of valued networks
-Version: 0.2.2
+Version: 0.2.3
+
+
+2017
+December 8, 2017
+Merged optParMultiC and optParC in to optParC. 
+Added formating to returned clu from these functions.
 
 2017
 June 30, 2017

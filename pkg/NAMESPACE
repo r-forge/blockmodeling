@@ -2,8 +2,8 @@ useDynLib(blockmodeling)
 
 #importFrom(sna, gplot)
 
-export(critFunC, optParC) #basic front end functions for interface with C
-export(optParMultiC, optRandomParC, parArr2VecC, parVec2ArrC) #experimental front end functions for interface with C
+export(critFunC, optParC, optRandomParC) #basic front end functions for interface with C
+#export(parArr2VecC, parVec2ArrC) #experimental front end functions for interface with C
 export(check.these.par, crit.fun, opt.par, opt.random.par, opt.these.par) #basic front end functions
 export(genRandomPar) 
 export(plot.mat,plot.mat.nm,plot.array)

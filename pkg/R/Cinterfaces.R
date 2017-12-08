@@ -597,7 +597,7 @@ genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the oth
 probGenMech = NULL),    #Here the probabilities for different mechanizems for specifying the partitions are set. If not set this is determined based on the previous parameter.
 maxTriesToFindNewPar=rep*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
 skip.par = NULL, #partitions to be skiped
-useOptParMultiC = FALSE # For backward compatibility. May be removed soon. See next argumetent.
+useOptParMultiC = FALSE, # For backward compatibility. May be removed soon. See next argumetent.
 useMulti = useOptParMultiC, #Should the "Multi" vesrsion of the optParC functions be used? Defaults to FALSE, which is usually faster, but in a sense not so thorough.
 printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
 n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)

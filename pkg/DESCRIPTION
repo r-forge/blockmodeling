@@ -1,8 +1,8 @@
 Package: blockmodeling
 Type: Package
 Title: An R package for generalized and classical blockmodeling of valued networks
-Version: 0.2.2
-Date: 2013-05-07
+Version: 0.2.3
+Date: 2017-12-08
 Imports: stats 
 Suggests: sna, Matrix, doParallel, doRNG
 Author: Aleš Žiberna
