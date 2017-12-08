@@ -315,8 +315,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
 }
 
 
-
-optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){
+optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){
 
     if(save.initial.param){
         initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
@@ -349,236 +348,6 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,
     }
     
     if(!is.list(clu))clu<-list(clu,clu)
-    clu<-lapply(clu,function(x)as.integer(as.factor(x)))
-    nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
-    nRCclu<-sapply(nUnitsInRCclu,length)
-    rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
-    for(i in 1:nRCclu[1]){
-        rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==i)-1)
-    }
-    colParArr<-matrix(as.integer(0),nrow=dM[2],ncol=nRCclu[2])
-    for(i in 1:nRCclu[2]){
-        colParArr[1:nUnitsInRCclu[[2]][i],i]<-as.integer(which(clu[[2]]==i)-1)
-    }
-
-    if(exchageClusters=="all"){
-        if(nMode>1){
-            exchageClusters=matrix(as.integer(0),nrow=nRCclu[1],ncol=nRCclu[2])
-            
-            tmp<-c(0,tmNclu)
-            for(imodeNclu in seq_along(tmNclu)){
-                tmpInd<-(sum(tmp[1:imodeNclu])+1):sum(tmNclu[1:imodeNclu])
-                exchageClusters[tmpInd,tmpInd]=as.integer(1)
-            }
-        } else{
-            exchageClusters=matrix(as.integer(1),nrow=nRCclu[1],ncol=nRCclu[2])
-        }
-    }
-    
-    if(is.null(isSym)){
-        isSym<-integer(dM[3])
-        for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
-    } else if(len(isSym)==1) isSym<-rep(isSym, dM[3])
-
-    #if(isTwoMode)diag<-FALSE #not needed as two mode netowrks are implemented through one-mode networks
-    if(length(diag)!=dM[3]) diag<-rep(diag[1], dM[3])
-    if(length(approaches)!=dM[3]&&(length(approaches)==1)) approaches<-rep(approaches[1], dM[3])
-
-    if(is.list(blocks)){
-        if(length(blocks)!=dM[3]) stop("the number of relations implied by 'blocks' and by 'M' does not match")
-        maxBlockTypes<- max(sapply(blocks,length))
-        blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-        for(i in 1:dM[3]){
-            nBT<-length(blocks[[i]])
-            blocksArr[1:nBT,i,,]<-array(blocks[[i]],dim=c(nBT,nRCclu))
-        }
-        blocks <- blocksArr
-    } else if(is.vector(blocks)){
-        maxBlockTypes<-length(blocks)
-        blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-        blocksArr[1:length(blocks),,,]<-blocks
-        blocks <- blocksArr
-    } else if(!is.array(blocks)){
-        stop("'blocks' argument should be a vector, a list or an array with appropriate dimmensions")
-    }else {
-        if(length(dim(blocks))==4){
-            maxBlockTypes<-dim(blocks)[1]
-            if(any(dim(blocks)!=c(maxBlockTypes,dM[3],nRCclu))){
-                if(nMode==2){
-                    oldBlocks<-blocks
-                    blocks<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-                    blocks[,,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-oldBlocks
-                    blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
-                    blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-                    if(any(dim(blocks)!=c(maxBlockTypes,dM[3],nRCclu))) stop("array ('blocks' argument) has a wrong dimensions of dimensions")    
-                } else stop("array ('blocks' argument) has a wrong dimensions of dimensions")
-            }
-        } else if(length(dim(blocks))==3){
-            maxBlockTypes<-dim(blocks)[1]
-            blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))      
-            if(nMode==2){
-                for(i in 1:dM[3]){
-                    blocksArr[,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks 
-                }
-            } else {
-                for(i in 1:dM[3]){
-                    blocksArr[,i,,]<-blocks 
-                }
-            }
-            blocks <- blocksArr
-            if(nMode==2){
-                blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
-                blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-            }
-            
-        } else if(length(dim(blocks))==2){
-            maxBlockTypes<-1
-            blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-            if(nMode==2){
-                for(i in 1:dM[3]){
-                    blocksArr[1,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks
-                }
-            }else {
-                for(i in 1:dM[3]){
-                    blocksArr[1,i,,]<-blocks
-                }
-            }
-            blocks<-blocksArr
-            if(nMode==2){
-                blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
-                blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-            }
-        } else stop("array ('blocks' argument) has a wrong number of dimmensions")
-    }
-
-
-    
-    dB<-dim(blocks)
-
-    if(dB[2]!=dM[3])stop("the number of relations implied by 'blocks' and by 'M' does not match")
-    if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")
-    nBlockTypeByBlock<-apply(!is.na(blocks),c(2,3,4),sum)
-    blocks[blocks=="null"]<-"nul"
-	blocks[blocks=="den"]<-"avg"
-
-    if(is.null(IM)){
-        IM<-array(as.integer(99),dim=dB[2:4])
-    }else if (length(dim(IM))==2){
-        IM<-array(as.integer(factor(IM,levels=cStatus$blockTypes))-as.integer(1),dim=c(dM[3],nRCclu))
-    }else{
-        IM<-array(as.integer(factor(IM,levels=cStatus$blockTypes))-as.integer(1),dim=dim(IM))
-    }
-
-    if(is.null(EM)){
-        EM<-array(as.double(Inf),dim=dB[2:4])
-    } else EM<-array(as.double(EM),dim=dim(EM))
-    if(is.null(Earr)){
-        Earr<-array(as.double(Inf),dim=dB)
-    }else Earr<-array(as.double(Earr),dim=dim(Earr))
-    
-    if(length(homFun)==1 & dM[3]>1) homFun<-rep(homFun,dM[3])
-    homFun<-as.integer(factor(homFun,levels=cStatus$homFuns))-as.integer(1)
-    
-    regFun<-as.integer(factor(regFun,levels=cStatus$regFuns))-as.integer(1)
-    if(is.vector(regFun)){
-        if(length(regFun)==1){
-            regFun <- array(as.integer(regFun),dim=dB)
-        }else if (dB[2]==1){
-            if(length(regFun)==dB[1]){
-                regFunArr <- array(as.integer(NA),dim=dB)
-                regFunArr[,,,]<-regFun
-                regFun<-regFunArr
-            } else stop("'regFun' is a vector of unapropriate length")
-        } else if(length(regFun)==dB[2]){
-                regFunArr <- array(as.integer(NA),dim=dB)
-                regFunArr[,,,]<-regFun
-                regFun<-regFunArr
-        } else stop("'regFun' is a vector of unapropriate length")
-    } else if(is.array(regFun)){
-        if(dim(regFun)!=dB){
-            stop("'regFun' is an array - dimensions of 'regFun' and 'blocks' do not match")
-        }
-    } else stop("'regFun' is neither a vector or an array")
-
-    preSpecM<-formatPreSpecM(preSpecMorg=preSpecM,dB=dB,blocks=blocks)
-    usePreSpecM<-formatUsePreSpecM(usePreSpecMorg=usePreSpecM,preSpecM=preSpecM,dB=dB,blocks=blocks)
-
-    if(any(approaches=="bin") && (!all(M[,,approaches=="bin"] %in% c(0,1)))){
-        for(i in 1:length(approaches)){
-            if(approaches[i]=="bin"){
-                if(!all(M[,,i] %in% c(0,1))){
-                    tmpPreSpecM<-preSpecM[,i,,]
-                    if(all(is.na(tmpPreSpecM))){
-                        M[,,i]<-(M[,,i]>0)*1
-                    } else if(all(tmpPreSpecM==tmpPreSpecM[1,1,1])){
-                        M[,,i]<-(M[,,i]>=tmpPreSpecM[1,1,1])*1
-                    } else stop("Relation ",i," is not binary but suplied to binary blockmodeling without suitable value in 'preSpec'!",sep="")
-                }
-            }
-        }
-    }
-    approaches <- as.integer(factor(approaches,levels=cStatus$implementedApproaches))-as.integer(1)
-
-    
-    M<-apply(M,c(2,3),as.double)
-    
-    combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
-    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
-    
-    resC<-.C("optPar", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-    , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters, NAOK=TRUE)
-    
-    
-#    if(isTwoMode){ # not needed as two-mode networks are implementer through onemode networks
-#        clu<- list(
-#            parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus), 
-#            parArrOne2clu(nUnitsClu=resC$nUnitsColClu, parArr=resC$colParArr, nClus=resC$nColClus)
-#        )
-#    } else {
-        clu<- parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus)
-#    }
-    res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),list(resC=resC))
-    class(res)<-"optPar"
-    return(res)
-}
-
-
-
-
-optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",maxPar=50,save.initial.param=TRUE){
-
-    if(save.initial.param){
-        initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
-    }else initial.param<-NULL
-    
-
-    if(length(dim(M))==2) M<-array(M,dim=c(dim(M),length(approaches)))
-    dM<-dim(M)
-    if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
-    
-    if(nMode>1){
-        tmN<-sapply(clu,length)
-        clu<-lapply(clu,function(x)as.integer(as.factor(x)))
-        tmNclu<-sapply(clu,max)
-        for(iMode in 2:nMode){
-            clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
-        }
-        
-        clu<-unlist(clu)
-        if(dM[1]!=length(clu)|dM[1]!=length(clu)){
-            warning("Two (and more) mode networks implemented through one mode networks!\nOnly partition, network and blocs arguments are converted if needed!\nIf usePrespecVal and similar arguments are arrays they must be in appropriate format - one mode network with two-mode network in upper right quadrant")
-            #currently two mode networks are treated as a special case of one mode networks where 3 "quadrants" of the network are filled with zeros
-            oldM<-M
-            oldDM<-dim(oldM)
-            nUnitsTmp<-length(clu)
-            M<-array(0,dim=c(nUnitsTmp,nUnitsTmp,length(approaches)))
-            M[1:oldDM[1],((oldDM[1]+1):nUnitsTmp),]<-oldM
-            dM<-dim(M)
-        }
-    }
-    
-    
-    if(!is.list(clu))clu<-list(clu,clu)
     clu<-lapply(clu,function(x)as.integer(as.factor(x))-as.integer(1))
     nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
     nRCclu<-sapply(nUnitsInRCclu,length)
@@ -604,7 +373,7 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
             exchageClusters=matrix(as.integer(1),nrow=nRCclu[1],ncol=nRCclu[2])
         }
     }
-       
+    
     if(is.null(isSym)){
         isSym<-integer(dM[3])
         for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
@@ -681,7 +450,6 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         } else stop("array ('blocks' argument) has a wrong number of dimmensions")
     }
     
-    
     dB<-dim(blocks)
 
     if(dB[2]!=dM[3])stop("the number of relations implied by 'blocks' and by 'M' does not match")
@@ -751,13 +519,26 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     M<-apply(M,c(2,3),as.double)
     
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
-    blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
+	blocks<-array(as.integer(factor(blocks,levels=cStatus$blockTypes)),dim=dim(blocks))-as.integer(1)
 
-    bestColParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[2])
-    bestRowParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[1])
+																	 
+																	 
     
-    resC<-.C("optParMulti", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-    , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix, NAOK=TRUE)
+	if(useMulti){		
+		bestColParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[2])
+		bestRowParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[1])
+		
+		resC<-.C("optParMulti", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
+		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix, NAOK=TRUE)
+        clu<- resC$rowPar
+    
+	} else{	
+		resC<-.C("optPar", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
+		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters, NAOK=TRUE)
+		
+		clu<- parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus)
+	}
+    
     
 #    if(isTwoMode){ # not needed as two-mode networks are implementer through onemode networks
 #        clu<- list(
@@ -765,19 +546,26 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
 #            parArrOne2clu(nUnitsClu=resC$nUnitsColClu, parArr=resC$colParArr, nClus=resC$nColClus)
 #        )
 #    } else {
-        clu<- resC$rowPar
+# This (under else) is moved up in to the if(useMulti), as it differs for both functions optPar C functions. Most likely, the below code could be used for both, but is not tested.
+#        clu<- parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus)
 #    }
-    if(resC$sameErr < 50){
-        bestRowParMatrix<-resC$bestRowParMatrix[,(1:(resC$sameErr)),drop=FALSE]
-    } else {
-        bestRowParMatrix<-resC$bestRowParMatrix[,(1:maxPar)]
-        warning(resC$sameErr , " partitions with the same error were found. Only ",maxPar," partitions are returned!")
-    }
-    res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),list(bestRowParMatrix=bestRowParMatrix), list(resC=resC))
-	class(res)<-"optPar"
+
+# this is new and experimental
+    if(nMode>1){
+ 		clu<-split(clu, f = rep(1:length(tmN),times=tmN))
+		clu<-lapply(clu,function(x)as.integer(as.factor(x)))
+        tmNclu<-sapply(clu,max)
+        for(iMode in 2:nMode){
+            clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+        }
+	} else clu<-as.integer(as.factor(clu))
+													   
+													   
+													   
+    res<-c(list(M=M), resC[c("err","EM","Earr","sameErr")], list(IM=IMaddNames(resC$IM)), clu=list(clu), initial.param, list(call=match.call()),if(useMulti)list(bestRowParMatrix=bestRowParMatrix),list(resC=resC))
+    class(res)<-"optPar"
     return(res)
 }
-
 
 
 
@@ -793,8 +581,8 @@ optParMultiC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
 k,#number of clusters/groups
 rep,#number of repetitions/different starting partitions to check
 save.initial.param=TRUE,  #save the initial parametrs of this call
-save.initial.param.opt=FALSE,  #save the initial parametrs for calls to optParC or optParMultiC
-deleteMs=TRUE, #delete networks/matrices from results of optParC or optParMultiC to save space
+save.initial.param.opt=FALSE,  #save the initial parametrs for calls to optParC
+deleteMs=TRUE, #delete networks/matrices from results of optParC
 max.iden=10, #the maximum number of results that should be saved (in case there are more than max.iden results with minimal error, only the first max.iden will be saved)
 switch.names=NULL,#should partitions that only differ in group names be considert equal (is c(1,1,2)==c(2,2,1))
 return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
@@ -809,7 +597,8 @@ genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the oth
 probGenMech = NULL),    #Here the probabilities for different mechanizems for specifying the partitions are set. If not set this is determined based on the previous parameter.
 maxTriesToFindNewPar=rep*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
 skip.par = NULL, #partitions to be skiped
-useOptParMultiC = FALSE, #the the "Multi" vesrsion of the optParC functions be used?
+useOptParMultiC = FALSE # For backward compatibility. May be removed soon. See next argumetent.
+useMulti = useOptParMultiC, #Should the "Multi" vesrsion of the optParC functions be used? Defaults to FALSE, which is usually faster, but in a sense not so thorough.
 printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
 n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
 nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object
@@ -945,9 +734,10 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         skip.par<-c(skip.par,list(temppar))
 
         if(printRep==1) cat("Starting partition:",unlistPar(temppar),"\n")
-        if(useOptParMultiC){
-            res[[i]]<-optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt, ...)
-        }else  res[[i]]<-optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...)
+        #if(useOptParMultiC){
+        #    res[[i]]<-optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt, ...)
+        #}else  res[[i]]<-optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...)
+		res[[i]]<-optParC(M=M, clu=temppar, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...)
         if(deleteMs){
             res[[i]]$M<-NULL
             res[[i]]$resC$M<-NULL
@@ -974,10 +764,12 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 
             #skip.par<-c(skip.par,list(temppar))
             
-            if(useOptParMultiC){
-                tres <- try(optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
-            }else  tres <- try(optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
-            if(class(tres)=="try-error"){
+            #if(useOptParMultiC){
+            #    tres <- try(optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
+            #}else  tres <- try(optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
+            tres <- try(optParC(M=M, clu=temppar, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...))
+			
+			if(class(tres)=="try-error"){
                 tres<-list("try-error"=tres, err=Inf, nIter=Inf, startPart=temppar)
             }
             if(deleteMs){
