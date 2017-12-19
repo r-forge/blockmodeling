@@ -1,5 +1,7 @@
 "IM" <-
 function(res,which=1,...){
-	res$best[[which]]$IM
+  if(class(res)=="opt.more.par"){
+    return(res$best[[which]]$IM)
+  } else return(res$IM)
 }
 
