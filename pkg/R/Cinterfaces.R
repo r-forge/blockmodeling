@@ -148,7 +148,12 @@ formatUsePreSpecM<-function(usePreSpecMorg,preSpecM,dB,blocks){
 
 
 ########## warning -- this functions needs to be corrected to be more similar to optParC and optRandParC
-critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, rowCluChange=c(0,0), colCluChange=c(0,0), sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, save.initial.param=TRUE,relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, returnEnv=FALSE){
+critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
+                   diag = 1, IM = NULL, EM = NULL, Earr = NULL, justChange = FALSE, 
+                   rowCluChange = c(0, 0), colCluChange = c(0, 0), sameIM = FALSE, 
+                   regFun = "max", homFun = "ss", usePreSpecM = NULL, preSpecM = NULL, 
+                   save.initial.param = TRUE, relWeights = 1, posWeights = 1, 
+                   blockTypeWeights = 1, combWeights = NULL, returnEnv = FALSE){
     if(save.initial.param){
         initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
     }else initial.param<-NULL
@@ -192,7 +197,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         } else {
             for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
         }
-    } else if(len(isSym)==1) isSym<-rep(isSym, dM[1])
+    } else if(length(isSym)==1) isSym<-rep(isSym, dM[3])
 
     if(isTwoMode)diag<-FALSE
     if(length(diag)!=dM[3]) diag<-rep(diag[1], dM[3])
@@ -221,7 +226,7 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
         } else if(length(dim(blocks))==3){
             maxBlockTypes<-dim(blocks)[1]
             blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-            for(i in 1:dM[1]){
+            for(i in 1:dM[3]){
                 blocksArr[,i,,]<-blocks
             }
             blocks <- blocksArr
@@ -312,6 +317,8 @@ critFunC<-function(M, isTwoMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks,IM=
     
     
     res<-c(list(M=M), resC[c("err","EM","Earr")], list(IM=IMaddNames(resC$IM)), list(clu=orgClu), initial.param, list(call=match.call()), if(returnEnv)list(env= environment()) else NULL)
+    class(res)<-"crit.fun"
+    return(res)
 }
 
 
@@ -377,7 +384,7 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMult
     if(is.null(isSym)){
         isSym<-integer(dM[3])
         for(i in 1:dM[3]) isSym[i]<-all(M[,,i]==t(M[,,i]))
-    } else if(len(isSym)==1) isSym<-rep(isSym, dM[3])
+    } else if(length(isSym)==1) isSym<-rep(isSym, dM[3])
 
     #if(isTwoMode)diag<-FALSE #not needed as two mode netowrks are implemented through one-mode networks
     if(length(diag)!=dM[3]) diag<-rep(diag[1], dM[3])
@@ -697,12 +704,12 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     return(res)
     })
   
-  if(nCores==1||!require(doParallel)||!require(doRNG)){
+  if(nCores==1||!requireNamespace("doParallel")||!requireNamespace("doRNG")){
       if(nCores!=1) {
         oldWarn<-options("warn")
         options(warn=1)
         warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
-        options(warn=oldWarn)
+        options(ldWarn)
       }
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
@@ -749,8 +756,8 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         if(printRep==1) cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
       }
    } else {
-        library(doParallel)
-        library(doRNG)
+     requireNamespace("doParallel")
+     requireNamespace("doRNG")
         if(!getDoParRegistered()){
             if(nCores==0){
                 nCores<-detectCores()-1                    
@@ -778,9 +785,9 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             }
 #            err[i]<-res[[i]]$err
 #            nIter[i]<-res[[i]]$resC$nIter
-            return(list(tres))
+           return(list(tres))
         }
-        res<-foreach(i=1:rep,.combine=c, .packages='blockmodeling') %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
+        res<-foreach::foreach(i=1:rep,.combine=c, .packages='blockmodeling') %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
