@@ -1,0 +1,61 @@
+\name{sedist}
+\alias{sedist}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{Computes distances in terms of Structural equivalence (Lorrain and White, 1971)}
+\description{
+The functions computed the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network. Several options for treating the diagonal values are supported.
+}
+\usage{
+sedist(M, method = "default", fun = "default",
+   fun.on.rows = "default", handle.interaction = "switch",
+   use = "pairwise.complete.obs", ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network must be one-mode.}
+  \item{method}{The method used to compute distances - any of the methods allowed by functions dist, cor or cov {all package::stats} or just "cor" or "cov" (given as character).}
+  \item{fun}{Which function should be used to compute distances (given as character), .}
+  \item{fun.on.rows}{For non-standard function - does the function compute measure on rows (such as \code{cor}, \code{cov},...) of the data matrix (as opposed to computing measure on columns (such as \code{dist}).}
+  \item{handle.interaction}{How should the interaction between the vertices analysed be handled:\cr
+       "switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]. This two comparisons are weighted by 2. This should be used with euclidean distance to get the corrected euclidean distance with p = 2.\cr
+       "switch2" - the same (alias)\cr       
+       "switch1" - the same as above, only that the two comparisons are weighted by 1. This should be used with euclidean distance to get the corrected euclidean distance with p = 1.\cr       
+       "ignore" (diagonal) - Diagonal is ignored. This should be used with euclidean distance to get the corrected euclidean distance with p = 0.\cr
+       "none" - the matrix is used "as is"}
+  \item{use}{For use with methods "cor" and "cov", for other methods (the default option should be used if handle.interaction=="ignore"), "pairwise.complete.obs" are always used, if stats.dist.cor.cov=TRUE}
+  \item{\dots}{Additional arguments to \code{fun}}
+}
+\details{
+If both \code{method} and \code{fun} are "default", the euclidean distances are computed. the "default" method for \code{fun="dist"} is "euclidean" and for \code{fun="cor"} "pearson".
+}
+\value{
+ A matrix (usually of class dist) is returned.
+}
+\references{
+Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for structural equivalence. Social Networks 14, 63-90.
+
+Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
+}
+\author{\enc{Aleš Žiberna}{Ales Ziberna}}
+\seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{optParC}}, \code{\link{optParC}}, \code{\link{optRandomParC}}}
+\examples{
+#generating a simple network corresponding to the simple Sum of squares
+#structural equivalence with blockmodel:
+# null com
+# null null
+n <- 20
+net <- matrix(NA, ncol = n, nrow = n)
+clu <- rep(1:2, times = c(5, 15))
+tclu <- table(clu)
+net[clu == 1, clu == 1] <- rnorm(n = tclu[1] * tclu[1], mean = 0, sd = 1)
+net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
+net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
+net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
+
+D <- sedist(M = net)
+plot.mat(net, clu = cutree(hclust(d = D, method = "ward"), k = 2))
+}
+
+\keyword{cluster}% at least one, from doc/KEYWORDS
+\keyword{graphs}% at least one, from doc/KEYWORDS
+
