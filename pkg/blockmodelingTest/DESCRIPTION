@@ -1,6 +1,6 @@
 Package: blockmodelingTest
 Type: Package
-Title: Testing version: Generalized and classical blockmodeling of valued networks
+Title: Testing version: Generalized and Classical Blockmodeling of Valued Networks
 Version: 0.2.4
 Date: 2018-03-02
 Imports: stats, sna, methods, Matrix, doParallel,doRNG, parallel, foreach

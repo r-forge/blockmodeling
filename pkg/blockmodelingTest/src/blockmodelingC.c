@@ -142,8 +142,15 @@ double ss0(double *px, int n, double preSpecVal)
 	return(ssx);
 }
 
+/* fucntion for compasion of two dobles "double" - copied form GNU C Library manual */
+int cmp (const void *a, const void *b) {
+	const double *da = (const double *) a;
+	const double *db = (const double *) b;
 
+	return (*da > *db) - (*da < *db);
+}
 
+	
 /* A function for computing sum of absolute deviations from the median*/
 double ad(double *px, int n, double preSpecVal){
 	/*int cmp(double *x, double *y){
@@ -152,13 +159,7 @@ double ad(double *px, int n, double preSpecVal){
 		return(0);
 	}*/
 
-	/* fucntion for compasion of two dobles "double" - copied form GNU C Library manual */
-	int cmp (const void *a, const void *b) {
-		const double *da = (const double *) a;
-		const double *db = (const double *) b;
 
-		return (*da > *db) - (*da < *db);
-	}
 
 
 	double med, sad = 0;
@@ -205,13 +206,6 @@ double ad0(double *px, int n, double preSpecVal){
 
 
 double adPmin(double *px, int n, double preSpecVal){
-	int cmp (const void *a, const void *b) {
-		const double *da = (const double *) a;
-		const double *db = (const double *) b;
-
-		return (*da > *db) - (*da < *db);
-	}
-
 	double med, sad = 0;
 	int i;
 	qsort(px,n,sizeof(double), cmp);
