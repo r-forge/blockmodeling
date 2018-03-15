@@ -29,7 +29,7 @@ function(
 	}
   res.IM<-array(NA,dim=c(k2[1],k2[2],length(cuts)))
   res.IM[,,1]<-alt.blocks
-  for(i in 1:length(cuts)) res.IM[,,i]<-crit.fun(M=M,clu=clu,blocks=c("null",alt.blocks),cut=cuts[i],approach="bin",...)$IM
+  for(i in 1:length(cuts)) res.IM[,,i]<-critFunC(M=M,clu=clu,blocks=c("nul",alt.blocks),preSpecM = cuts[i],approaches="bin",...)$IM
   cut<-matrix(NA,nrow=k2[1],ncol=k2[2])
   for(i in 1:k2[1]){
     for(j in 1:k2[2]){

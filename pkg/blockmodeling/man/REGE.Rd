@@ -53,14 +53,14 @@ REGE.FC(M, E = 1, iter = 3, until.change = TRUE, use.diag = TRUE,
    normE = FALSE)
 REGE.FC.ow(M, E = 1, iter = 3, until.change = TRUE,
    use.diag = TRUE, normE = FALSE)
-REGD.ne.for(M, iter = 3, E=0)
+REGD.ne.for(M, iter = 3, E = 0)
 REGD.ow.ne.for(M, iter = 3, E = 0)
-REGE.ne.for(M, iter = 3, E=1)
-REGE.nm.diag.for(M, iter = 3, E=1)
-REGE.nm.ne.for(M, iter = 3, E=1)
-REGE.ow.ne.for(M, iter = 3, E=1)
-REGE.ownm.diag.for(M, iter = 3, E=1)
-REGE.ownm.ne.for(M, iter = 3, E=1)
+REGE.ne.for(M, iter = 3, E = 1)
+REGE.nm.diag.for(M, iter = 3, E = 1)
+REGE.nm.ne.for(M, iter = 3, E = 1)
+REGE.ow.ne.for(M, iter = 3, E = 1)
+REGE.ownm.diag.for(M, iter = 3, E = 1)
+REGE.ownm.ne.for(M, iter = 3, E = 1)
 }%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{Matrix or a 3 dimensional array representing the network. The third dimension allows for several relations to be analyzed.}
@@ -90,27 +90,25 @@ White, Douglas R.(1985b): DOUG WHITE'S REGULAR DISTANCES PROGRAM. \url{http://ec
 White, Douglas R.(2005): REGGE (web page). \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} (12.5.2005).
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna} based on Douglas R. White's original REGE and REGD}
-\seealso{\code{\link{sedist}}, \code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{plot.mat}}}
+\seealso{\code{\link{sedist}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{plot.mat}}}
 \examples{
-n<-20
-net<-matrix(NA,ncol=n,nrow=n)
-clu<-rep(1:2,times=c(5,15))
-tclu<-table(clu)
-net[clu==1,clu==1]<-0
-net[clu==1,clu==2]<-rnorm(n=tclu[1]*tclu[2],
-   mean=4,sd=1)*sample(c(0,1),
-   size= tclu[1]*tclu[2],replace=TRUE,prob=c(3/5,2/5))
-net[clu==2,clu==1]<-0
-net[clu==2,clu==2]<-0
+n <- 20
+net <- matrix(NA, ncol = n, nrow = n)
+clu <- rep(1:2, times = c(5, 15))
+tclu <- table(clu)
+net[clu == 1, clu == 1] <- 0
+net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4,sd = 1) * sample(c(0, 1),
+   size = tclu[1] * tclu[2], replace = TRUE, prob = c(3/5, 2/5))
+net[clu == 2, clu == 1] <- 0
+net[clu == 2, clu == 2] <- 0
 
-D<-REGE.for(M=net)$E #any other REGE function can be used
-plot.mat(net, clu=cutree(hclust(d=as.dist(1-D),method="ward"),
-   k=2))
+D <- REGE.for(M = net)$E #any other REGE function can be used
+plot.mat(net, clu = cutree(hclust(d = as.dist(1 - D), method = "ward"),
+   k = 2))
 #REGE returns similarities, which have to be converted to
 #disimilarities
 
-res<-opt.random.par(M=net,k=2,rep=10,approach="ss",blocks="reg",
-   FUN="max")
+res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "reg")
 plot(res) #Hopefully we get the original partition
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS

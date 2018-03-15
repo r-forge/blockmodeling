@@ -709,7 +709,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         oldWarn<-options("warn")
         options(warn=1)
         warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
-        options(ldWarn)
+        options(oldWarn)
       }
       for(i in 1:rep){
         if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")

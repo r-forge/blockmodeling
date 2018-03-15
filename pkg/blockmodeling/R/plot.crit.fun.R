@@ -1,6 +1,6 @@
 "plot.crit.fun" <-
 function(
-	x,#an "opt.par" class object
+	x,#an "crit.fun" class object
 	main=NULL,
 	...	#aditional parameters to "plot.mat"
 ){

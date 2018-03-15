@@ -27,7 +27,7 @@ function(
 		k2<-c(k,k)
 	}
   res.IM<-array(NA,dim=c(k2[1],k2[2],length(ms)))
-  for(i in 1:neval) res.IM[,,i]<-crit.fun(M=M,clu=clu,blocks=c("null",alt.blocks),m=ms[i],approach="val",...)$IM
+  for(i in 1:neval) res.IM[,,i]<-critFunC(M=M,clu=clu,blocks=c("nul",alt.blocks),preSpecM = ms[i],approaches="val",...)$IM
   m<-matrix(NA,nrow=k2[1],ncol=k2[2])
   for(i in 1:k2[1]){
     for(j in 1:k2[2]){

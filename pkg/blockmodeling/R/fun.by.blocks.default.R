@@ -1,5 +1,5 @@
 "fun.by.blocks.default" <-
-function(x=M, M=x, clu, ignore.diag = "default", FUN = "mean",sortNames=TRUE,...)
+function(x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
 {
     M<-as.array(M)
     dM<-dim(M)

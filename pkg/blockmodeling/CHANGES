@@ -1,8 +1,15 @@
-Name: blockmodeling
+Name: blockmodelingTest
 Title: An R package for generalized and classical blockmodeling of valued networks
+
+Version 0.2.4
+2018
+March 2, 2018
+Added help files for functions optRandomParC and critFunC.
+Updated help files (e.g. helpfile for function optParC was inserted (combined) in help file of function critFunC).
+Added new functions plotMat, plotArray and plotMatNm which are equivalent to the old functions plot.mat, plot.array and plot.mat.nm. The old functions will eventually be replaced with the new functions.
+
+
 Version: 0.2.3
-
-
 2017
 December 8, 2017
 Merged optParMultiC and optParC in to optParC. 

@@ -26,7 +26,7 @@ reorderImage(IM, oldClu, newClu)
 \enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 }
 \author{Ales Ziberna}
-\seealso{\code{\link{crit.fun}}, \code{\link{plot.mat}}, \code{\link{clu}}, \code{\link{IM}}, \code{\link{err}}}
+\seealso{\code{\link{critFunC}}, \code{\link{plot.mat}}, \code{\link{clu}}, \code{\link{IM}}, \code{\link{err}}}
 %\examples{
 %}
 \keyword{manip}% at least one, from doc/KEYWORDS

@@ -1,4 +1,4 @@
-"plot.mat" <-
+"plot.mat" <- plotMat <- 
 function(
     x=M, #x should be a matrix or similar object
     M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
@@ -133,7 +133,7 @@ function(
     if(class(M)!="matrix"&&class(M)!="mat"){
         pack<-attr(class(M),"package")
         if(!(is.null(pack))&&pack=="Matrix"){
-            if(require(Matrix)){
+            if(requireNamespace("Matrix")){
                 M<-as.matrix(M)
             } else stop("The supplied object needs Matrix packege, but the package is not available (install it!!!).")
         } else {
@@ -370,7 +370,7 @@ function(
 }
 
 
-"plot.array" <-
+"plot.array" <- plotArray <- 
 function(
     x=M, #x should be a matrix or similar object
     M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package

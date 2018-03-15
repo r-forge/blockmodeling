@@ -12,9 +12,9 @@ Computes a value of a functions over blocks of a matrix, defined by a partition.
 \usage{
 fun.by.blocks(x, ...)
 
-\method{fun.by.blocks}{default}(x = M, M = x, clu,
-  ignore.diag = identical(ss(diag(M)), 0) && !is.list(clu),
-  FUN = "mean", sortNames = TRUE, ...)
+\method{fun.by.blocks}{default}(x = M, M = x, clu, 
+ignore.diag = "default", sortNames = TRUE, 
+FUN = "mean", ...) 
 
 \method{fun.by.blocks}{opt.more.par}(x, which = 1, ...)
 }
@@ -41,35 +41,25 @@ fun.by.blocks(x, ...)
 }
 
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
-\seealso{\code{\link{opt.random.par}}, \code{\link{opt.these.par}}}
+\seealso{\code{\link{optRandomParC}}, \code{\link{optParC}}}
 
 \examples{
-n<-8 #if larger, the number of partitions increases dramaticaly,
+n <- 8 #if larger, the number of partitions increases dramaticaly,
      #as does if we increase the number of clusters
-net<-matrix(NA,ncol=n,nrow=n)
-clu<-rep(1:2,times=c(3,5))
-tclu<-table(clu)
-net[clu==1,clu==1]<-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
-net[clu==1,clu==2]<-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
-net[clu==2,clu==1]<-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
-net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+net <- matrix(NA, ncol = n, nrow = n)
+clu <- rep(1:2, times = c(3, 5))
+tclu <- table(clu)
+net[clu == 1, clu == 1] <- rnorm(n = tclu[1] * tclu[1], mean = 0, sd = 1)
+net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
+net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
+net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
-#we select a random parition and then optimise it
 
-all.par<-nkpartitions(n=n, k=length(tclu)) #forming the partitions
-all.par<-lapply(apply(all.par,1,list),function(x)x[[1]])
-# to make a list out of the matrix
-
-#optimizing 10 random partitions with opt.these.par
-res<-opt.these.par(M=net,
-   partitions=all.par[sample(1:length(all.par),size=10)],
-   approach="ss", blocks="com")
+#optimizing 10 random partitions with optRandomParC
+res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "com")
 plot(res) #Hopefully we get the original partition
 fun.by.blocks(res)
 #computing mean by blocks, ignoring the diagonal (default)
-res$best[[1]]$BM
-#the same result computed by opt.these.par when
-#approach="ss" and blocks="com"
 }
 \keyword{ cluster }% at least one, from doc/KEYWORDS
 \keyword{ math }% at least one, from doc/KEYWORDS

@@ -1,11 +1,11 @@
 "savenetwork" <-
 structure(function(n,filename,twomode="default",symetric=NULL){
-	if(length(grep(patt="w32",x=version["os"]))){
+	if(length(grep(pattern="w32",x=version["os"]))){
 		eol<-"\n"
 	}else{eol<-"\r\n"}
 	rowNames<-rownames(n)
 	colNames<-colnames(n)
-	if(require(Matrix)){
+	if(requireNamespace("Matrix")){
 		if(class(n)=="mat") n<-unclass(n)
 		n <- as(n,"dgTMatrix")
 		useMatrix<-TRUE

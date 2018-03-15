@@ -1,10 +1,9 @@
 Package: blockmodeling
 Type: Package
-Title: An R package for generalized and classical blockmodeling of valued networks
-Version: 0.2.3
-Date: 2017-12-08
-Imports: stats 
-Suggests: sna, Matrix, doParallel, doRNG
+Title: Testing version: Generalized and classical blockmodeling of valued networks
+Version: 0.2.4
+Date: 2018-03-02
+Imports: stats, sna, methods, Matrix, doParallel,doRNG, parallel, foreach
 Author: Aleš Žiberna
 Authors@R: person("Aleš", "Žiberna", role = c("aut", "cre"),
                           email = "ales.ziberna@gmail.com")
@@ -12,3 +11,4 @@ Maintainer: Aleš Žiberna <ales.ziberna@gmail.com>
 Description: The package is primarily meant as an implementation of Generalized blockmodeling for valued networks. In addition, measures of similarity or dissimilarity based on structural equivalence and regular equivalence (REGE algorithms) can be computed and partitioned matrices can be plotted.
 License: GPL (>=2)
 Encoding: UTF-8
+RoxygenNote: 6.0.1

@@ -11,9 +11,11 @@ genMatrixMult(A,B,FUNelement="*", FUNsummary=sum)
 \arguments{
   \item{A}{The first matrix}
   \item{B}{The second matrix}
-  \item{digits}{The number of desired digits}
-  \item{FUN}{Function used for "shortening" the numbers.}
-  \item{\dots}{Additional arguments to \code{format}}
+ % \item{digits}{The number of desired digits}
+ % \item{FUN}{Function used for "shortening" the numbers.}
+  \item{FUNelement}{Elementwise operator.}
+  \item{FUNsummary}{Summary function.}
+ 
 }
 \value{
 A character vector or matrix.

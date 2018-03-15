@@ -1,4 +1,4 @@
-"plot.mat.nm" <-
+"plot.mat.nm" <- plotMatNm <- 
 function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
 	if(is.null(main.title)){
 		objName<-deparse(substitute(M))

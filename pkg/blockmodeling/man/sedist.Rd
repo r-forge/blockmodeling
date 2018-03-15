@@ -37,23 +37,23 @@ Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for 
 Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
-\seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{crit.fun}}, \code{\link{opt.par}}, \code{\link{opt.random.par}}}
+\seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{optParC}}, \code{\link{optParC}}, \code{\link{optRandomParC}}}
 \examples{
 #generating a simple network corresponding to the simple Sum of squares
 #structural equivalence with blockmodel:
 # null com
 # null null
-n<-20
-net<-matrix(NA,ncol=n,nrow=n)
-clu<-rep(1:2,times=c(5,15))
-tclu<-table(clu)
-net[clu==1,clu==1]<-rnorm(n=tclu[1]*tclu[1],mean=0,sd=1)
-net[clu==1,clu==2]<-rnorm(n=tclu[1]*tclu[2],mean=4,sd=1)
-net[clu==2,clu==1]<-rnorm(n=tclu[2]*tclu[1],mean=0,sd=1)
-net[clu==2,clu==2]<-rnorm(n=tclu[2]*tclu[2],mean=0,sd=1)
+n <- 20
+net <- matrix(NA, ncol = n, nrow = n)
+clu <- rep(1:2, times = c(5, 15))
+tclu <- table(clu)
+net[clu == 1, clu == 1] <- rnorm(n = tclu[1] * tclu[1], mean = 0, sd = 1)
+net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
+net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
+net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
-D<-sedist(M=net)
-plot.mat(net, clu=cutree(hclust(d=D,method="ward"),k=2))
+D <- sedist(M = net)
+plot.mat(net, clu = cutree(hclust(d = D, method = "ward"), k = 2))
 }
 
 \keyword{cluster}% at least one, from doc/KEYWORDS

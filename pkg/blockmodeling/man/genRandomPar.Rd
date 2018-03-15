@@ -3,7 +3,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{The function for generating random partitions}
 \description{
- The function generates random partitions. The function is meant to be caled by the function \code{\link{opt.random.par}}
+ The function generates random partitions. The function is meant to be caled by the function \code{\link{optRandomParC}}
 }
 \usage{
 genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf,
@@ -22,11 +22,10 @@ genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf,
 }
 }
 \value{
-  A random partition in the format required by \code{\link{opt.random.par}}. If a netowork has several modes, than a list of partitions, one for each mode.
+  A random partition in the format required by \code{\link{optRandomParC}}. If a network has several modes, than a list of partitions, one for each mode.
 }
 \references{
-BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, \url{http://vlado.fmf.uni lj.si/pub/networks/pajek/} (accessed January 6, 2006).
+BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/} (accessed January 6, 2006).
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
-\seealso{\code{\link{opt.random.par}}}
 \keyword{cluster}

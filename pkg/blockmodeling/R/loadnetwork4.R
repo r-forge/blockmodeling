@@ -1,7 +1,7 @@
 "loadnetwork4" <-
 function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
   sc<-scan(filename,what="raw",sep="\n")
-  sc<-gsub(patt="\\",rep="/",x=sc,fixed=TRUE)
+  sc<-gsub(pattern="\\",replacement="/",x=sc,fixed=TRUE)
   first<-sapply(sc,substr,start=1,stop=1)
   sc<-sc[first!="%"]
   first<-first[first!="%"]
@@ -13,8 +13,8 @@ function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
   }
   if(length(n)==1){
     if(useSparseMatrix){
-      if(require(Matrix)){
-        M<-Matrix(0,nrow=n,ncol=n,sparse=TRUE)
+      if(requireNamespace("Matrix")){
+        M<-Matrix::Matrix(0,nrow=n,ncol=n,sparse=TRUE)
       }else{
         M<-matrix(0,nrow=n,ncol=n)
         warning("Matrix package is not installed. Ordanary (dense) matrices will be used instead of sparse onse")      
@@ -65,8 +65,8 @@ function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){
     }
     
     if(useSparseMatrix){
-      if(require(Matrix)){
-        M<-Matrix(0,nrow=n12,ncol=n12,sparse=TRUE)
+      if(requireNamespace("Matrix")){
+        M<-Matrix::Matrix(0,nrow=n12,ncol=n12,sparse=TRUE)
       }else{
         warning("Matrix package is not installed. Ordanary (dense) matrices will be used instead of sparse onse")
         M<-matrix(0,nrow=n12,ncol=n12)
