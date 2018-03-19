@@ -4,7 +4,7 @@ Title: Testing version: Generalized and Classical Blockmodeling of Valued Networ
 Version: 0.2.4
 Date: 2018-03-02
 Imports: stats, sna, methods, Matrix, doParallel,doRNG, parallel, foreach
-Author: Aleš Žiberna
+Author: Aleš Žiberna [aut, cre]
 Authors@R: person("Aleš", "Žiberna", role = c("aut", "cre"),
                           email = "ales.ziberna@gmail.com")
 Maintainer: Aleš Žiberna <ales.ziberna@gmail.com>
