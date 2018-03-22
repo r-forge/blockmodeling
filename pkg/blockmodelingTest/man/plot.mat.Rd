@@ -2,7 +2,7 @@
 \name{plot.mat}
 \alias{plot.mat}
 \alias{plotMat}
-\alias{plot.mat.nm}
+%\alias{plot.mat.nm}
 \alias{plotMatNm}
 \alias{plot.array}
 \alias{plotArray}
@@ -14,37 +14,37 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Functions for plotting a partitioned matrix (representing the network)}
 \description{
-The main function \code{plot.mat} or \code{plotMat} plots a (optionally partitioned) matrix. If the matrix is partitioned, the rows and columns of the matrix are rearranged according to the partitions. Other functions are only wrappers for \code{plot.mat} or \code{plotMat} for convenience when plotting the results of the corresponding functions. The \code{plot.mat.nm} or \code{plotMatNm} plots two matrices based on M, normalized by rows and columns, next to each other. The \code{plot.array} or \code{plotArray} plots an array.
+The main function \code{plot.mat} or \code{plotMat} plots a (optionally partitioned) matrix. If the matrix is partitioned, the rows and columns of the matrix are rearranged according to the partitions. Other functions are only wrappers for \code{plot.mat} or \code{plotMat} for convenience when plotting the results of the corresponding functions. The \code{plotMatNm} plots two matrices based on M, normalized by rows and columns, next to each other. The \code{plot.array} or \code{plotArray} plots an array. \code{plot.mat.nm} has been replaced by \code{plotMatNm}.
 }
 \usage{
-plot.mat(x = M, M = x, clu = NULL, 
-                ylab = "", xlab = "", main =
-                 NULL, print.val = !length(table(M)) <= 2, print.0 =
-                 FALSE, plot.legend = !print.val && !length(table(M))
-                 <= 2, print.legend.val = "out", print.digits.legend =
-                 2, print.digits.cells = 2, print.cells.mf = NULL,
-                 outer.title = FALSE, title.line = ifelse(outer.title,
-                 -1.5, 7), mar = c(0.5, 7, 8.5, 0) + 0.1, cex.val =
-                 "default", val.y.coor.cor = 0, val.x.coor.cor = 0,
-                 cex.legend = 1, legend.title = "Legend", cex.axes =
-                 "default", print.axes.val = NULL, print.x.axis.val =
-                 !is.null(colnames(M)), print.y.axis.val =
-                 !is.null(rownames(M)), x.axis.val.pos = 1.01,
-                 y.axis.val.pos = -0.01, cex.main = par()$cex.main,
-                 cex.lab = par()$cex.lab, yaxis.line = -1.5, xaxis.line
-                 = -1, legend.left = 0.4, legend.up = 0.03, legend.size
-                 = 1/min(dim(M)), legend.text.hor.pos = 0.5,
-                 par.line.width = 3, par.line.col = "blue", IM.dens =
-                 NULL, IM = NULL, wnet = NULL, wIM = NULL, use.IM =
-                 length(dim(IM)) == length(dim(M)) | !is.null(wIM),
-                 dens.leg = c(null = 100, nul = 100), blackdens = 70,
-                 plotLines = FALSE, frameMatrix = TRUE, x0ParLine =
-                 -0.1, x1ParLine = 1, y0ParLine = 0, y1ParLine = 1.1,
-                 colByUnits = NULL, colByRow = NULL, colByCol = NULL,
-                 mulCol = 2, joinColOperator = "+", colTies = FALSE,
-                 maxValPlot = NULL, printMultipliedMessage = TRUE,
-                 replaceNAdiagWith0 = TRUE, ...)
-                 
+%plot.mat(x = M, M = x, clu = NULL, 
+%                ylab = "", xlab = "", main =
+%                 NULL, print.val = !length(table(M)) <= 2, print.0 =
+%                 FALSE, plot.legend = !print.val && !length(table(M))
+%                 <= 2, print.legend.val = "out", print.digits.legend =
+%                 2, print.digits.cells = 2, print.cells.mf = NULL,
+%                 outer.title = FALSE, title.line = ifelse(outer.title,
+%                 -1.5, 7), mar = c(0.5, 7, 8.5, 0) + 0.1, cex.val =
+%                 "default", val.y.coor.cor = 0, val.x.coor.cor = 0,
+%                 cex.legend = 1, legend.title = "Legend", cex.axes =
+%                 "default", print.axes.val = NULL, print.x.axis.val =
+%                 !is.null(colnames(M)), print.y.axis.val =
+%                 !is.null(rownames(M)), x.axis.val.pos = 1.01,
+%                 y.axis.val.pos = -0.01, cex.main = par()$cex.main,
+%                 cex.lab = par()$cex.lab, yaxis.line = -1.5, xaxis.line
+%                 = -1, legend.left = 0.4, legend.up = 0.03, legend.size
+%                 = 1/min(dim(M)), legend.text.hor.pos = 0.5,
+%                 par.line.width = 3, par.line.col = "blue", IM.dens =
+%                 NULL, IM = NULL, wnet = NULL, wIM = NULL, use.IM =
+%                 length(dim(IM)) == length(dim(M)) | !is.null(wIM),
+%                 dens.leg = c(null = 100, nul = 100), blackdens = 70,
+%                 plotLines = FALSE, frameMatrix = TRUE, x0ParLine =
+%                 -0.1, x1ParLine = 1, y0ParLine = 0, y1ParLine = 1.1,
+%                 colByUnits = NULL, colByRow = NULL, colByCol = NULL,
+%                 mulCol = 2, joinColOperator = "+", colTies = FALSE,
+%                 maxValPlot = NULL, printMultipliedMessage = TRUE,
+%                 replaceNAdiagWith0 = TRUE, ...)
+                
                  
 plotMat(x = M, M = x, clu = NULL, 
                 ylab = "", xlab = "", main =
@@ -75,10 +75,10 @@ plotMat(x = M, M = x, clu = NULL,
                  replaceNAdiagWith0 = TRUE, ...)
 
 
-plot.mat.nm(x = M, M = x, ..., main.title = NULL,
-   title.row = "Row normalized",
-   title.col = "Column normalized",
-   main.title.line = -2, par.set = list(mfrow = c(1, 2)))
+% plot.mat.nm(x = M, M = x, ..., main.title = NULL,
+%   title.row = "Row normalized",
+%   title.col = "Column normalized",
+%   main.title.line = -2, par.set = list(mfrow = c(1, 2)))
 
 
 plotMatNm(x = M, M = x, ..., main.title = NULL,
@@ -88,8 +88,8 @@ plotMatNm(x = M, M = x, ..., main.title = NULL,
 
 
 
-plot.array(x = M, M = x, ..., main.title = NULL, main.title.line
-                 = -2, mfrow = NULL)
+%plot.array(x = M, M = x, ..., main.title = NULL, main.title.line
+%                 = -2, mfrow = NULL)
 
         
 plotArray(x = M, M = x, ..., main.title = NULL, main.title.line
@@ -124,6 +124,10 @@ plotArray(x = M, M = x, ..., main.title = NULL, main.title.line
                  replaceNAdiagWith0 = TRUE, ...)
 
 \method{plot}{crit.fun}(x, main = NULL, ...)
+
+
+\method{plot}{array}(x = M, M = x, ..., main.title = NULL, main.title.line
+                 = -2, mfrow = NULL)
 
 \method{plot}{opt.par}(x, main = NULL, which = 1, ...)
 
@@ -202,17 +206,17 @@ than this should be a vector, else a list of vectors, one for each mode.}
    \item{title.col}{Title for the column-normalized matrix in nm version}
    \item{par.set}{A list of possible ploting paramters (to \code{par}) to be used in nm version}
   \item{which}{Which (if there are more than one) of optimal solutions to plot.}
-  \item{\dots}{Aditional arguments to \code{plot.default} for \code{plot.mat} and also to \code{plot.mat} for other functions.}
+  \item{\dots}{Aditional arguments to \code{plot.default} for \code{plotMat} and also to \code{plotMat} for other functions.}
 }
 \value{
   The functions are used for their side affect - plotting.
 }
 \references{
-\enc{?IBERNA, Ale?}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-\enc{?IBERNA, Ale?}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 }
-\author{\enc{Ale? ?iberna}{Ales Ziberna}}
+\author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \seealso{\code{\link{critFunC}}, \code{\link{optRandomParC}}}
 \examples{
 ## Generation of the network
