@@ -21,7 +21,7 @@ A character vector or matrix.
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \seealso{\code{\link{find.m}}, \code{\link{find.m2}}, \code{\link{find.cut}}}
 \examples{
-A<-matrix(c(1,1.02002,0.2,10.3),ncol=2)
+A <- matrix(c(1, 1.02002, 0.2, 10.3), ncol = 2)
 formatA(A)
 }
 \keyword{character}% at least one, from doc/KEYWORDS

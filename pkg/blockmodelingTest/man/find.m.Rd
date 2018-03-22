@@ -51,5 +51,5 @@ DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anuška}{Anuska} (2005): Ge
 }
 
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
-\seealso{\code{\link{critFunC}} and maybe also \code{\link{optParC}}, \code{\link{plot.mat}}}
+\seealso{\code{\link{critFunC}} and maybe also \code{\link{optParC}}, \code{\link{plotMat}}}
 \keyword{cluster}% at least one, from doc/KEYWORDS

@@ -42,7 +42,7 @@ net[clu[[1]] == 2, clu[[2]] == 1] <- rnorm(n = tclu[[1]][2] * tclu[[2]][1],
    mean = 4, sd = 1)
 net[clu[[1]] == 2, clu[[2]] == 2] <- rnorm(n = tclu[[1]][2] * tclu[[2]][2],
    mean = 0, sd = 1)
-plot.mat(net,clu = clu) #two mode matrix of a two mode network
+plot.mat(net, clu = clu) #two mode matrix of a two mode network
 #converting to one mode network
 M1 <- two2one(net)$M
 plot.mat(M1, clu = two2one(net)$clu) #plotting one mode matrix

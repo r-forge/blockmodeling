@@ -24,16 +24,17 @@ A character vector or matrix.
 \seealso{\code{\link{matmult}}}
 \examples{
 #operations can be anything
-x<-matrix(letters[1:8],ncol=2)
-y<-matrix(1:10,nrow=2)
+x <- matrix(letters[1:8], ncol = 2)
+y <- matrix(1:10, nrow = 2)
 
-genMatrixMult(x,y,FUNelement=paste,FUNsummary=function(x)paste(x,collapse="|"))
+genMatrixMult(x, y, FUNelement = paste,
+FUNsummary = function(x) paste(x, collapse = "|"))
 
-#biary logic
+# biary logic
 set.seed(1)
-x<-matrix(rbinom(8,size=1,prob=0.5)==1,ncol=2)
-y<-matrix(rbinom(10,size=1,prob=0.5)==1,nrow=2)
-genMatrixMult(x,y,FUNelement="*",FUNsummary=any)
+x <- matrix(rbinom(8, size = 1, prob = 0.5) == 1, ncol = 2)
+y <- matrix(rbinom(10, size = 1, prob = 0.5) == 1, nrow = 2)
+genMatrixMult(x, y, FUNelement = "*", FUNsummary = any)
 }
 \keyword{array} % at least one, from doc/KEYWORDS
 \keyword{algebra}

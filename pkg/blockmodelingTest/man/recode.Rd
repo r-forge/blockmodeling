@@ -20,8 +20,8 @@ recode(x, oldcode = sort(unique(x)), newcode)
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \examples{
-x<-rep(1:3,times=1:3)
-newx<-recode(x,oldcode=1:3,newcode=c("a","b","c"))
+x <- rep(1:3, times = 1:3)
+newx <- recode(x, oldcode = 1:3, newcode = c("a", "b", "c"))
 }
 
 \keyword{ manip }% at least one, from doc/KEYWORDS
