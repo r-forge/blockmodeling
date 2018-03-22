@@ -1,14 +1,14 @@
 Package: blockmodelingTest
 Type: Package
-Title: Testing version: Generalized and Classical Blockmodeling of Valued Networks
+Title: Testing Version: Generalized and Classical Blockmodeling of Valued Networks
 Version: 0.2.4
-Date: 2018-03-02
-Imports: stats, sna, methods, Matrix, doParallel,doRNG, parallel, foreach
+Date: 2018-03-19
+Imports: stats, sna, methods, Matrix, doParallel, doRNG, parallel, foreach
 Author: Aleš Žiberna [aut, cre]
-Authors@R: person("Aleš", "Žiberna", role = c("aut", "cre"),
-                          email = "ales.ziberna@gmail.com")
+Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@gmail.com", 
+                  role = c("aut", "cre"))
 Maintainer: Aleš Žiberna <ales.ziberna@gmail.com>
-Description: The package is primarily meant as an implementation of Generalized blockmodeling for valued networks. In addition, measures of similarity or dissimilarity based on structural equivalence and regular equivalence (REGE algorithms) can be computed and partitioned matrices can be plotted.
+Description: This is primarily meant as an implementation of Generalized blockmodeling for valued networks. In addition, measures of similarity or dissimilarity based on structural equivalence and regular equivalence (REGE algorithms) can be computed and partitioned matrices can be plotted.
 License: GPL (>=2)
 Encoding: UTF-8
 RoxygenNote: 6.0.1
