@@ -8,11 +8,14 @@
 !     COMPUTE DEGREE, SUMS FOR I--&gt;K, INITIAL STRUCTURAL EQUIV.
       DO 100 I=1,N
       DEG(I)=0.0
-      DO 100 J=1,N
+      DO 99 J=1,N
       SUM(I,J)=0.0
       DO 50 KR=1,NR
-   50 SUM(I,J)=SUM(I,J)+R(I,J,KR)+R(J,I,KR)
-  100 DEG(I)=DEG(I)+SUM(I,J)
+      SUM(I,J)=SUM(I,J)+R(I,J,KR)+R(J,I,KR)
+   50 END DO
+      DEG(I)=DEG(I)+SUM(I,J)
+  99  END DO
+  100 END DO
       D = 100.0
 !     BEGIN ITERATIONS
       DO 700 L=1,ITER
@@ -47,7 +50,8 @@
       SUMM2=0.0
       DO 300 KR=1,NR
       SUMM1 = SUMM1 +min (R(I,K,KR),r(j,m,kr))
-  300 SUMM2 = SUMM2 +min (R(K,I,KR),r(m,j,kr))
+      SUMM2 = SUMM2 +min (R(K,I,KR),r(m,j,kr))
+  300 END DO
       CMIKJM1 = SUMM1 * b (max (k,m), min (k,m))
       CMIKJM2 = SUMM2 * b (max (k,m), min (k,m))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
@@ -73,9 +77,11 @@
 ! symmetrize : to lower half matrix
       D=0.0
       DO 600 I = 2, N
-      DO 600 J = 1, i-1
+      DO 599 J = 1, i-1
       D = D + (B(i,j) - B(j,i) )**2
-  600 B(i,j) = B(j,i) 
+      B(i,j) = B(j,i) 
+  599 END DO
+  600 END DO
   700 CONTINUE
 
  1000 END

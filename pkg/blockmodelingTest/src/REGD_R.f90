@@ -7,13 +7,15 @@
 !     COMPUTE DEGREE, SUMS FOR I-->K, INITIAL STRUCTURAL DISTANCE
       DO 100 I=1,N
       DEG(I)=0.0
-      DO 100 J=1,N
+      DO 99 J=1,N
       SUM(I,J)=0.0
       DO 50 KR=1,NR
       SM = R(I,J,KR)**2 + R(J,I,KR)**2
-   50 SUM(I,J)=SUM(I,J) + sm
-  100 DEG(I)=DEG(I)+SUM(I,J)
-
+      SUM(I,J)=SUM(I,J) + sm
+  50  END DO
+      DEG(I)=DEG(I)+SUM(I,J)
+  99  END DO
+ 100  END DO
       IQUIT=0
 
 !     BEGIN ITERATIONS
@@ -47,7 +49,8 @@
 ! 0 should be allowed as a best fit for small values      IF(SUM(J,M).EQ.0.0) GO TO 400
       SUMM=0.0
       DO 300 KR=1,NR
-300   summ = summ + (R(I,K,KR) - R(J,M,KR)) **2 + (R(K,i,KR) - R(M,j,KR)) **2 
+      summ = summ + (R(I,K,KR) - R(J,M,KR)) **2 + (R(K,i,KR) - R(M,j,KR)) **2 
+ 300  CONTINUE
       CMIKJM = max (Summ, sum(i,k) * b (max (k,m), min (k,m)))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=DEG(II)+DEG(JJ)
@@ -77,7 +80,8 @@
 ! symmetrize : to lower half matrix
       DO 650 I = 2, N
       DO 600 J = 1, i-1
-  600 B(i,j) = B(j,i) 
+      B(i,j) = B(j,i)
+  600 END DO 
   650 CONTINUE
   
       IF(IQUIT.EQ.1) GO TO 800

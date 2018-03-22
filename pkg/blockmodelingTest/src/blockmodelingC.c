@@ -33,6 +33,7 @@ TODO:
 - allow penalties by relations (already implemented), by block types and by "positions". This could be implemented in C by just one 4d weighting array that could be in R computed (if desired) from those separate weighting schemes.
 */
 
+
 #include <stdio.h>
 #include <R.h>
 #include <stdlib.h>
@@ -48,6 +49,18 @@ TODO:
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #define max(a,b) ((a) > (b) ? (a) : (b))
+
+
+// RegisteringDynamic Symbols
+
+#include <R.h>
+#include <Rinternals.h>
+#include <R_ext/Rdynload.h>
+
+void R_init_markovchain(DllInfo* info) {
+  R_registerRoutines(info, NULL, NULL, NULL, NULL);
+  R_useDynamicSymbols(info, TRUE);
+}
 
 
 double ss(double *px, int n, double preSpecVal);

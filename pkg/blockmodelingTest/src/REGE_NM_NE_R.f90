@@ -9,10 +9,12 @@
 !     COMPUTE DEGREE, SUMS FOR I--&gt;K, INITIAL STRUCTURAL EQUIV.
       DO 100 I=1,N
       DEG(I) = 0.0
-      DO 100 J=1,N
+      DO 99 J=1,N
       SUM(I,J)= R(I,J,1) + R(J,I,2)
-  100 DEG(I)=DEG(I) + SUM(I,J)
-
+      DEG(I)=DEG(I) + SUM(I,J)
+  99  END DO
+ 100  END DO
+ 
 !     BEGIN ITERATIONS
       DO 700 L=1,ITER
 !     INITIALIZE DIFFERENCE IN SUCCESSIVE SE MATRICES
@@ -43,7 +45,8 @@
       IF(SUM(J,M).EQ.0.0) GO TO 400
       SUMM=0.0
 !     DO 300 KR=1,NR
-  300 SUMM = SUMM + min (R(I,K,1),r(j,m,1)) + min (R(K,I,2),r(m,j,2))
+      SUMM = SUMM + min (R(I,K,1),r(j,m,1)) + min (R(K,I,2),r(m,j,2))
+
       CMIKJM = SUMM * b (max (k,m), min (k,m))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=0.0
@@ -66,10 +69,10 @@
 
 ! symmetrize : to lower half matrix
       DO 600 I = 2, N
-      DO 600 J = 1, i-1
-  600 B(i,j) = B(j,i) 
-
-
+      DO 599 J = 1, i-1
+      B(i,j) = B(j,i) 
+ 599  END DO
+ 600  END DO
 ! Start normalization
       NumIter=15
       DO K = 1, NumIter
