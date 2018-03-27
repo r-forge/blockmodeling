@@ -787,7 +787,8 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 #            nIter[i]<-res[[i]]$resC$nIter
            return(list(tres))
         }
-        res<-foreach::foreach(i=1:rep,.combine=c, .packages='blockmodeling') %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
+		pkgName<-packageName(environment(optParC))
+        res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
@@ -801,8 +802,6 @@ unlistPar<-function(part){
     }
     part
 }
-## library(blockmodelingTestC); 
-##  x<-optRandomParC(M=labAllComp52, k=3,rep=10,approaches="hom",blocks="com",return.all=TRUE)
 
 parArr2VecC<-function(parArr,nUnitsClu=NULL){
     if(is.null(nUnitsClu)){
@@ -831,11 +830,6 @@ parVec2ArrC<-function(parVec){
     return(parArr)
 }
 
-
-## library(blockmodelingTestC)
-## testClu<-c(1,1,1,2,2,3,3,3,4,4)
-## x<-parVec2ArrC(testClu)
-## parArr2VecC(x)
 
 
 
