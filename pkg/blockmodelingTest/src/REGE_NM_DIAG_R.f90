@@ -47,7 +47,7 @@
       IF(J.EQ.M) GO TO 400
       SUMM=0.0
 !     DO 300 KR=1,NR
-  300 SUMM = SUMM + min (R(I,K,1),r(j,m,1)) + min (R(K,I,2),r(m,j,2))
+      SUMM = SUMM + min (R(I,K,1),r(j,m,1)) + min (R(K,I,2),r(m,j,2))
       CMIKJM = SUMM * b (max (k,m), min (k,m))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=0.0
@@ -57,9 +57,9 @@
  
   400 CONTINUE
 !     ADD BEST MATCHES TO REGULAR EQUIVALENCE NUMERATOR FOR I,J
-  450 CM=CM+XMAX
+  450 CM=INT(CM+XMAX)
   500  CONTINUE
-      CM=CM + b (max (i,j), min (i,j))*(min(R(I,I,1),r(j,j,1))+min(R(I,I,2),r(j,j,2)))
+      CM=INT(CM + b (max (i,j), min (i,j))*(min(R(I,I,1),r(j,j,1))+min(R(I,I,2),r(j,j,2))))
   505  CONTINUE
 !     COMPUTE REGULAR EQUIVALENCE
   506 DM = DEG(II)+DEG(JJ)
