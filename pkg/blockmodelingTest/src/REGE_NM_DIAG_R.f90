@@ -62,7 +62,7 @@
       CM=INT(CM + b (max (i,j), min (i,j))*(min(R(I,I,1),r(j,j,1))+min(R(I,I,2),r(j,j,2))))
   505  CONTINUE
 !     COMPUTE REGULAR EQUIVALENCE
-  506 DM = DEG(II)+DEG(JJ)
+  506 DM = INT(DEG(II))+INT(DEG(JJ))
       B (II,JJ)= 1.0
       IF(DM.NE.0.0) B (II,JJ)=CM/DM
 !     IF(B (II,JJ).LE.CUT) B (II,JJ)=0.0

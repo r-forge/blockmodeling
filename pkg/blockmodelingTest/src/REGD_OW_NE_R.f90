@@ -9,7 +9,7 @@
       DO 99 J=1,N
       SUM(I,J)=0.0
       DO 50 KR=1,NR
-      SM = R(I,J,KR)**2
+      SM = INT(R(I,J,KR)**2)
       SUM(I,J)=SUM(I,J) + SM
    50 END DO
    99 END DO
@@ -84,7 +84,8 @@
   500  CONTINUE
   505  CONTINUE
 !     COMPUTE REGULAR DISTANCE
-  506 DM = INT(DEG(II))+ INT(DEG(JJ))
+ ! 506 
+      DM = INT(DEG(II))+ INT(DEG(JJ))
 ! REMEMBER BOTH POINTS TAKEN AS REFERENCE
       if(cm.gt.dm) cm=DM
       IF(DM.NE.0.0) B (II,JJ)=CM/DM

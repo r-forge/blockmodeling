@@ -47,9 +47,9 @@
       IF(SUM(J,M).EQ.0.0) GO TO 400
       SUMM=0.0
       DO 300 KR=1,NR
-      SUMM = SUMM +min (R(I,K,KR),r(j,m,kr)) +min (R(K,I,KR),r(m,j,kr))
+      SUMM = INT(SUMM +min (R(I,K,KR),r(j,m,kr)) +min (R(K,I,KR),r(m,j,kr)))
   300 END DO
-      CMIKJM = SUMM * b (max (k,m), min (k,m))
+      CMIKJM = INT(SUMM * b (max (k,m), min (k,m)))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=0.0
       IF(CMIKJM.GT.XMAX) XMAX= CMIKJM

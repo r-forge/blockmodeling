@@ -63,7 +63,7 @@
  
   400 CONTINUE
 !     ADD BEST MATCHES TO REGULAR EQUIVALENCE NUMERATOR FOR I,J
-  450 CM=CM+XMAX1 + XMAX2
+  450 CM=INT(CM+XMAX1 + XMAX2)
   500  CONTINUE
   505  CONTINUE
 !     COMPUTE REGULAR EQUIVALENCE
@@ -78,7 +78,7 @@
       D=0.0
       DO 600 I = 2, N
       DO 599 J = 1, i-1
-      D = D + (B(i,j) - B(j,i) )**2
+      D = INT(D + (B(i,j) - B(j,i) )**2)
       B(i,j) = B(j,i) 
   599 END DO
   600 END DO
