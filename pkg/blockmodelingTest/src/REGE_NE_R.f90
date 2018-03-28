@@ -1,7 +1,7 @@
 ! REGE_NE_R.F Ales Ziberna, 2006 - NORMALIZED EQUIVALENCES NORMALIZED MATRICES version of REGE (Douglas R. White, 1985)
 !  THIS VERSION ALLOWS USER TO SET THE NUMBER OF ITERATIONS 
       subroutine regene(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, xxmax, row, col
+      DOUBLE PRECISION   R, B, DEG, SUM, xxmax, row, col, SUMM, CMIKJM, DM
       INTEGER NR, N, ITER, KR, JJ, II, NumIter
       DIMENSION  DEG (N), SUM (N,N), R (N,N, NR), B (N,N), row(N), col(N)
 
@@ -46,9 +46,9 @@
       IF(SUM(J,M).EQ.0.0) GO TO 400
       SUMM=0.0
       DO 300 KR=1,NR
-      SUMM = INT(SUMM +min (R(I,K,KR),r(j,m,kr)) +min (R(K,I,KR),r(m,j,kr)))
+      SUMM = SUMM +min (R(I,K,KR),r(j,m,kr)) +min (R(K,I,KR),r(m,j,kr))
   300 CONTINUE
-      CMIKJM = INT(SUMM * b (max (k,m), min (k,m)))
+      CMIKJM = SUMM * b (max (k,m), min (k,m))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=0.0
       IF(CMIKJM.GT.XMAX) XMAX= CMIKJM
@@ -61,7 +61,7 @@
   500  CONTINUE
   505  CONTINUE
 !     COMPUTE REGULAR EQUIVALENCE
-  506 DM = INT(DEG(II))+INT(DEG(JJ))
+  506 DM = DEG(II)+DEG(JJ)
       B (II,JJ)= 1.0
       IF(DM.NE.0.0) B (II,JJ)=CM/DM
 !     IF(B (II,JJ).LE.CUT) B (II,JJ)=0.0

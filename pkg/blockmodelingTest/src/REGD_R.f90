@@ -1,6 +1,6 @@
 ! REGDI.FOR 3/18/85 - DOUG WHITE'S REGULAR DISTANCES PROGRAM
       subroutine regd(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, CM, SUMM
+      DOUBLE PRECISION   R, B, DEG, SUM, CM, SUMM, SM, CMIKJM, DM
       INTEGER NR, N, ITER, KR, JJ, II
       DIMENSION  DEG (N), SUM (N,N), R (N,N, NR), B (N,N)
 
@@ -10,7 +10,7 @@
       DO 99 J=1,N
       SUM(I,J)=0.0
       DO 50 KR=1,NR
-      SM = INT(R(I,J,KR)**2) + INT(R(J,I,KR)**2)
+      SM = R(I,J,KR)**2 + R(J,I,KR)**2
       SUM(I,J)=SUM(I,J) + sm
   50  END DO
       DEG(I)=DEG(I)+SUM(I,J)
@@ -51,7 +51,7 @@
       DO 300 KR=1,NR
       summ = summ + (R(I,K,KR) - R(J,M,KR)) **2 + (R(K,i,KR) - R(M,j,KR)) **2 
  300  CONTINUE
-      CMIKJM = INT(max (Summ, sum(i,k) * b (max (k,m), min (k,m))))
+      CMIKJM = max (Summ, sum(i,k) * b (max (k,m), min (k,m)))
 !     IF PERFECT MATCH DESIRED, CORRECT MATCH
 !     IF(SUMM.NE.SUM(I,K).AND.NOERRS.EQ.1)  CMIKJM=DEG(II)+DEG(JJ)
       IF(CMIKJM.LT.XMIN) XMIN= CMIKJM
@@ -65,7 +65,7 @@
   505  CONTINUE
 !     COMPUTE REGULAR DISTANCE
   !506 
-      DM = INT(DEG(II))+INT(DEG(JJ))
+      DM = DEG(II)+DEG(JJ)
 ! REMEMBER BOTH POINTS TAKEN AS REFERENCE
       if(cm.gt.dm) cm=DM
       IF(DM.NE.0.0) B (II,JJ)=CM/DM

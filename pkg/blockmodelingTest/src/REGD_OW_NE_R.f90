@@ -1,6 +1,6 @@
 ! REGD_OW_NE_R.F Ales Ziberna, 2006 - ONEWAY version of REGD (Douglas R. White, 1985)
       subroutine regdowne(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, SUMM1, SUMM2, XMIN1, XMIN2, CMIKJM1, CMIKJM2, CM, Row, Col
+      DOUBLE PRECISION   R, B, DEG, SUM, SUMM1, SUMM2, XMIN1, XMIN2, CMIKJM1, CMIKJM2, CM, Row, Col, SM, DM
       INTEGER NR, N, ITER, KR, JJ, II
       DIMENSION  DEG (N), SUM (N,N), R (N,N, NR), B (N,N), Row(N), Col(N)
 
@@ -9,7 +9,7 @@
       DO 99 J=1,N
       SUM(I,J)=0.0
       DO 50 KR=1,NR
-      SM = INT(R(I,J,KR)**2)
+      SM = R(I,J,KR)**2
       SUM(I,J)=SUM(I,J) + SM
    50 END DO
    99 END DO
@@ -85,7 +85,7 @@
   505  CONTINUE
 !     COMPUTE REGULAR DISTANCE
  ! 506 
-      DM = INT(DEG(II))+ INT(DEG(JJ))
+      DM = DEG(II)+ DEG(JJ)
 ! REMEMBER BOTH POINTS TAKEN AS REFERENCE
       if(cm.gt.dm) cm=DM
       IF(DM.NE.0.0) B (II,JJ)=CM/DM

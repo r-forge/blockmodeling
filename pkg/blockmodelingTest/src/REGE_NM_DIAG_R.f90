@@ -1,7 +1,7 @@
 ! REGE_NM_R.F Ales Ziberna, 2006 - NORMALIZED MATRICES version of REGE (Douglas R. White, 1985)
 !  THIS VERSION ALLOWS USER TO SET THE NUMBER OF ITERATIONS 
       subroutine regenmdiag(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, SUMM, XMAX, CMIKJM
+      DOUBLE PRECISION   R, B, DEG, SUM, SUMM, XMAX, CMIKJM, CM, DM
       INTEGER NR, N, ITER, JJ, II !, KR
       DIMENSION  DEG (N), SUM (N,N),R (N,N, NR), B (N,N)
 
@@ -57,12 +57,12 @@
  
   400 CONTINUE
 !     ADD BEST MATCHES TO REGULAR EQUIVALENCE NUMERATOR FOR I,J
-  450 CM=INT(CM+XMAX)
+  450 CM=CM+XMAX
   500  CONTINUE
-      CM=INT(CM + b (max (i,j), min (i,j))*(min(R(I,I,1),r(j,j,1))+min(R(I,I,2),r(j,j,2))))
+      CM=CM + b (max (i,j), min (i,j))*(min(R(I,I,1),r(j,j,1))+min(R(I,I,2),r(j,j,2)))
   505  CONTINUE
 !     COMPUTE REGULAR EQUIVALENCE
-  506 DM = INT(DEG(II))+INT(DEG(JJ))
+  506 DM = DEG(II)+DEG(JJ)
       B (II,JJ)= 1.0
       IF(DM.NE.0.0) B (II,JJ)=CM/DM
 !     IF(B (II,JJ).LE.CUT) B (II,JJ)=0.0
