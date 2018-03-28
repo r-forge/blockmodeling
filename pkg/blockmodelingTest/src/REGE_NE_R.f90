@@ -1,7 +1,7 @@
 ! REGE_NE_R.F Ales Ziberna, 2006 - NORMALIZED EQUIVALENCES NORMALIZED MATRICES version of REGE (Douglas R. White, 1985)
 !  THIS VERSION ALLOWS USER TO SET THE NUMBER OF ITERATIONS 
       subroutine regene(R,B,N,NR,ITER)
-      DOUBLE PRECISION   R, B, DEG, SUM, xxmax, row, col, SUMM, CMIKJM, DM, XMAX
+      DOUBLE PRECISION   R, B, DEG, SUM, xxmax, row, col, SUMM, CMIKJM, DM, XMAX, CM
       INTEGER NR, N, ITER, KR, JJ, II, NumIter
       DIMENSION  DEG (N), SUM (N,N), R (N,N, NR), B (N,N), row(N), col(N)
 
