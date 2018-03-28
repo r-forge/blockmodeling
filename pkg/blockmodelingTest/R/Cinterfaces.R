@@ -787,7 +787,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
 #            nIter[i]<-res[[i]]$resC$nIter
            return(list(tres))
         }
-		pkgName<-packageName(environment(optParC))
+		pkgName<-utils::packageName(environment(optParC))
         res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
