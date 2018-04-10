@@ -1,4 +1,4 @@
-useDynLib(blockmodeling)
+useDynLib(blockmodelingOld)
 import(foreach)
 import(Matrix)
 import(doParallel)
