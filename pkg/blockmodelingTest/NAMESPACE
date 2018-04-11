@@ -5,7 +5,7 @@ import(doParallel)
 import(doRNG)
 import(parallel)
 import(methods)
-importFrom("sna", "gplot")
+#importFrom("sna", "gplot")
 #importFrom("methods", "as")
 importFrom("grDevices", "gray", "grey")
 importFrom("graphics", "mtext", "par", "plot.default", "rect",

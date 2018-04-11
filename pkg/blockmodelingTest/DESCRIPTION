@@ -1,9 +1,10 @@
 Package: blockmodelingTest
 Type: Package
 Title: Testing Version: Generalized and Classical Blockmodeling of Valued Networks
-Version: 0.2.4
-Date: 2018-03-19
-Imports: stats, sna, methods, Matrix, doParallel, doRNG, parallel, foreach
+Version: 0.3.0
+Date: 2018-10-11
+Imports: stats, methods, Matrix, doParallel, doRNG, parallel, foreach
+Suggests: sna
 Author: Aleš Žiberna [aut, cre]
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@gmail.com", 
                   role = c("aut", "cre"))

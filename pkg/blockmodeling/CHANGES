@@ -1,4 +1,4 @@
-Name: blockmodelingTest
+Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
@@ -6,7 +6,7 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 April 10, 2018
 Version 0.3.0
 Final tweaks before submission to CRAN.
-
+Making sna Suggested package (and not one dependent upon).
 
 March 28, 2018
 Correcting some FORTRAN warnings.
