@@ -1,5 +1,5 @@
 "gplot1" <-function(M,diag=TRUE,displaylabels=TRUE,boxed.labels=FALSE,loop.cex=4,edge.lwd=1,edge.col="default",rel.thresh=0.05,...){
-  if(!requireNamespace("sna", quietly = TRUE)){
+  if(requireNamespace("sna", quietly = TRUE)){
     M[M<(max(M)*rel.thresh)]<-0  
     if(edge.col[1]=="default") edge.col<-gray(1-M/max(M))
     edge.col<-edge.col[edge.col!=gray(1)]
@@ -11,7 +11,7 @@
 
 "gplot2" <-
 function(M,uselen=TRUE,usecurve=TRUE,edge.len=0.001,diag=TRUE,displaylabels=TRUE,boxed.labels=FALSE,loop.cex=4,arrowhead.cex=2.5,edge.lwd=1,edge.col="default",rel.thresh=0.05,...){
-  if(!requireNamespace("sna", quietly = TRUE)){
+  if(requireNamespace("sna", quietly = TRUE)){
     M[M<(max(M)*rel.thresh)]<-0
     if(edge.col[1]=="default") edge.col<-gray(1-M/max(M))
     edge.col<-edge.col[edge.col!=gray(1)]
