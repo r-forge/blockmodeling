@@ -18,7 +18,7 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
-  \item{clu}{A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode}
+  \item{clu}{A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode.}
   \item{alt.blocks}{Only one of allowed blocktypes, as alternative to the null block:\cr
   "com" - complete block\cr
   "rdo", "cdo" - row and column-dominant blocks (binary, valued, and implicit approach only)\cr
@@ -31,13 +31,13 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
   \item{cormet}{Which metho should be used to correct for diferent maxismum error contributins?\cr
       "none" - no correction\cr
       "censor" - censor values larger than m\cr
-      "correct" -  so that the maxsimum possible error contribution of the cell is the same regardles of a condition (either that somthing must be o or at least m)}
+      "correct" -  so that the maxsimum possible error contribution of the cell is the same regardles of a condition (either that somthing must be o or at least \code{m}).}
   \item{FUN}{(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks.}
-  \item{cuts}{The cuts which should be evaluatated. If \code{cuts="all"n} (default), all unique values are evaluated}
+  \item{cuts}{The cuts which should be evaluatated. If \code{cuts="all"n} (default), all unique values are evaluated.}
   \item{neval}{Number of different \code{m} values to be evaluated.}
   \item{half}{Should the returned value of m be one half of the value where the incosnistencies are the same.}
   \item{ms}{The values of m where the function should be evaluated.}
-  \item{\dots}{Other parameters to crit.fun}
+  \item{\dots}{Other parameters to \code{crit.fun}.}
 }
 \value{
   A matrix of maximal \code{m/cut} values.
