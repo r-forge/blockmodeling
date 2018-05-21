@@ -18,6 +18,8 @@ This package is primarily meant as an implementation of Generalized blockmodelin
 
 \enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales} (2014): Blockmodeling of multilevel networks. Social Networks, Oct. 2014, vol. 39, no. 1, 46-61. \url{https://doi.org/10.1016/j.socnet.2014.04.002}.
+
 DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anuška}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 
 White, D. R., K. P. Reitz (1983): "Graph and semigroup homomorphisms on networks of relations". Social Networks, 5, p. 193-234.
