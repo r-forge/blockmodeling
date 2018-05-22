@@ -70,10 +70,9 @@ loadpajek(filename)
   NULL, a matrix or a vector (see Description)
 }
 \references{
-Pajek (
-V. Batagelj, A. Mrvar: Pajek - Program for Large Network Analysis. Home page \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}.
+Batagelj, V., & Mrvar. A. (1999). Pajek - Program for Large Network Analysis. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}.
 
-W. de Nooy, A. Mrvar, V. Batagelj: Exploratory Social Network Analysis with Pajek, CUP, January 2005
+de Nooy, W., Mrvar, A., & Batagelj. V. (2005). Exploratory Social Network Analysis with Pajek. London: SAGE Publications.
 }
 \author{Vladimir Batagelj & Andrej Mrvar (most functions), \enc{Aleš Žiberna}{Ales Ziberna} (\code{loadnetwork}, \code{loadpajek} and modification of others)}
 \seealso{\code{\link{plot.mat}}, \code{\link{critFunC}}, \code{\link{optRandomParC}}}

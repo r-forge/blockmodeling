@@ -5,7 +5,7 @@
 \description{
 Computes a generalized matrix multiplication, where sum and product functions (elemetwise and summary functions) can be replaced by arbitrary functions.}
 \usage{
-genMatrixMult(A,B,FUNelement="*", FUNsummary=sum)
+genMatrixMult(A, B, FUNelement = "*", FUNsummary = sum)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

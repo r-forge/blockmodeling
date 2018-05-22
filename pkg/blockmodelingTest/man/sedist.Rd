@@ -32,9 +32,9 @@ If both \code{method} and \code{fun} are "default", the euclidean distances are 
  A matrix (usually of class dist) is returned.
 }
 \references{
-Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for structural equivalence. Social Networks 14, 63-90.
+Batagelj, V., Ferligoj, A., & Doreian, P. (1992). Direct and indirect methods for structural equivalence. Social Networks, 14(1-2), 63-90. doi: 10.1016/0378-8733(92)90014-X
 
-Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
+Lorrain, F., & White, H. C. (1971). Structural equivalence of individuals in social networks. Journal of Mathematical Sociology, 1(1), 49-80. doi: 1971.9989788
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{optParC}}, \code{\link{optParC}}, \code{\link{optRandomParC}}}

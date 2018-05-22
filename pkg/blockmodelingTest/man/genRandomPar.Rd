@@ -25,7 +25,7 @@ genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf,
   A random partition in the format required by \code{\link{optRandomParC}}. If a network has several modes, than a list of partitions, one for each mode.
 }
 \references{
-BATAGELJ, Vladimir, MRVAR, Andrej (2006): Pajek 1.11, \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/} (accessed January 6, 2006).
+Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \keyword{cluster}

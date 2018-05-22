@@ -79,15 +79,15 @@ REGE.ownm.ne.for(M, iter = 3, E = 1)
   ...
 }
 \references{
-\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
+\enc{Žiberna, A.}.{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 
-White, D. R., K. P. Reitz (1983): "Graph and semigroup homomorphisms on networks of relations". Social Networks, 5, p. 193-234.
+White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
 
-White, Douglas R.(1985a): DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR} (12.5.2005).
+White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR}
 
-White, Douglas R.(1985b): DOUG WHITE'S REGULAR DISTANCES PROGRAM. \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR} (12.5.2005).
+White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR}
 
-White, Douglas R.(2005): REGGE (web page). \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} (12.5.2005).
+White, D. R.(2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} 
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna} based on Douglas R. White's original REGE and REGD}
 \seealso{\code{\link{sedist}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{plot.mat}}}
