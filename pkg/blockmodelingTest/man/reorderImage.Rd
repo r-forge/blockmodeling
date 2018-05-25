@@ -20,9 +20,9 @@ reorderImage(IM, oldClu, newClu)
   Reorder matrix (rows and columns are reordred)
 }
 \references{
-\enc{Žiberna, A.}{Ziberna, A.}. (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+\enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
-\enc{Žiberna, A.}{Ziberna, A.}. (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+\enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 }
 \author{Ales Ziberna}
 \seealso{\code{\link{critFunC}}, \code{\link{plot.mat}}, \code{\link{clu}}, \code{\link{IM}}, \code{\link{err}}}
