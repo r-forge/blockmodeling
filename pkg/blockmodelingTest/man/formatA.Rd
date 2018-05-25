@@ -10,10 +10,10 @@ formatA(x, digits = 2, FUN = round, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{A numerical vector or matric}
-  \item{digits}{The number of desired digits}
+  \item{x}{A numerical vector or matrix.}
+  \item{digits}{The number of desired digits.}
   \item{FUN}{Function used for "shortening" the numbers.}
-  \item{\dots}{Additional arguments to \code{format}}
+  \item{\dots}{Additional arguments to \code{format}.}
 }
 \value{
 A character vector or matrix.

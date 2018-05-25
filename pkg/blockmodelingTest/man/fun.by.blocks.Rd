@@ -7,7 +7,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Computation of function values by blocks}
 \description{
-Computes a value of a functions over blocks of a matrix, defined by a partition.
+Computes a value of a function over blocks of a matrix, defined by a partition.
 }
 \usage{
 fun.by.blocks(x, ...)
@@ -20,14 +20,14 @@ FUN = "mean", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An object of suitable class or a matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
-  \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (diferent kinds of units with no ties among themselvs. If the network is not two-mode, the matrix must be square.}
-  \item{clu}{A partition. Each unique value represents one cluster. If the nework is  one-mode, than this should be a vector, else a list of vectors, one for each mode}
-  \item{ignore.diag}{Should the diagonal be ingored. }
-  \item{sortNames}{Should the rows and columns of the matrix be sorted based on their names?}
-  \item{FUN}{Function to be computed over the blocks}
-  \item{which}{Which (if several) of the "best" solutions should be used}
-  \item{\dots}{Further arguments to \code{fun.by.blocks.default} }
+  \item{x}{An object of suitable class or a matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (different kinds of units with no ties among themselves. If the network is not two-mode, the matrix must be square.}
+  \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network can have one or more modes (different  kinds of units with no ties among themselves. If the network is not two-mode, the matrix must be square.}
+  \item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.}
+  \item{ignore.diag}{Should the diagonal be ignored.}
+  \item{sortNames}{Should the rows and columns of the matrix be sorted based on their names.}
+  \item{FUN}{The function to be computed over the blocks.}
+  \item{which}{Which (if several) of the "best" solutions should be used.}
+  \item{\dots}{Further arguments to \code{fun.by.blocks.default}.}
 
 }
 
@@ -44,8 +44,8 @@ FUN = "mean", ...)
 \seealso{\code{\link{optRandomParC}}, \code{\link{optParC}}}
 
 \examples{
-n <- 8 #if larger, the number of partitions increases dramaticaly,
-     #as does if we increase the number of clusters
+n <- 8 # If larger, the number of partitions increases dramaticaly,
+       # as does if we increase the number of clusters
 net <- matrix(NA, ncol = n, nrow = n)
 clu <- rep(1:2, times = c(3, 5))
 tclu <- table(clu)
@@ -55,11 +55,11 @@ net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
 
-#optimizing 10 random partitions with optRandomParC
+# Optimizing 10 random partitions with optRandomParC
 res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "com")
-plot(res) #Hopefully we get the original partition
+plot(res) # Hopefully we get the original partition
 fun.by.blocks(res)
-#computing mean by blocks, ignoring the diagonal (default)
+# Computing mean by blocks, ignoring the diagonal (default)
 }
-\keyword{ cluster }% at least one, from doc/KEYWORDS
-\keyword{ math }% at least one, from doc/KEYWORDS
+\keyword{cluster}% at least one, from doc/KEYWORDS
+\keyword{math}% at least one, from doc/KEYWORDS
