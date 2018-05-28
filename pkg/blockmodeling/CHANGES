@@ -15,6 +15,7 @@ Making sna Suggested package (and not one dependent upon).
 March 28, 2018
 Correcting some FORTRAN warnings.
 
+			 
 March 2, 2018
 Version 0.2.4
 Added help files for functions optRandomParC and critFunC.
@@ -22,12 +23,14 @@ Updated help files (e.g. helpfile for function optParC was inserted (combined) i
 Added new functions plotMat, plotArray and plotMatNm which are equivalent to the old functions plot.mat, plot.array and plot.mat.nm. The old functions will eventually be replaced with the new functions.
 
 
+			  
 2017
 December 8, 2017
 Version: 0.2.3
 Merged optParMultiC and optParC in to optParC. 
 Added formating to returned clu from these functions.
 
+	
 June 30, 2017
 Seveal bug fixes
 
