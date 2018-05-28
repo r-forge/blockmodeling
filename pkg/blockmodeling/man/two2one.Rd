@@ -4,7 +4,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Two-mode network conversions}
 \description{
-  Coverting two mode networks from two to one mode matrix representation and vice versa. If a two-mode matrix is converted in-to a one-mode matrix, the original two-mode matrix lies in the upper right corner of the one-mode matrix.
+  Converting  two mode networks from two to one mode matrix representation and vice versa. If a two-mode matrix is converted into a one-mode matrix, the original two-mode matrix lies in the upper right corner of the one-mode matrix.
 }
 \usage{
 two2one(M, clu = NULL)
@@ -17,17 +17,17 @@ one2two(M, clu = NULL)
 }
 
 \value{
-Functions returns list with elemets:
-a mode mode matrix with the two mode network in its upper left corner.
-  \item{M}{The matrix}
+Function returns list with the elemets:
+a two mode matrix of a the two mode network in its upper left corner.
+  \item{M}{The matrix.}
   \item{clu}{The partition, in form appropriate for the mode of the matrix}
 
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \seealso{\code{\link{optParC}}, \code{\link{optParC}}, \code{\link{optRandomParC}}, \code{\link{plot.mat}}}
 \examples{
-#generating a simple network corresponding to the simple Sum of squares
-#structural equivalence with blockmodel:
+# Generating a simple network corresponding to the simple Sum of squares
+# Structural equivalence with blockmodel:
 # null com
 # null null
 n <- c(7, 13)
@@ -42,12 +42,14 @@ net[clu[[1]] == 2, clu[[2]] == 1] <- rnorm(n = tclu[[1]][2] * tclu[[2]][1],
    mean = 4, sd = 1)
 net[clu[[1]] == 2, clu[[2]] == 2] <- rnorm(n = tclu[[1]][2] * tclu[[2]][2],
    mean = 0, sd = 1)
-plot.mat(net, clu = clu) #two mode matrix of a two mode network
-#converting to one mode network
+plot.mat(net, clu = clu) # Two mode matrix of a two mode network
+
+# Converting to one mode network
 M1 <- two2one(net)$M
-plot.mat(M1, clu = two2one(net)$clu) #plotting one mode matrix
+plot.mat(M1, clu = two2one(net)$clu) # Plotting one mode matrix
+# Converting one to two mode matrix and plotting
 plot.mat(one2two(M1, clu = clu)$M, clu = clu)
-#converting one to two mode matix and ploting
+
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS
 \keyword{graphs}% at least one, from doc/KEYWORDS
