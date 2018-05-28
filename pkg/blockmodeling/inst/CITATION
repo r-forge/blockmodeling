@@ -1,4 +1,4 @@
-citHeader("To cite package '",meta$Package,"' in publications please use pacakage citation and (at least) one of the articles:", sep="")
+citHeader("To cite package '",meta$Package,"' in publications please use package citation and (at least) one of the articles:", sep="")
      
 # Grab the version and date from the DESCRIPTION file
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
@@ -17,7 +17,7 @@ citEntry(entry = "Article",
 	year = "2007",
 	number = "1",
 	pages = "105--126",
-	textVersion= "Žiberna, Aleš (2007). Generalized blockmodeling of valued networks. Social Networks 29 (1), 105–126."
+	textVersion= "Žiberna, Aleš (2007). Generalized blockmodeling of valued networks. Social Networks 29(1), 105-126."
 )
 
 citEntry(entry = "Article",
