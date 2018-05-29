@@ -20,23 +20,23 @@
 
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece}
+\title{REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece.}
 \description{
 REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece (White and Reitz, 1983):
 
-\code{REGE, REGE.for} - Classical REGE or REGGE, as also implemented in Ucinet. Similarities in terms of regular equivalence are computed.  The \code{REGE.for} is a wrapper for calling the FORTRAN subrutine written by White (1985a), modified to be called by R. The \code{REGE} does the same, however it is written in R. The functions with and without ".for" differ only in wheater they are implemented  in R of FORTRAN. Needless to say, the functions implemented in FORTRAN are much faster.
+\code{REGE, REGE.for} - Classical REGE or REGGE, as also implemented in Ucinet. Similarities in terms of regular equivalnece are computed.  The \code{REGE.for} is a wraper for calling the FORTRAN subrutine writen by White (1985a), modified to be called by R. The \code{REGE} does the same, however it is written in R. The functions with and without ".for" differ only in wheater they are implemeted in R of FORTRAN. Needless to say, the funcitons implemeted in FORTRAN are much faster.
 
-\code{REGE.ow, REGE.ow.for} - The above function, modified so that a best match is searched for each arc separately (and not for both arcs, if they exist, together).
+\code{REGE.ow, REGE.ow.for} - The above function, modified so that a best match is searhed for for each arc speleratly (and not for both arcs, if they exist, together)
 
-\code{REGE.nm.for} - REGE or REGGE, modified to use row and column normalized matrices instead of the original matrix.
+\code{REGE.nm.for} - REGE or REGGE, modified to to use row and column normalited matrices instead of the original matrix.
 
-\code{REGE.ownm.for} - The above function, modified so that a best match for an outgoing ties is searched on row-normalized network and for incoming ties on column-normalized network.
+\code{REGE.ownm.for} - The above function, modified so that a best match is searhed for for each arc speleratly (and not for both arcs, if they exist, together)
 
-\code{REGD.for} - REGD or REGDI, a dissimilarity version of the classical REGE or REGGE. Dissimilarities in terms of regular equivalence  are computed.  The \code{REGD.for} is a wrapper for calling the FORTRAN subroutine written by White (1985b), modified to be called by R.
+\code{REGD.for} - REGD or REGDI, a dissimilarity version of the classical REGE or REGGE. Dissimilarities in terms of regular equivalnece are computed.  The \code{REGD.for} is a wraper for calling the FORTRAN subrutine writen by White (1985b), modified to be called by R.
 
-\code{REGE.FC}  - Actually an earlier version of REGE. The difference is in the denominator. See Žiberna (2007) for details.
+\code{REGE.FC}  - Acctually an erlier version of REGE. The diference is in the denominator. See Žiberna (2006) for details.
 
-\code{REGE.FC.ow} - The above function, modified so that a best match is searched for each arc separately (and not for both arcs, if they exist, together).
+\code{REGE.FC.ow} - The above function, modified so that a best match is searhed for for each arc speleratly (and not for both arcs, if they exist, together)
 
 other - still in testing stage
 }
@@ -65,29 +65,29 @@ REGE.ownm.ne.for(M, iter = 3, E = 1)
 \arguments{
   \item{M}{Matrix or a 3 dimensional array representing the network. The third dimension allows for several relations to be analyzed.}
   \item{E}{Initial (dis)similarity in terms of regular equivalnece.}
-  \item{iter}{The desired number of iterations.}
-  \item{until.change}{Should the iterations be stopped when no change occurs.}
+  \item{iter}{The desired number of itetations}
+  \item{until.change}{Should the iterations be stop when no change occours}
   \item{use.diag}{Should the diagonal be used. If \code{FALSE}, all diagonal elements are set to 0.}
-  \item{normE}{Should the equivalence matrix be normalized after each iteration.}
+  \item{normE}{Should the equivalence matrix be normalized after each iteration?}
 }
 \value{
-  \item{E}{A matrix of (dis)similarities in terms of regular equivalnece.}
-  \item{Eall}{An array of (dis)similarity matrices in terms of regular equivalence, each third dimension represets one iteration. For ".for" functions, only the initial and the final (dis)similarities are returned.}
+  \item{E}{A matrix of (dis)similarities in terms of regular equivalnece}
+  \item{Eall }{An array of (dis)similarity matrices in terms of regular equivalnece, each third dimmension represets one iteration. For ".for" functions, only the initial and the final (dis)similarities are returned.}
   \item{M}{Matrix or a 3 dimensional array representing the network used in the call.}
-  \item{iter}{The desired number of iterations.}
-  \item{use.diag}{Should the diagonal be used - for functions implemented in R only.}
+  \item{iter}{The desired number of itetations}
+  \item{use.diag}{Should the diagonal be used - for functions implemeted in R only.}
   ...
 }
 \references{
-\enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
+White, D. R., K. P. Reitz (1983): "Graph and semigroup homomorphisms on networks of relations". Social Networks, 5, p. 193-234.
 
-White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR}
+White, Douglas R.(1985a): DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR} (12.5.2005).
 
-White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR}
+White, Douglas R.(1985b): DOUG WHITE'S REGULAR DISTANCES PROGRAM. \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR} (12.5.2005).
 
-White, D. R.(2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} 
+White, Douglas R.(2005): REGGE (web page). \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} (12.5.2005).
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna} based on Douglas R. White's original REGE and REGD}
 \seealso{\code{\link{sedist}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{plot.mat}}}
@@ -97,19 +97,19 @@ net <- matrix(NA, ncol = n, nrow = n)
 clu <- rep(1:2, times = c(5, 15))
 tclu <- table(clu)
 net[clu == 1, clu == 1] <- 0
-net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1) * sample(c(0, 1),
+net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4,sd = 1) * sample(c(0, 1),
    size = tclu[1] * tclu[2], replace = TRUE, prob = c(3/5, 2/5))
 net[clu == 2, clu == 1] <- 0
 net[clu == 2, clu == 2] <- 0
 
-D <- REGE.for(M = net)$E # Any other REGE function can be used
+D <- REGE.for(M = net)$E #any other REGE function can be used
 plot.mat(net, clu = cutree(hclust(d = as.dist(1 - D), method = "ward"),
    k = 2))
-# REGE returns similarities, which have to be converted to
-# disimilarities
+#REGE returns similarities, which have to be converted to
+#disimilarities
 
 res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "reg")
-plot(res) # Hopefully we get the original partition
+plot(res) #Hopefully we get the original partition
 }
 \keyword{cluster}% at least one, from doc/KEYWORDS
 \keyword{graphs}% at least one, from doc/KEYWORDS

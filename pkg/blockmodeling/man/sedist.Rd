@@ -1,9 +1,9 @@
 \name{sedist}
 \alias{sedist}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Computes distances in terms of Structural equivalence (Lorrain & White, 1971)}
+\title{Computes distances in terms of Structural equivalence (Lorrain and White, 1971)}
 \description{
-The functions compute the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network. Several options for treating the diagonal values are supported.
+The functions computed the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network. Several options for treating the diagonal values are supported.
 }
 \usage{
 sedist(M, method = "default", fun = "default",
@@ -13,34 +13,34 @@ sedist(M, method = "default", fun = "default",
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network must be one-mode.}
-  \item{method}{The method used to compute distances - any of the methods allowed by functions dist, \code{cor} or \code{cov} {all package::stats} or just "cor" or "cov" (given as a character).}
-  \item{fun}{Which function should be used to compute distances (given as a character) .}
+  \item{method}{The method used to compute distances - any of the methods allowed by functions dist, cor or cov {all package::stats} or just "cor" or "cov" (given as character).}
+  \item{fun}{Which function should be used to compute distances (given as character), .}
   \item{fun.on.rows}{For non-standard function - does the function compute measure on rows (such as \code{cor}, \code{cov},...) of the data matrix (as opposed to computing measure on columns (such as \code{dist}).}
   \item{handle.interaction}{How should the interaction between the vertices analysed be handled:\cr
-       "switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]. These two comparisons are weighted by 2. This should be used with Euclidean distance to get the corrected Euclidean distance with p = 2.\cr
+       "switch" (the default) - assumes that when comparing units i and j, M[i,i] should be compared with M[j,j] and M[i,j] with M[j,i]. This two comparisons are weighted by 2. This should be used with euclidean distance to get the corrected euclidean distance with p = 2.\cr
        "switch2" - the same (alias)\cr       
-       "switch1" - the same as above, only that the two comparisons are weighted by 1. This should be used with Euclidean distance to get the corrected Wuclidean distance with p = 1.\cr       
-       "ignore" (diagonal) - Diagonal is ignored. This should be used with Euclidean distance to get the corrected Euclidean distance with p = 0.\cr
+       "switch1" - the same as above, only that the two comparisons are weighted by 1. This should be used with euclidean distance to get the corrected euclidean distance with p = 1.\cr       
+       "ignore" (diagonal) - Diagonal is ignored. This should be used with euclidean distance to get the corrected euclidean distance with p = 0.\cr
        "none" - the matrix is used "as is"}
-  \item{use}{For use with methods "cor" and "cov", for other methods (the default option should be used if \code{handle.interaction=="ignore"}), "pairwise.complete.obs" are always used, if \code{stats.dist.cor.cov=TRUE}.}
+  \item{use}{For use with methods "cor" and "cov", for other methods (the default option should be used if handle.interaction=="ignore"), "pairwise.complete.obs" are always used, if stats.dist.cor.cov=TRUE}
   \item{\dots}{Additional arguments to \code{fun}}
 }
 \details{
-If both \code{method} and \code{fun} are "default", the Euclidean distances are computed. The "default" method for \code{fun="dist"} is "euclidean" and for \code{fun="cor"} "pearson".
+If both \code{method} and \code{fun} are "default", the euclidean distances are computed. the "default" method for \code{fun="dist"} is "euclidean" and for \code{fun="cor"} "pearson".
 }
 \value{
  A matrix (usually of class dist) is returned.
 }
 \references{
-Batagelj, V., Ferligoj, A., & Doreian, P. (1992). Direct and indirect methods for structural equivalence. Social Networks, 14(1-2), 63-90. doi: 10.1016/0378-8733(92)90014-X
+Batagelj, V., Ferligoj, A., Doreian, P. (1992): Direct and indirect methods for structural equivalence. Social Networks 14, 63-90.
 
-Lorrain, F., & White, H. C. (1971). Structural equivalence of individuals in social networks. Journal of Mathematical Sociology, 1(1), 49-80. doi: 10.1080/0022250X.1971.9989788
+Lorrain, F., White, H.C., 1971. Structural equivalence of individuals in social networks. Journal of Mathematical Sociology 1, 49-80.
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \seealso{\code{\link{dist}}, \code{\link{hclust}}, \code{\link{REGE}}, \code{\link{optParC}}, \code{\link{optParC}}, \code{\link{optRandomParC}}}
 \examples{
-# Generating a simple network corresponding to the simple Sum of squares
-# Structural equivalence with blockmodel:
+#generating a simple network corresponding to the simple Sum of squares
+#structural equivalence with blockmodel:
 # null com
 # null null
 n <- 20

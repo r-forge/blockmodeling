@@ -14,17 +14,15 @@ This package is primarily meant as an implementation of Generalized blockmodelin
 \enc{Aleš Žiberna}{Ales Ziberna}
 }
 \references{
-Doreian, P., Batagelj, V. & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales} (2006): Generalized Blockmodeling of Valued Networks. Social Networks, Jan. 2007, vol. 29, no. 1, 105-126. \url{http://dx.doi.org/10.1016/j.socnet.2006.04.002}.
 
-\enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+\enc{ŽIBERNA, Aleš}{ZIBERNA, Ales}. Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. J. math. sociol., 2008, vol. 32, no. 1,  57-84. \url{http://www.informaworld.com/smpp/content?content=10.1080/00222500701790207}.
 
-\enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+DOREIAN, Patrick, BATAGELJ, Vladimir, FERLIGOJ, \enc{Anuška}{Anuska} (2005): Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press, 2005. XV, 384 p., ISBN 0-521-84085-6.
 
-\enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
+White, D. R., K. P. Reitz (1983): "Graph and semigroup homomorphisms on networks of relations". Social Networks, 5, p. 193-234.
 
-White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
-
-White, D. R.(2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/}
+White, Douglas R.(2005): REGGE (web page). \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} (12.5.2005).
 }
 \keyword{ package }
 \keyword{cluster}% at least one, from doc/KEYWORDS
@@ -39,7 +37,7 @@ Functions inside this package:
 \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{optRandomParC}},  \code{\link{REGE}}, \code{\link{plot.mat}}
 }
 \examples{
-n <- 8 # If larger, the number of partitions increases dramaticaly,
+n <- 8 #if larger, the number of partitions increases dramaticaly,
 # as does if we increase the number of clusters
 net <- matrix(NA, ncol = n, nrow = n)
 clu <- rep(1:2, times = c(3, 5))
@@ -49,23 +47,28 @@ net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
 net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
-# We select a random parition and then optimise it
-all.par <- nkpartitions(n = n, k = length(tclu))
-# Forming the partitions
-all.par <- lapply(apply(all.par, 1, list), function(x) x[[1]])
+#we select a random parition and then optimise it
 
-# Optimizing one partition
+all.par<-nkpartitions(n=n, k=length(tclu))
+#forming the partitions
+all.par <- lapply(apply(all.par, 1, list), function(x) x[[1]])
+# to make a list out of the matrix
+
+#optimizing one partition
 res <- optParC(M = net,
    clu = all.par[[sample(1:length(all.par), size = 1)]],
    approaches = "hom", homFun = "ss" , blocks = "com")
-plot(res) # Hopefully we get the original partition
+plot(res) #Hopefully we get the original partition
 
-# Optimizing 10 random partitions with opt.random.par
+
+#optimizing 10 random partitions with opt.random.par
 res <- optRandomParC(M = net, k = 2, rep = 10, 
 approaches = "hom", homFun = "ss", blocks = "com")
-plot(res) # Hopefully we get the original partition
+plot(res) #Hopefully we get the original partition
 
-# Using indidect approach - structural equivalence
+
+
+#using indidect approach - structural equivalence
 D <- sedist(M = net)
 plot.mat(net, clu = cutree(hclust(d = D, method = "ward"), k = 2))
 }
