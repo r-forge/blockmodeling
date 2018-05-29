@@ -11,8 +11,8 @@ recode(x, oldcode = sort(unique(x)), newcode)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{A vector}
-  \item{oldcode}{A vector of old codes}
-  \item{newcode}{A vector of new codes}
+  \item{oldcode}{A vector of old codes.}
+  \item{newcode}{A vector of new codes.}
 }
 
 \value{
@@ -24,5 +24,5 @@ x <- rep(1:3, times = 1:3)
 newx <- recode(x, oldcode = 1:3, newcode = c("a", "b", "c"))
 }
 
-\keyword{ manip }% at least one, from doc/KEYWORDS
+\keyword{manip}% at least one, from doc/KEYWORDS
 

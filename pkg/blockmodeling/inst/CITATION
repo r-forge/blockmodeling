@@ -1,5 +1,5 @@
 citHeader("To cite package '",meta$Package,"' in publications please use package citation and (at least) one of the articles:", sep="")
-
+     
 # Grab the version and date from the DESCRIPTION file
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
 vers <- paste("R package version", meta$Version)
