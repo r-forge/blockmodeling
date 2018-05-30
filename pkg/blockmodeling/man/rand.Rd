@@ -22,6 +22,6 @@ crand2(clu1, clu2)
 \value{
   The value of Rand Index (corrected/adjusted for chance).
 }
-\references{Hubert L. &, Arabie P. (1985). Comparing Partitions. Journal of Classification, 2(1), 193-218.}
+\references{Hubert, L., & Arabie, P. (1985). Comparing Partitions. Journal of Classification, 2(1), 193-218.}
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \keyword{cluster}% at least one, from doc/KEYWORDS
