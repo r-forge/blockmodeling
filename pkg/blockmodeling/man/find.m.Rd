@@ -43,7 +43,7 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
   A matrix of maximal \code{m/cut} values.
 }
 \references{
-Doreian, P., Batagelj, V. & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
+Doreian, P., Batagelj, V. & Ferligoj, A. \enc{Anuška}{Anuska}. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
