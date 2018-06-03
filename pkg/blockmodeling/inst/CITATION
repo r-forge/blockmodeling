@@ -34,12 +34,14 @@ citEntry(entry = "Article",
 )
 
 citEntry(entry="Manual",
-	title = "Generalized and Classical Blockmodeling of Valued Networks",
+	title = meta$Title,
 	author= as.person("Aleš Žiberna"),
-	year ="2018",
-	note ="package version 0.3.1",
-	textVersion= "Žiberna, A. (2018). Generalized and Classical Blockmodeling of Valued Networks. R package
-  version 0.3.1."
+	year =year,
+	note =vers,
+	textVersion= paste("Žiberna, A. (", year, 
+	").  ",meta$Title,", ",
+	vers, ".", sep="")
 )
+
 
 
