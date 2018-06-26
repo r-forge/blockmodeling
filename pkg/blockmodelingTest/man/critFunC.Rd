@@ -104,6 +104,8 @@ absolute deviations.}
   \item{BM}{Block means by block - only for Homogeneity blockmodeling.}
   \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}
   \item{useMulti}{If \code{TRUE} several optimal partitions are found.}
+  \item{bestRowParMatrix}{(If \code{useMulti = TRUE}) Matrix, where there are different solutions for columns, where rows represent units.}
+   
 }
 \references{
 Doreian, P., Batagelj, V., & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
