@@ -86,14 +86,24 @@ absolute deviations.}
 %\details{
 %}
 \value{
-  A list:
+
+ \code{critFunC} returns a list containing:
   \item{M}{The matrix of the network analyzed.}
   \item{err}{The error or inconsistency emplirical network with the ideal network for a given blockmodel (model, approach,...) and paritition.}
   \item{clu}{The analyzed partition.}
   \item{EM}{Block errors by blocks.}
   \item{IM}{The obtained image for objects.}
   \item{BM}{Block means by block - only for Homogeneity blockmodeling.}
+  \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}\cr
+   \code{optParC} returns a list containing:
+    \item{M}{The matrix of the network analyzed.}
+  \item{err}{The error or inconsistency emplirical network with the ideal network for a given blockmodel (model, approach,...) and paritition.}
+  \item{clu}{The analyzed partition.}
+  \item{EM}{Block errors by blocks.}
+  \item{IM}{The obtained image for objects.}
+  \item{BM}{Block means by block - only for Homogeneity blockmodeling.}
   \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}
+  \item{useMulti}{If \code{TRUE} several optimal partitions are found.}
 }
 \references{
 Doreian, P., Batagelj, V., & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
