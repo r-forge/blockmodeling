@@ -61,7 +61,7 @@ loadpajek(filename)
   \item{minN}{The minimal number of units in the network to use sparse matrices.}
   \item{n}{A matrix representing the network.}
   \item{twomode}{1 for one-mode networks and 2 for two-mode networks. Default sets the argument to 1 for square matrices and to 2 for others.}
-  \item{symetric}{If true, only the lower part of the matrix is used and the values are interpreted as "Edges", not "Arcs".}
+  \item{symetric}{If \code{TRUE}, only the lower part of the matrix is used and the values are interpreted as "Edges", not "Arcs".}
   \item{v}{A vector.}
   \item{fill}{If \code{TRUE}, then in case the rows have unequal length, blank fields are added.}
   \item{safe}{If \code{FALSE} error will occur if not all vertices have labels. If \code{TRUE} reading works faster.}

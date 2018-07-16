@@ -38,17 +38,17 @@ optRandomParC(M, k, rep, save.initial.param = TRUE,
   \item{return.all}{If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.}
   \item{return.err}{Should the error for each optimized partition be returned.}
   \item{seed}{Optional. The seed for random generation of partitions.}
-  \item{RandomSeed}{Optional. Integer vector, containing the random number generator.It is only         looked for in the user's workspace.}
+  \item{RandomSeed}{Optional. Integer vector, containing the random number generator. It is only         looked for in the user's workspace.}
   \item{parGenFun}{The function (object) that will generate random partitions. The default function is   \code{\link{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).}
   \item{mingr}{Minimal allowed group size.}
   \item{maxgr}{Maximal allowed group size.}
   \item{addParam}{A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link{genRandomPar}}.}
   \item{genPajekPar}{Should the partitions be generated as in Pajek.}
   \item{probGenMech}{Should the probabilities for different mechanisms for specifying the partitions be set. If \code{probGenMech} is not set, it is determined based on the parameter \code{genPajekPar}.}
-  \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep*1000}.}
+  \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep * 1000}.}
   \item{skip.par}{The partitions that are not allowed or were already checked and should therefore be skipped.}
   \item{useOptParMultiC}{For backward compatibility. May be removed soon. See next argument.}
-  \item{useMulti}{Which version of local search should be used. Default is currently \code{FALSE}. If \code{FALSE}, first possible all moves in random order and then all possible exchanges in random order are tired. When a move with lower value of criterion function is found, the algorithm moves to this new partition. If \code{TRUE} the version of local search where all possible moves and exchanges are tired first and then the one with the lowest error is selected and used. In this case, several optimal partitions are found. \code{maxPar} best partitions are returned.}
+  \item{useMulti}{Which version of local search should be used. Default is currently \code{FALSE}. If \code{FALSE}, first possible all moves in random order and then all possible exchanges in random order are tried. When a move with lower value of criterion function is found, the algorithm moves to this new partition. If \code{TRUE} the version of local search where all possible moves and exchanges are tried first and then the one with the lowest error is selected and used. In this case, several optimal partitions are found. \code{maxPar} best partitions are returned.}
  \item{printRep}{Should some information about each optimization be printed.}
  \item{n}{The number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is one mode (both modes are in rows and columns).}
   \item{nCores}{Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.}
@@ -74,7 +74,7 @@ of network with more than 100 units can take a lot of time (from a few hours to 
 \references{
 Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}
 
-Doreian, P., Batagelj, V. & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
+Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
@@ -97,7 +97,7 @@ net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
 net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
-# We select a random parition and then optimise it
+# We select a random partition and then optimize it
 all.par <- nkpartitions(n = n, k = length(tclu))
 # Forming the partitions
 all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])

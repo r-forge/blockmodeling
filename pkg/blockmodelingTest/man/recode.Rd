@@ -10,13 +10,13 @@ recode(x, oldcode = sort(unique(x)), newcode)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{A vector}
+  \item{x}{A vector.}
   \item{oldcode}{A vector of old codes.}
   \item{newcode}{A vector of new codes.}
 }
 
 \value{
-  A recoded vector
+  A recoded vector.
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
 \examples{

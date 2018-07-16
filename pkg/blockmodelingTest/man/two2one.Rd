@@ -17,10 +17,10 @@ one2two(M, clu = NULL)
 }
 
 \value{
-Function returns list with the elemets:
+Function returns list with the elements:
 a two mode matrix of a the two mode network in its upper left corner.
   \item{M}{The matrix.}
-  \item{clu}{The partition, in form appropriate for the mode of the matrix}
+  \item{clu}{The partition, in form appropriate for the mode of the matrix.}
 
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}

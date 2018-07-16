@@ -18,7 +18,7 @@ genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf,
   \item{maxgr}{Maximal allowed group size.}
   \item{addParam}{This has to be a list with the following parameters (any or all can be missing, then the default values (see usage) are used):\cr
   "genPajekPar" - Should the partitions be generated as in Pajek (Batagelj & Mrvar, 2006). If \code{FALSE}, all partitions are selected completely at random while making sure that the partitions have the required number of clusters. \cr
-  "probGenMech" - Here the probabilities for 4 different generating mechanisms can be specified. If this is not specified, the value is set to \code{c(1/3,1/3,1/3,0)} if \code{genPajekPar} is \code{TRUE} and to \code{c(0,0,0,1)} if \code{genPajekPar} is \code{FALSE}. The first 3 mechanisms are the same as implemented in Pajek (the second one has almost all units in only one cluster) and the fourth is completely random (from uniform distribution).
+  \code{probGenMech} - Here the probabilities for 4 different generating mechanisms can be specified. If this is not specified, the value is set to \code{c(1/3, 1/3, 1/3, 0)} if \code{genPajekPar} is \code{TRUE} and to \code{c(0, 0, 0, 1)} if \code{genPajekPar} is \code{FALSE}. The first 3 mechanisms are the same as implemented in Pajek (the second one has almost all units in only one cluster) and the fourth is completely random (from uniform distribution).
 }
 }
 \value{

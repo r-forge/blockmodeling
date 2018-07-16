@@ -22,8 +22,8 @@ The matrix or number of possible partitions.
 }
 \author{Chris Andrews}
 \examples{
-n <- 8 # If larger, the number of partitions increases dramaticaly,
-     # as does if we increase the number of clusters
+n <- 8 # If larger, the number of partitions increases dramatically,
+# as does if we increase the number of clusters
 net <- matrix(NA, ncol = n, nrow = n)
 clu <- rep(1:2, times = c(3, 5))
 tclu <- table(clu)

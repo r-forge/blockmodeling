@@ -108,7 +108,7 @@ absolute deviations.}
    
 }
 \references{
-Doreian, P., Batagelj, V., & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
+Doreian, P., Batagelj, V., & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
@@ -135,7 +135,7 @@ net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
 # Computation of criterion function with the correct partition
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = "com")
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$BM  # The block means are around 0 or 4
 plot(res)
 
@@ -148,7 +148,7 @@ B[1, 1, , ] <- "nul"
 B[1, 1, 1, 2] <- "com"
 B[1, 1, , ]
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = B)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 plot(res)
 
@@ -161,7 +161,7 @@ B <- array(NA, dim = c(2, 2, 2))
 B[1, , ] <- "nul"
 B[2, 1, 2] <- "com"
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = B)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 plot(res)
 
@@ -180,7 +180,7 @@ net[net < 0] <- 0
 # Computation of criterion function with the correct partition
 res <- critFunC(M = net, clu = clu, approaches = "val", 
 blocks = c("nul", "com"), preSpecM = 4)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 # The image corresponds to the one used for generation of
 # The network

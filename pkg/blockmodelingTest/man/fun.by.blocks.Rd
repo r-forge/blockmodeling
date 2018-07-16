@@ -32,7 +32,7 @@ FUN = "mean", ...)
 }
 
 \value{
- A numerical matrix of \code{FUN} values by blocks, induced by a partition \code{clu}
+ A numerical matrix of \code{FUN} values by blocks, induced by a partition \code{clu}.
 }
 \references{
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
@@ -44,8 +44,8 @@ FUN = "mean", ...)
 \seealso{\code{\link{optRandomParC}}, \code{\link{optParC}}}
 
 \examples{
-n <- 8 # If larger, the number of partitions increases dramaticaly,
-       # as does if we increase the number of clusters
+n <- 8 # If larger, the number of partitions increases dramatically,
+# as does if we increase the number of clusters
 net <- matrix(NA, ncol = n, nrow = n)
 clu <- rep(1:2, times = c(3, 5))
 tclu <- table(clu)
@@ -53,7 +53,6 @@ net[clu == 1, clu == 1] <- rnorm(n = tclu[1] * tclu[1], mean = 0, sd = 1)
 net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
 net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
-
 
 # Optimizing 10 random partitions with optRandomParC
 res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "com")
