@@ -67,7 +67,7 @@ loadpajek(filename)
   \item{safe}{If \code{FALSE} error will occur if not all vertices have labels. If \code{TRUE} reading works faster.}
   \item{closeFile}{Should the connection be closed at the end. Should be always \code{TRUE} if function is used directly.}}
 \value{
-  NULL, a matrix or a vector (see Description)
+  NULL, a matrix or a vector (see Description).
 }
 \references{
 Batagelj, V., & Mrvar. A. (1999). Pajek - Program for Large Network Analysis. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}.
