@@ -105,6 +105,7 @@ absolute deviations.}
   \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}
   \item{useMulti}{The value of the input paramter \code{useMulti}.}
   \item{bestRowParMatrix}{(If \code{useMulti = TRUE}) Matrix, where there are different solutions for columns, where rows represent units.}
+   \item{sameErr}{The number of partitions with the minimum value of the criterion function.}
    
 }
 \references{
