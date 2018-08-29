@@ -169,6 +169,15 @@ function(
     }
 
     if(!is.null(clu)){  #is any clustering provided, ordering of the matrix if 'TRUE'
+      if(is.list(clu)){
+        clu<-lapply(clu,function(x)as.integer(as.factor(x)))
+        tmNclu<-sapply(clu,max)
+        for(iMode in 2:length(tmNclu)){
+          clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+        }
+        unlistClu<-unlist(clu)
+        if( all(length(unlistClu)==dm)) clu<-unlistClu
+      }
         if(!is.list(clu)){
             tclu<-table(clu)
             or.c<-or.r<-order(clu)
