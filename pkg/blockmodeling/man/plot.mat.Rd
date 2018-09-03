@@ -126,7 +126,7 @@ plotArray(x = M, M = x, IM = NULL, ..., main.title = NULL,
 \method{plot}{crit.fun}(x, main = NULL, ...)
 
 
-\method{plot}{array}(x = M, M = x, ..., main.title = NULL, main.title.line
+\method{plot}{array}(x = M, M = x, IM = NULL, ..., main.title = NULL, main.title.line
                  = -2, mfrow = NULL)
 
 \method{plot}{opt.par}(x, main = NULL, which = 1, ...)
