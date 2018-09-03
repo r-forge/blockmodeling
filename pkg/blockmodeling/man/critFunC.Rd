@@ -86,14 +86,27 @@ absolute deviations.}
 %\details{
 %}
 \value{
-  A list:
+
+ \code{critFunC} returns a list containing:
   \item{M}{The matrix of the network analyzed.}
   \item{err}{The error or inconsistency emplirical network with the ideal network for a given blockmodel (model, approach,...) and paritition.}
   \item{clu}{The analyzed partition.}
   \item{EM}{Block errors by blocks.}
   \item{IM}{The obtained image for objects.}
   \item{BM}{Block means by block - only for Homogeneity blockmodeling.}
+  \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}\cr
+   \code{optParC} returns a list containing:
+    \item{M}{The matrix of the network analyzed.}
+  \item{err}{The error or inconsistency emplirical network with the ideal network for a given blockmodel (model, approach,...) and paritition.}
+  \item{clu}{The analyzed partition.}
+  \item{EM}{Block errors by blocks.}
+  \item{IM}{The obtained image for objects.}
+  \item{BM}{Block means by block - only for Homogeneity blockmodeling.}
   \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array.}
+  \item{useMulti}{The value of the input paramter \code{useMulti}.}
+  \item{bestRowParMatrix}{(If \code{useMulti = TRUE}) Matrix, where there are different solutions for columns, where rows represent units.}
+   \item{sameErr}{The number of partitions with the minimum value of the criterion function.}
+   
 }
 \references{
 Doreian, P., Batagelj, V., & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
@@ -123,7 +136,7 @@ net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
 # Computation of criterion function with the correct partition
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = "com")
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$BM  # The block means are around 0 or 4
 plot(res)
 
@@ -136,7 +149,7 @@ B[1, 1, , ] <- "nul"
 B[1, 1, 1, 2] <- "com"
 B[1, 1, , ]
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = B)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 plot(res)
 
@@ -149,7 +162,7 @@ B <- array(NA, dim = c(2, 2, 2))
 B[1, , ] <- "nul"
 B[2, 1, 2] <- "com"
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = B)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 plot(res)
 
@@ -168,7 +181,7 @@ net[net < 0] <- 0
 # Computation of criterion function with the correct partition
 res <- critFunC(M = net, clu = clu, approaches = "val", 
 blocks = c("nul", "com"), preSpecM = 4)
-res$err # The error is relativly small
+res$err # The error is relatively small
 res$IM 
 # The image corresponds to the one used for generation of
 # The network

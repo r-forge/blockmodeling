@@ -3,9 +3,14 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2018
+September 3, 2018
+Version 0.3.2
+Edited grammar in help files.
+
+
 May 29, 2018
 Version 0.3.1
-Edited grammar in help files
+Edited grammar in help files.
 Editing style (APA) of citaitons of blockmodeling package in publications.
 Added a reference for the method in the 'Description' field. 
 
@@ -13,7 +18,7 @@ April 25, 2018
 Version 0.3.1
 A bug fix which prevented the use of functions gplot1 and gplot2.
 
-2018
+
 April 10, 2018
 Version 0.3.0
 Final tweaks before submission to CRAN.
@@ -21,6 +26,7 @@ Final tweaks before submission to CRAN.
 
 March 28, 2018
 Correcting some FORTRAN warnings.
+
 
 March 2, 2018
 Version 0.2.4
@@ -36,16 +42,16 @@ Merged optParMultiC and optParC in to optParC.
 Added formating to returned clu from these functions.
 
 June 30, 2017
-Seveal bug fixes
+Seveal bug fixes.
 
 2014
 May 14, 2014
 Version: 0.2.2
-A bug in sedist fixed
+A bug in sedist fixed.
 
 2013
 Version: 0.2.2
-Several improvements, added additional block types (rfn, cfn, cdo, rdo) and support for multilevel blockmodeling
+Several improvements, added additional block types (rfn, cfn, cdo, rdo) and support for multilevel blockmodeling.
 
 November 15, 2012
 Version: 0.2.2
@@ -55,5 +61,5 @@ Multicore support through package doParallel for function optRandomParC.
 
 February 9, 2012
 Version: 0.2.1
-Added optParMultiC - function for searching whole neighbourhood before moving to the next partition
-Added valued blockmodeling in C (the blocks are still limited to nul, com and reg)
+Added optParMultiC - function for searching whole neighbourhood before moving to the next partition.
+Added valued blockmodeling in C (the blocks are still limited to nul, com and reg).

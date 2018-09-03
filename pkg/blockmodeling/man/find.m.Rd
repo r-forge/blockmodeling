@@ -31,7 +31,7 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
   \item{cormet}{Which method should be used to correct for different maximum  error contributions\cr
       "none" - no correction\cr
       "censor" - censor values larger than \code{M}\cr
-      "correct" -  so that the maximum  possible error contribution of the cell is the same regardless of a condition (either that something  must be 0 or at least \code{m}).}
+      "correct" -  so that the maximum  possible error contribution of the cell is the same regardless of a condition (either that something  must be 0 or at least \code{M}).}
   \item{FUN}{(default = "max") Function f used in row-f-regular, column-f-regular, and f-regular blocks.}
   \item{cuts}{The cuts, which should be evaluated. If \code{cuts="all"} (default), all unique values are evaluated.}
   \item{neval}{A number of different \code{m} values to be evaluated.}
@@ -43,7 +43,7 @@ find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
   A matrix of maximal \code{m/cut} values.
 }
 \references{
-Doreian, P., Batagelj, V., & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
+Doreian, P., Batagelj, V. & Ferligoj, A. \enc{Anuška}{Anuska} (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 

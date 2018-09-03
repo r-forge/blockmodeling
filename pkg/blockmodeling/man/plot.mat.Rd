@@ -156,10 +156,10 @@ then this should be a vector, else a list of vectors, one for each mode.}
   \item{print.digits.legend}{The number of digits that should appear in the legend.}
   \item{print.digits.cells}{The number of digits that should appear in the cells (of the matrix and/or legend).}
   \item{print.cells.mf}{If not \code{NULL}, the above argument is ignored, the cell values are printed as the cell are multiplied by this factor and rounded.}
-  \item{outer.title}{Should the title be printed on the 'inner' or 'outer' plot, default is \code{'inner'}.}
+  \item{outer.title}{Should the title be printed on the 'inner' or 'outer' margin of the plot, default is 'inner' margin.}
   \item{title.line}{The line (from the top) where the title should be printed. The suitable values depend heavily on the displayed type.}
   \item{mar}{A numerical vector of the form \code{c(bottom, left, top, right)} which gives the lines of margin to be specified on the four sides of the plot. The R default for ordinary  plots is \code{c(5, 4, 4, 2) + 0.1}, while this function default is \code{c(0.5, 7, 8.5, 0) + 0.1}.}
-  \item{cex.val}{The size of the values printed. The default is \code{10/'number of units'}.}
+  \item{cex.val}{The size of the values printed. The default is \code{10 / 'number of units'}.}
   \item{val.y.coor.cor}{Correction for centering the values in the squares in y direction.}
   \item{val.x.coor.cor}{Correction for centering the values in the squares in x direction.}
   \item{cex.legend}{Size of the text in the legend.}
@@ -183,12 +183,12 @@ then this should be a vector, else a list of vectors, one for each mode.}
   \item{IM.dens}{The density of shading lines in each block.}
   \item{IM}{The image (as obtained  with \code{critFunC}) of the blockmodel. \code{dens.leg} is used to translate this image into \code{IM.dens}.}
    \item{wnet}{Specifies which matrix (if more) should be plotted  - used if \code{M} is an array.}
-   \item{wIM}{Specifies which IM (if more) should be used for plotting. The default value is set to \code{wnet}) - used if IM is an array.}
-  \item{use.IM}{Specifies if IM should be used for plotting.}
+   \item{wIM}{Specifies which \code{IM} (if more) should be used for plotting. The default value is set to \code{wnet}) - used if \code{IM} is an array.}
+  \item{use.IM}{Specifies if \code{IM} should be used for plotting.}
     \item{dens.leg}{It is used to translate the \code{IM} into \code{IM.dens}.}
   \item{blackdens}{At which density should the values on dark colors  of lines be printed in white.}
   \item{plotLines}{Should the lines in the matrix be printed. The default value is set to \code{FALSE}, best set to \code{TRUE} for very small networks.}
-  \item{frameMatrix}{Should the matrix be framed (if plotLines is \code{FALSE}). The default value is set to \code{TRUE}.}
+  \item{frameMatrix}{Should the matrix be framed (if \code{plotLines} is \code{FALSE}). The default value is set to \code{TRUE}.}
   \item{x0ParLine}{Coordinates for lines separating clusters.}
   \item{x1ParLine}{Coordinates for lines separating clusters.}
   \item{y0ParLine}{Coordinates for lines separating clusters.}
@@ -196,12 +196,12 @@ then this should be a vector, else a list of vectors, one for each mode.}
    \item{colByUnits}{Coloring units. It should be a vector of unit length.}
   \item{colByRow}{Coloring units by rows. It should be a vector of unit length.}
   \item{colByCol}{Coloring units by columns. It should be a vector of unit length.}
-  \item{mulCol}{Multiply color when joining with row, column. Only used when when \code{colByUnits} is not NULL.}
+  \item{mulCol}{Multiply color when joining with row, column. Only used when when \code{colByUnits} is not \code{NULL}.}
   \item{joinColOperator}{Function to join \code{colByRow} and \code{colByCol}. The default value is set to \code{"+"}.}
   \item{colTies}{If \code{TRUE}, ties are colored, if \code{FALSE}, 0-ties are colored.}
   \item{maxValPlot}{The value to use as a maximum when computing colors (ties with maximal positive value are plotted  as black).}
   \item{printMultipliedMessage}{Should the message '* all values in cells were multiplied by' be printed on the plot. The default value is set to \code{TRUE}.}
-  \item{replaceNAdiagWith0}{If \code{replaceNAdiagWith0 = TRUE} Should the NA values on the diagonal of a matrix be replaced with 0s.}
+  \item{replaceNAdiagWith0}{If \code{replaceNAdiagWith0 = TRUE} Should the \code{NA} values on the diagonal of a matrix be replaced with 0s.}
    \item{title.row}{Title for the row-normalized matrix in nm version}
    \item{title.col}{Title for the column-normalized matrix in nm version}
    \item{par.set}{A list of possible plotting parameters (to \code{par}) to be used in nm version}
@@ -235,9 +235,9 @@ net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 plotMat(M = net, clu = clu, print.digits.cells = 3)
 class(net) <- "mat"
 plot(net, clu = clu)
-# See corespodning functions for examples for other plotting
+# See corresponding functions for examples for other ploting
 # functions
-# presented, that are esentially only the wrappers for "plot.max"
+# presented, that are essentially only the wrappers for "plot.max"
 }
 \keyword{graphs}% at least one, from doc/KEYWORDS
 \keyword{hplot}% at least one, from doc/KEYWORDS

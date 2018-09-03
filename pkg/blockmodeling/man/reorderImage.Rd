@@ -17,7 +17,7 @@ reorderImage(IM, oldClu, newClu)
 %  ~~ If necessary, more details than the description above ~~
 %}
 \value{
-  Reorder matrix (rows and columns are reordred)
+  Reorder matrix (rows and columns are reordred).
 }
 \references{
 \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002

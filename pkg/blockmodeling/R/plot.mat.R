@@ -62,10 +62,15 @@ function(
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
-    if(length(dim(IM))>2&use.IM){
+    if(length(dim(IM))>length(dim(IM))&use.IM){
         if(is.null(wIM))wIM<-wnet
         if(is.null(wIM)) wIM<-1
-        IM<-IM[wIM,,]
+        if(length(dim(IM))==3) {
+          IM<-IM[wIM,,]
+        } else{
+          warning("IM will not be used for plotting. Cannot be sure how to extract the appropirate part!")
+          use.IM<-FALSE
+        }
     }
     tempClu<-clu
 	
@@ -76,7 +81,7 @@ function(
             relDim<-which.min(dim(M))
             if(relDim==1){
                 M<-M[wnet,,]
-            }else if(relDim==1){
+            }else if(relDim==3){
                     M<-M[,,wnet]
             }else stop("More than 2 dimensions where relation dimension can not be determined")
         }else{
@@ -169,6 +174,15 @@ function(
     }
 
     if(!is.null(clu)){  #is any clustering provided, ordering of the matrix if 'TRUE'
+      if(is.list(clu)){
+        clu<-lapply(clu,function(x)as.integer(as.factor(x)))
+        tmNclu<-sapply(clu,max)
+        for(iMode in 2:length(tmNclu)){
+          clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+        }
+        unlistClu<-unlist(clu)
+        if( all(length(unlistClu)==dm)) clu<-unlistClu
+      }
         if(!is.list(clu)){
             tclu<-table(clu)
             or.c<-or.r<-order(clu)
@@ -374,6 +388,7 @@ function(
 function(
     x=M, #x should be a matrix or similar object
     M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
+    IM=NULL, #the image to be used for plotting
     ...,    #aditional arguments to plot.mat
     main.title=NULL,main.title.line=-2,mfrow=NULL
 ){
@@ -401,10 +416,12 @@ function(
     
     relNames<-dimnames(M)[[relDim]]
     if(is.null(relNames)) relNames<-1:nDim
-    for(iName in relNames) {
+    for(i in 1:nDim){
+    #for(iName in relNames) 
+        iName<-relNames[i]
         if(relDim==1){
-            plot.mat(M[iName,,],main=iName,...)
-        } else if(relDim==3) plot.mat(M[,,iName],main=iName,...)
+            plot.mat(M[iName,,],main=iName, IM=IM[i,,],...)
+        } else if(relDim==3) plot.mat(M[,,iName],main=iName, IM=IM[i,,],...)
     }
     
     title(main=main.title,outer=TRUE,line=main.title.line)

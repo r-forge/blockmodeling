@@ -21,8 +21,7 @@ gplot2(M, uselen = TRUE, usecurve = TRUE,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix (array) of a graph or set thereof.  This data may be valued. }
-  \item{diag}{Boolean indicating whether or not the diagonal should be treated as valid data.  Set this true if and only if the data can contain loops.  \code{diag} is \code{FALSE} by default. }
-
+  \item{diag}{Boolean indicating whether or not the diagonal should be treated as valid data.  Set this \code{TRUE} if and only if the data can contain loops.  \code{diag} is \code{FALSE} by default.}
   \item{rel.thresh}{Real number indicating the lower relative (compared to the highest value) threshold for tie values.  Only ties of value \code{thresh} are displayed.  By default, \code{thresh = 0}.}
   \item{displaylabels}{Boolean; should vertex labels be displayed. }
   \item{boxed.labels}{Boolean; place vertex labels within boxes. }
@@ -39,7 +38,7 @@ gplot2(M, uselen = TRUE, usecurve = TRUE,
 }
 
 \value{
- Plots a graph
+ Plots a graph.
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{\enc{Aleš Žiberna}{Ales Ziberna}}
