@@ -92,8 +92,8 @@ plotMatNm(x = M, M = x, ..., main.title = NULL,
 %                 = -2, mfrow = NULL)
 
         
-plotArray(x = M, M = x, ..., main.title = NULL, main.title.line
-                 = -2, mfrow = NULL)
+plotArray(x = M, M = x, IM = NULL, ..., main.title = NULL,
+                 main.title.line = -2, mfrow = NULL)
 
 \method{plot}{mat}(x = M, M = x, clu = NULL, 
                   ylab = "", xlab = "", main =
