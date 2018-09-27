@@ -59,9 +59,9 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
     		next
     	}else line<-as.double(line)
     	
-    	if(type=="*Arcs"){
+    	if(tolower(type)=="*arcs"){
     		M[line[1],line[2]]<-line[3]
-    	}else if(type=="*Edges") {
+    	}else if(tolower(type)=="*edges") {
     		M[line[1],line[2]]<-line[3]
     		M[line[2],line[1]]<-line[3]
     	}	
