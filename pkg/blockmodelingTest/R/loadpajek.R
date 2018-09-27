@@ -16,9 +16,9 @@ loadpajek<-function(filename){
             next
         }
 		if(sum(grep(pattern="^ *$",x=as.character(line))==1)) next
-		if(line[1]=="*Matrix" || line[1]=="*Network"){
+		if(tolower(tolower(line[1]))=="*matrix" || tolower(line[1])=="*network"){
 			objName<-paste(line[-1],collapse=" ")
-			if(line[1]=="*Matrix"){
+			if(tolower(line[1])=="*matrix"){
 				readObj<-loadmatrix(file)
 			}else readObj<-loadnetwork2(file, closeFile=FALSE)
 
@@ -32,10 +32,10 @@ loadpajek<-function(filename){
 			}
 			res[["Networks"]]<-c(res[["Networks"]],list(readObj))
 			names(res[["Networks"]])[length(res[["Networks"]])]<-objName
-		} else if(line[1]=="*Vector" || line[1]=="*Permutation" || line[1]=="*Partition"){
+		} else if(tolower(line[1])=="*vector" || tolower(line[1])=="*permutation" || tolower(line[1])=="*partition"){
 			objName<-paste(line[-1],collapse=" ")
 			readObj<-loadvector2(file)
-			if(line[1]=="*Vector"){
+			if(tolower(line[1])=="*vector"){
 				if(objName %in% names(res[["Vectors"]])){
 					i<-1
 					while(TRUE){
@@ -46,7 +46,7 @@ loadpajek<-function(filename){
 				}
 				res[["Vectors"]]<-c(res[["Vectors"]],list(readObj))
 				names(res[["Vectors"]])[length(res[["Vectors"]])]<-objName
-			} else if(line[1]=="*Permutation"){
+			} else if(tolower(line[1])=="*permutation"){
 				if(objName %in% names(res[["Permutations"]])){
 					i<-1
 					while(TRUE){
@@ -57,7 +57,7 @@ loadpajek<-function(filename){
 				}
 				res[["Permutations"]]<-c(res[["Permutations"]],list(readObj))
 				names(res[["Permutations"]])[length(res[["Permutations"]])]<-objName
-			} else if(line[1]=="*Partition"){
+			} else if(tolower(line[1])=="*partition"){
 				if(objName %in% names(res[["Partitions"]])){
 					i<-1
 					while(TRUE){
