@@ -4,17 +4,15 @@ loadpajek<-function(filename){
 	res<-list(Networks=list(),Partitions=list(),Vectors=list(),Permutation=list())
 	nblanklines=0
 	while(TRUE){
-		line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+		line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
 		if(length(line)==0) {
-			nblanklines=nblanklines+1
-			if (nblanklines>10) break
-			next
+			break
 		}
-		nblanklines=0
         if (substr(line[1],start=1,stop=1)=="%") {
             print(paste(line,collapse=" "))
             next
         }
+		if(line[1]=="") next
 		if(sum(grep(pattern="^ *$",x=as.character(line))==1)) next
 		if(tolower(tolower(line[1]))=="*matrix" || tolower(line[1])=="*network"){
 			objName<-paste(line[-1],collapse=" ")
