@@ -4,8 +4,9 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
   	file<-file(description=filename,open="r")
   } else file<-filename
   while(TRUE){
-	line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+	line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
 	if(substr(line[1],start=1,stop=1)=="%") {print(paste(line,collapse=" "));next}
+	if(line[1]=="") next
 	n<-line
 	break
   }
@@ -14,8 +15,9 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
     if(safe){
 		vnames<-rep(as.character(NA),n)
 		while(TRUE){
-			line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+			line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
 			if(length(line)==0||sum(grep(pattern="^ *$",x=as.character(line))==1)) break
+			if(line[1]=="") break
 			if(substr(line[1],start=1,stop=1)=="%") {print(paste(line,collapse=" "));next}
 			if(substr(line[1],start=1,stop=1)=="*"){
 				type=line[1]
@@ -51,7 +53,7 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
         tmp<-as.matrix(tmp)
         M[1:n,1:n]<-M
     } else while(TRUE){
-    	line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+    	line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
     	if(length(line)==0||sum(grep(pattern="^ *$",x=as.character(line))==1)) break
     	if(substr(line[1],start=1,stop=1)=="%") {print(paste(line,collapse=" "));next}
     	if(substr(line[1],start=1,stop=1)=="*"){
@@ -59,22 +61,22 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
     		next
     	}else line<-as.double(line)
     	
-    	if(type=="*Arcs"){
+    	if(tolower(type)=="*arcs"){
     		M[line[1],line[2]]<-line[3]
-    	}else if(type=="*Edges") {
+    	}else if(tolower(type)=="*edges") {
     		M[line[1],line[2]]<-line[3]
     		M[line[2],line[1]]<-line[3]
     	}	
     }
     dimnames(M)<-list(vnames,vnames)
-  } else{
+  } else if(length(n)==3){
     n12<-as.numeric(n[2])
     n1<-as.numeric(n[3])
     n2<-n12-n1
     if(safe){
 		vnames<-rep(as.character(NA),n12)
 		while(TRUE){
-			line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+			line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
 			if(length(line)==0||sum(grep(pattern="^ *$",x=as.character(line))==1)) break
 			if(substr(line[1],start=1,stop=1)=="%") {print(paste(line,collapse=" "));next}
 			if(substr(line[1],start=1,stop=1)=="*"){
@@ -111,7 +113,7 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
         tmp<-as.matrix(tmp)
         M[1:n1,(n1+1):n12]<-tmp
     } else while(TRUE){
-    	line<-scan(file = file, nlines =1,what="char",quiet =TRUE)
+    	line<-scan(file = file, nlines =1,what="char",quiet =TRUE, blank.lines.skip=FALSE)
     	if(length(line)==0||sum(grep(pattern="^ *$",x=as.character(line))==1)) break
     	if(substr(line[1],start=1,stop=1)=="%") {print(paste(line,collapse=" "));next}
     	if(substr(line[1],start=1,stop=1)=="*"){
@@ -124,7 +126,8 @@ function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){
     }
     dimnames(M)<-list(vnames,vnames)
     M<-M[1:n1,(n1+1):n12]    
-  }
+  } else stop("Error in line: ", line)
   if(closeFile) close(file)
+  M[is.na(M)]<-1
   return(M)
 }
