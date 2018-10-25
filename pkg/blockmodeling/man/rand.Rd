@@ -17,7 +17,7 @@ crand2(clu1, clu2)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{clu1, clu2}{The two partitions to be compared, given in the form of vectors, where for each unit a cluster membership is given.}
-  \item{tab}{A contingency table obtained  as a table(clu1, clu2).}
+  \item{tab}{A contingency table obtained as a table(clu1, clu2).}
 }
 \value{
   The value of Rand Index (corrected/adjusted for chance).
