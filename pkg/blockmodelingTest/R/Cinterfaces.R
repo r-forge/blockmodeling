@@ -181,11 +181,11 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     # }
         
     rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
-    for(i in clu[[1]]){
+    for(i in nRCclu[[1]]){
         rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==i)-1)
     }
     colParArr<-matrix(as.integer(0),nrow=dM[2],ncol=nRCclu[2])
-    for(i in clu[[2]]){
+    for(i in nRCclu[[2]]){
         colParArr[1:nUnitsInRCclu[[2]][i],i]<-as.integer(which(clu[[2]]==i)-1)
     }
 
