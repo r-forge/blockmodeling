@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2018
+November 5, 2018
+Version 0.3.2
+Some minor bug fixes, performance improvements and documentation improvements.
+
 April 25, 2018
 Version 0.3.1
 A bug fix which prevented the use of functions gplot1 and gplot2.
