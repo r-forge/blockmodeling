@@ -34,8 +34,11 @@ optParC(M, nMode = NULL,isSym = NULL, diag = 1, clu, approaches, blocks,
 \item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2007). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
   "val" - valued blockmodeling,\cr
-  "ss" - sum of squares homogenity blockmodeling, and\cr
-  "ad" - absolute deviations homogenity blockmodeling.}
+  "hom" - homogeneity blockmodeling,\cr
+  "ss" - sum of squares homogeneity blockmodeling, and\cr
+  "ad" - absolute deviations homogeneity blockmodeling.\cr
+  \cr
+The last two options are "shorthand" for specifying \code{approaches="hom"} and  \code{homFun} to either \code{"ss"} or  \code{"ad"}.}
 \item{blocks}{A vector, a list of vectors or an array with names of allowed blocy types. \cr
 \cr
 Only listing of allowed block types (blockmodel is not pre-specified).\cr

@@ -2,6 +2,7 @@
 \alias{clu}
 \alias{partitions}
 \alias{IM}
+\alias{EM}
 \alias{err}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling}
@@ -11,6 +12,7 @@ Function for extraction of clu (partition), all best clus (partitions), IM (imag
 \usage{
 clu(res, which = 1, ...)
 IM(res, which = 1, ...)
+EM(res, which = 1, ...)
 err(res, ...)
 partitions(res)
 }
@@ -57,5 +59,6 @@ plot(res) # Hopefully we get the original partition
 clu(res) # Hopefully we get the original partition
 err(res) # Error
 IM(res) # Image matrix/array.
+EM(res) # Error matrix/array.
 }
 \keyword{manip}% at least one, from doc/KEYWORDS

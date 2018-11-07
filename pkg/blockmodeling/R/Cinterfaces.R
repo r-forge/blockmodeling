@@ -263,6 +263,11 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     }else Earr<-array(as.double(Earr),dim=dim(Earr))
     
     if(length(homFun)==1 & dM[3]>1) homFun<-rep(homFun,dM[3])
+	
+	  homFun[approaches=="ss"]<-"ss"
+	  homFun[approaches=="ad"]<-"ad"
+	  approaches[approaches%in%c("ss","ad")]<-"hom"
+	  
     homFun<-as.integer(factor(homFun,levels=cStatus$homFuns))-as.integer(1)
     
     
@@ -305,7 +310,10 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
             }
         }
     }
+    
     approaches <- as.integer(factor(approaches,levels=cStatus$implementedApproaches))-as.integer(1)
+    
+    
     
 
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
@@ -481,6 +489,11 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMult
     }else Earr<-array(as.double(Earr),dim=dim(Earr))
     
     if(length(homFun)==1 & dM[3]>1) homFun<-rep(homFun,dM[3])
+	
+  	homFun[approaches=="ss"]<-"ss"
+  	homFun[approaches=="ad"]<-"ad"
+  	approaches[approaches%in%c("ss","ad")]<-"hom"
+  	
     homFun<-as.integer(factor(homFun,levels=cStatus$homFuns))-as.integer(1)
     
     regFun<-as.integer(factor(regFun,levels=cStatus$regFuns))-as.integer(1)
