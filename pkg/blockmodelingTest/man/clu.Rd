@@ -11,8 +11,8 @@ Function for extraction of clu (partition), all best clus (partitions), IM (imag
 
 \usage{
 clu(res, which = 1, ...)
-IM(res, which = 1, ...)
-EM(res, which = 1, ...)
+IM(res, which = 1, drop=TRUE, ...)
+EM(res, which = 1, drop=TRUE, ...)
 err(res, ...)
 partitions(res)
 }
@@ -20,6 +20,7 @@ partitions(res)
 \arguments{
   \item{res}{Result of function \code{\link{critFunC}} or \code{\link{optRandomParC}}.}
   \item{which}{From \code{which} (if there are more than one) "best" solution should the element be extracted. Warning! \code{which} grater than the number of "best" partitions produces an error.}
+  \item{drop}{If \code{TRUE} (default), dimensions that have only one level are dropped (\code{drop} function is applied to the final result).}
   \item{\dots}{Not used.}
 }
 \value{

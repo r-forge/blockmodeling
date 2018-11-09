@@ -1,14 +1,18 @@
 "IM" <-
 function(res,which=1,...){
   if(class(res)=="opt.more.par"){
-    return(res$best[[which]]$IM)
-  } else return(res$IM)
+    IM<-res$best[[which]]$IM
+  } else IM<-res$IM
+  if(drop)IM<-drop(IM)
+  return(IM)
 }
 
 "EM" <-
-  function(res,which=1,...){
+function(res,which=1,...){
     if(class(res)=="opt.more.par"){
-      return(res$best[[which]]$EM)
-    } else return(res$EM)
-  }
+      EM<-res$best[[which]]$EM
+    } else EM<-res$EM
+    if(drop)EM<-drop(EM)
+    return(EM)
+}
 
