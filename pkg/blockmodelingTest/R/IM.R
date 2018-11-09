@@ -1,5 +1,5 @@
 "IM" <-
-function(res,which=1,...){
+function(res,which=1, drop=TRUE, ...){
   if(class(res)=="opt.more.par"){
     IM<-res$best[[which]]$IM
   } else IM<-res$IM
@@ -8,7 +8,7 @@ function(res,which=1,...){
 }
 
 "EM" <-
-function(res,which=1,...){
+function(res,which=1, drop=TRUE,...){
     if(class(res)=="opt.more.par"){
       EM<-res$best[[which]]$EM
     } else EM<-res$EM
