@@ -181,11 +181,11 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     # }
         
     rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
-    for(i in nRCclu[[1]]){
+    for(i in 1:nRCclu[[1]]){
         rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==i)-1)
     }
     colParArr<-matrix(as.integer(0),nrow=dM[2],ncol=nRCclu[2])
-    for(i in nRCclu[[2]]){
+    for(i in 1:nRCclu[[2]]){
         colParArr[1:nUnitsInRCclu[[2]][i],i]<-as.integer(which(clu[[2]]==i)-1)
     }
 
@@ -263,6 +263,11 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     }else Earr<-array(as.double(Earr),dim=dim(Earr))
     
     if(length(homFun)==1 & dM[3]>1) homFun<-rep(homFun,dM[3])
+	
+	  homFun[approaches=="ss"]<-"ss"
+	  homFun[approaches=="ad"]<-"ad"
+	  approaches[approaches%in%c("ss","ad")]<-"hom"
+	  
     homFun<-as.integer(factor(homFun,levels=cStatus$homFuns))-as.integer(1)
     
     
@@ -305,7 +310,10 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
             }
         }
     }
+    
     approaches <- as.integer(factor(approaches,levels=cStatus$implementedApproaches))-as.integer(1)
+    
+    
     
 
     combWeights<-computeCombWeights(combWeights, dB, blocks, relWeights, posWeights, blockTypeWeights)
@@ -322,7 +330,7 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
 }
 
 
-optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){
+optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=FALSE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){
 
     if(save.initial.param){
         initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
@@ -481,6 +489,11 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMult
     }else Earr<-array(as.double(Earr),dim=dim(Earr))
     
     if(length(homFun)==1 & dM[3]>1) homFun<-rep(homFun,dM[3])
+	
+  	homFun[approaches=="ss"]<-"ss"
+  	homFun[approaches=="ad"]<-"ad"
+  	approaches[approaches%in%c("ss","ad")]<-"hom"
+  	
     homFun<-as.integer(factor(homFun,levels=cStatus$homFuns))-as.integer(1)
     
     regFun<-as.integer(factor(regFun,levels=cStatus$regFuns))-as.integer(1)
@@ -583,9 +596,11 @@ optParC<-function(M, nMode=NULL,isSym=NULL,diag=1,clu,approaches,blocks, useMult
 
 
 
-### tole je testno
+
 "optRandomParC" <-function(M, 
 k,#number of clusters/groups
+approaches, #generalized blockmodeling approach
+blocks, #allowed block types as a vector, list or array.
 rep,#number of repetitions/different starting partitions to check
 save.initial.param=TRUE,  #save the initial parametrs of this call
 save.initial.param.opt=FALSE,  #save the initial parametrs for calls to optParC
@@ -611,9 +626,9 @@ n=NULL, #the number of units by "modes". It is used only for generating random p
 nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object
 ... #paramters to optParC
 ){
-  dots<-list(...)
+  dots<-list(...) #this might not be need - can be removed and all latter occurencies given sufficent testing. Left for now as there is not enought time.
   if(is.null(switch.names)){
-    switch.names<-is.null(dots$BLOCKS)
+    switch.names<-is.null(blocks)
   }
 
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
@@ -744,7 +759,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
         #if(useOptParMultiC){
         #    res[[i]]<-optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt, ...)
         #}else  res[[i]]<-optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...)
-		res[[i]]<-optParC(M=M, clu=temppar, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...)
+		res[[i]]<-optParC(M=M, clu=temppar, approaches=approaches, blocks=blocks, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...)
         if(deleteMs){
             res[[i]]$M<-NULL
             res[[i]]$resC$M<-NULL
@@ -765,7 +780,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             registerDoParallel(nCores)
         }
         nC<-getDoParWorkers()
-        oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,nC,...){
+        oneRep<-function(i,M,approaches, blocks, n,k,mingr,maxgr,addParam,rep,nC,...){
             if(printRep) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
             temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
 
@@ -774,7 +789,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             #if(useOptParMultiC){
             #    tres <- try(optParMultiC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
             #}else  tres <- try(optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
-            tres <- try(optParC(M=M, clu=temppar, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...))
+            tres <- try(optParC(M=M, clu=temppar, approaches=approaches, blocks=blocks, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...))
 			
 			if(class(tres)=="try-error"){
                 tres<-list("try-error"=tres, err=Inf, nIter=Inf, startPart=temppar)
@@ -788,7 +803,7 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
            return(list(tres))
         }
 		pkgName<-utils::packageName(environment(optParC))
-        res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
+        res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
         err<-sapply(res,function(x)x$err)
         nIter<-sapply(res,function(x)x$resC$nIter)
    }
