@@ -19,8 +19,7 @@ function(x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "me
     if(ignore.diag =="default"){
         if(length(dM)==3){
             ignore.diag <-all(apply(M,1,function(x)identical(ss(diag(x)),0)))&(nmode==1)
-        } else ignore.diag <-identical(ss(diag(M)),0)&(nmode==1)
-        
+        } else ignore.diag <-identical(ss(diag(M)),0)&(nmode==1)  
     }   
     
     if(sortNames) {
