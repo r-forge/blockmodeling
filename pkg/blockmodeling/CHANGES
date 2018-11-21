@@ -2,11 +2,26 @@ Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
+
+
 2018
+November 9, 2018
+Version 0.3.3
+Bug fixed in critFunC.
+
+November 7, 2018
+Version 0.3.3
+Corrected documentation on critFunC and optParC in the part on using argument "approaches". Also, the functions were updated so that "ss" and "ad" are accepted as values of the approaches argument (which was previously documented, but not supported).
+Function EM that extract the error matrix was added.
+
+November 5, 2018
+Version 0.3.3
+Some minor bug fixes, performance improvements and documentation improvements.
+
 September 3, 2018
 Version 0.3.2
 Edited grammar in help files.
-Seveal bug fixes in plotting functions.
+Several bug fixes in plotting functions.
 
 May 29, 2018
 Version 0.3.1
