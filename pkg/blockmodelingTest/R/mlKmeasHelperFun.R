@@ -61,7 +61,7 @@ expandMat<-function(mat, nn){
 #' @param orFun kmBlock currently requires M to be a matrix. If M is a 3 dimmensional array with the third dimmension repesenting relation, the function specified by orFun (must be a function object) is used to combine different relations
 #' @param blocks Allowed blocks or pre-specified block image for sum of squares blockmodeling approach. Anyting else but the default probably does not make sense. 
 #' @return Sum of squared deviations from the mean using only valid (non NA) values.
-kMeansAndSSMlevOR<-function(M, k, nn=ncol(M), weightMat=matrix(1), rep=1000, nCores=0, orFun=max, blocks="com", ...){
+kMeansAndSSMlevOR<-function(M, k, n=ncol(M), weightMat=matrix(1), rep=1000, nCores=0, orFun=max, blocks="com", ...){
   
   if(length(dim(M))>2)if(length(dim(M))==3){
     M<-apply(M, c(1,2),sum)
@@ -70,7 +70,7 @@ kMeansAndSSMlevOR<-function(M, k, nn=ncol(M), weightMat=matrix(1), rep=1000, nCo
   
   posWeights<-expandMat(weightMat,k)
   
-  kmRes<-kmBlockORP(M = M,k = k,n = nn,weights = tmpW, rep = rep, nCores = nCores, ...)
+  kmRes<-kmBlockORP(M = M,k = k,n = n,weights = tmpW, rep = rep, nCores = nCores, ...)
   tclu<-splitCluRes(kmRes)
   if(length(tclu)==1) tclu<-unlist(tclu)
   ssRes<-optParC(M = M, clu=tclu, approach="hom",blocks=blocks,posWeights = posWeights,useMulti = TRUE)
