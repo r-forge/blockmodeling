@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2018
+November 23, 2018
+Version 0.3.4
+Added functions for k-means one-mode blockmodeling and some helper functions EXPERIMENTAL!!!.
+
 November 9, 2018
 Bug fixed in critFunC.
 
