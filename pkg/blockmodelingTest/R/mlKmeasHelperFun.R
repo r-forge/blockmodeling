@@ -248,3 +248,22 @@ optErrByPartsMlSS<-function(mlNet,cluParts=NULL, nn=NULL, k, rep=100, nCores=0){
     }
   }
   return(errMat)}
+
+#' Extracts a clu in form of a vector as returned by kmBlock function based on the number of units in each set.
+#'
+#' @param clu Clu in form of a vector
+#' @param n A vector with number of units per set of units.
+#' @return A clu splti into a list of vecotors. 
+splitClu<-function(clu, n){
+  unclass(by(data = clu, INDICES = rep(1:length(n),times=n), FUN=c))
+}
+  
+#' Extracts a clu from a result of a kmBlockORP and splits it into a list in case of linked or two-mode networks
+#'
+#' @param res The result of kmBlockORP
+#' @return A clu splti into a list of vecotors. 
+splitCluRes<-function(res){
+  clu<-clu(res)
+  n<-res$initial.param$n
+  splitClu(clu,n)
+}
