@@ -66,7 +66,7 @@ kMeansAndSSMlevOR<-function(M, k, n=ncol(M), weightMat=matrix(1), rep=1000, nCor
   if(length(dim(M))>2)if(length(dim(M))==3){
     M<-apply(M, c(1,2),sum)
   }else stop("M must have 2 or 3 dimmensions")
-  tmpW<-expandMat(weightMat,nn)
+  tmpW<-expandMat(weightMat,n)
   
   posWeights<-expandMat(weightMat,k)
   
