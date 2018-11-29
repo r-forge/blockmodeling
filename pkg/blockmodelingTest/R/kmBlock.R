@@ -369,8 +369,8 @@ kmBlockORP<-function(M, #a square matrix
       library(doParallel)
       library(doRNG)
       if(!getDoParRegistered()){
-        registerDoParallel(cl)
 		if(is.null(cl)) cl<-makeCluster(nCores)
+        registerDoParallel(cl)
       }
       nC<-getDoParWorkers()
       res<-foreach(i=1:rep,.combine=c, .packages='blockmodeling', .export = c("kmBlock")) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
