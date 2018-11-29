@@ -369,12 +369,17 @@ kmBlockORP<-function(M, #a square matrix
       library(doParallel)
       library(doRNG)
       if(!getDoParRegistered()){
-		if(is.null(cl)) cl<-makeCluster(nCores)
-        registerDoParallel(cl)
+		if(is.null(cl)) {
+			cl<-makeCluster(nCores)
+			registerDoParallel(cl)
+		} else registerDoParallel(nCores)
       }
       nC<-getDoParWorkers()
-      res<-foreach(i=1:rep,.combine=c, .packages='blockmodeling', .export = c("kmBlock")) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
-	  if(!is.null(cl) & stopcl) stopCluster(cl)
+      res<-foreach(i=1:rep,.combine=c, .packages='blockmodelingTest', .export = c("kmBlock")) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+	  if(!is.null(cl) & stopcl) {
+		registerDoSEQ()
+		stopCluster(cl)
+	}
     }
     err<-sapply(res,function(x)x$err)    
   }
