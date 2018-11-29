@@ -3,6 +3,9 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2018
+November 29, 2018
+A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
+
 November 23, 2018
 Version 0.3.4
 Added functions for k-means one-mode blockmodeling and some helper functions EXPERIMENTAL!!!.

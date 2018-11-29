@@ -191,7 +191,7 @@ kmBlockORP<-function(M, #a square matrix
                         nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object,
                         useParLapply=FALSE, #should ply be used instead of foreach
                         cl = NULL, #the cluster to use (if formed beforehand)
-                        stopcl = FALSE, # should the cluster be stoped
+                        stopcl = is.null(cl), # should the cluster be stoped
                         ... #paramters to kmBlock
 ){
   dots<-list(...)
@@ -368,12 +368,13 @@ kmBlockORP<-function(M, #a square matrix
     } else {
       library(doParallel)
       library(doRNG)
-      if(is.null(cl)) cl<-makeCluster(nCores)
       if(!getDoParRegistered()){
         registerDoParallel(cl)
+		if(is.null(cl)) cl<-makeCluster(nCores)
       }
       nC<-getDoParWorkers()
       res<-foreach(i=1:rep,.combine=c, .packages='blockmodeling', .export = c("kmBlock")) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+	  if(!is.null(cl) & stopcl) stopCluster(cl)
     }
     err<-sapply(res,function(x)x$err)    
   }
