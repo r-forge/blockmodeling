@@ -368,9 +368,9 @@ kmBlockORP<-function(M, #a square matrix
     } else {
       library(doParallel)
       library(doRNG)
-      if(!getDoParRegistered()){
-		if(is.null(cl)) {
-			cl<-makeCluster(nCores)
+      if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
+		if(!is.null(cl)) {
+			#cl<-makeCluster(nCores)
 			registerDoParallel(cl)
 		} else registerDoParallel(nCores)
       }
