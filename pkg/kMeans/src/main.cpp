@@ -1,11 +1,11 @@
-#include <RcppArmadillo.h>
+#include "kmBlock_types.h"
 
+// [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector test( const arma::Cube<double> M, const Rcpp::NumericVector clu, const arma::Cube<double> weights, const Rcpp::NumericVector n, const Rcpp::NumericVector nClu )
+Array test( const Array M, const IVector clu, Array weights, const IVector n, const IVector nClu )
 {
-    return clu;
+    return M;
 }
-
