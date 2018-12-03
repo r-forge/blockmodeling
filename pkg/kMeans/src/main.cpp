@@ -14,7 +14,7 @@ double meanMatrix( const DMatrix & p_matrix );
 Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const IVector & n, const IVector & nClu )
 {
     DMatrix pSeparate;
-    Array aRes = funByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate );
+    Array aRes = funByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate, Diagonale::Ignore );
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -63,6 +63,7 @@ Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix
     }
 
     for( size_t r = 0; r < aRes.n_slices; ++r ) {
+        double diagMean( sDiagonal == Diagonale::Ignore ? meanMatrix( M.slice( r ) ) : 0 ); // calculate it only once for each iteration
         for( size_t i = 0; i < aRes.n_rows; ++i ) {
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
                 mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
@@ -70,7 +71,7 @@ Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix
             for( size_t j = 0; j < aRes.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
                 if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
-                    aRes = meanMatrix( M.slice( r ) );
+                    aRes(i, j, r ) = diagMean;
                 }
                 else {
                     aRes( i, j, r ) = dVal / N( i, j, r );
