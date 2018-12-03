@@ -7,24 +7,24 @@
 
 using namespace Rcpp;
 
-// test
-Array test(const Array M, const IVector clu, Array weights, const IVector n, const IVector nClu);
-RcppExport SEXP _kmBlock_test(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP) {
+// kmBlock
+Rcpp::List kmBlock(const Array& M, const IVector& clu, Array& weights, const IVector& n, const IVector& nClu);
+RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Array >::type M(MSEXP);
-    Rcpp::traits::input_parameter< const IVector >::type clu(cluSEXP);
-    Rcpp::traits::input_parameter< Array >::type weights(weightsSEXP);
-    Rcpp::traits::input_parameter< const IVector >::type n(nSEXP);
-    Rcpp::traits::input_parameter< const IVector >::type nClu(nCluSEXP);
-    rcpp_result_gen = Rcpp::wrap(test(M, clu, weights, n, nClu));
+    Rcpp::traits::input_parameter< const Array& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const IVector& >::type clu(cluSEXP);
+    Rcpp::traits::input_parameter< Array& >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
+    Rcpp::traits::input_parameter< const IVector& >::type nClu(nCluSEXP);
+    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, n, nClu));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_kmBlock_test", (DL_FUNC) &_kmBlock_test, 5},
+    {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 5},
     {NULL, NULL, 0}
 };
 
