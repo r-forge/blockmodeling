@@ -69,7 +69,7 @@ Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix
             }
             for( size_t j = 0; j < aRes.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
-                if( !dVal && Diagonale::Ignore ) { // If value of the block is and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+                if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
                     aRes = meanMatrix( M.slice( r ) );
                 }
                 else {
