@@ -7,6 +7,20 @@
 
 using namespace Rcpp;
 
+// meanByBlocks
+Rcpp::List meanByBlocks(const Array& M, const IVector& clu, const int dimensions, const std::string diagonal);
+RcppExport SEXP _kmBlock_meanByBlocks(SEXP MSEXP, SEXP cluSEXP, SEXP dimensionsSEXP, SEXP diagonalSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Array& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const IVector& >::type clu(cluSEXP);
+    Rcpp::traits::input_parameter< const int >::type dimensions(dimensionsSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type diagonal(diagonalSEXP);
+    rcpp_result_gen = Rcpp::wrap(meanByBlocks(M, clu, dimensions, diagonal));
+    return rcpp_result_gen;
+END_RCPP
+}
 // kmBlock
 Rcpp::List kmBlock(const Array& M, const IVector& clu, Array& weights, const IVector& n, const IVector& nClu);
 RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP) {
@@ -24,6 +38,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_kmBlock_meanByBlocks", (DL_FUNC) &_kmBlock_meanByBlocks, 4},
     {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 5},
     {NULL, NULL, 0}
 };

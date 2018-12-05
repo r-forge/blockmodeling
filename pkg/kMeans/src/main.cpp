@@ -7,14 +7,25 @@
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::depends(RcppArmadillo)]]
 
-Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal = Diagonale::Same );
+// Exposed functions
+// [[Rcpp::export]]
+Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const std::string diagonal = "same" );
+// [[Rcpp::export]]
+Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const IVector & n, const IVector & nClu );
+
+// Function declarations
+Array meansByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal = Diagonale::Same );
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
+IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K );
 double meanMatrix( const DMatrix & p_matrix );
 
-// [[Rcpp::export]]
 Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const IVector & n, const IVector & nClu )
 {
     DMatrix pSeparate;
-    Array aRes = funByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate, Diagonale::Ignore );
+    Array aRes = meansByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate, Diagonale::Ignore );
+    double cf = criterialFunction( M, clu, weights, aRes );
+    Rcpp::Rcout << "Criterial function value: " << cf << std::endl;
+    Rcpp::Rcout << "Set Groups: " << setGroups( M, clu, weights, aRes, Rcpp::sum( nClu ) ) << std::endl;
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -23,7 +34,24 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const
 
 }
 
-Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal )
+Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const std::string diagonal )
+{
+    Diagonale dDiag( Diagonale::Same );
+    if( diagonal == "same" );
+    else if( diagonal == "seperate" ) dDiag = Diagonale::Seperate;
+    else if( diagonal == "ignore"   ) dDiag = Diagonale::Ignore;
+    else Rcpp::stop( "Unknow diagonal parameter\nOptions are: [ same, ignore, seperate ]\n" );
+
+    DMatrix pSeparate;
+    Array aRes = meansByBlocks( M, clu, dimensions, pSeparate, dDiag );
+    if( !pSeparate.is_empty() ) {
+        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
+    }
+    return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes );
+
+}
+
+Array meansByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal )
 {
 
 //    Rcpp::Rcout << "funByBlocks: begin" << std::endl;
@@ -63,14 +91,14 @@ Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix
     }
 
     for( size_t r = 0; r < aRes.n_slices; ++r ) {
-        double diagMean( sDiagonal == Diagonale::Ignore ? meanMatrix( M.slice( r ) ) : 0 ); // calculate it only once for each iteration
+        double diagMean( sDiagonal == Diagonale::Ignore ? meanMatrix( M.slice( r ) ) : 0 ); // calculate it only once per each iteration
         for( size_t i = 0; i < aRes.n_rows; ++i ) {
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
                 mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
             }
             for( size_t j = 0; j < aRes.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
-                if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+                if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
                     aRes(i, j, r ) = diagMean;
                 }
                 else {
@@ -94,6 +122,33 @@ Array funByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix
     return aRes;
 }
 
+
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat )
+{
+    double dRet = 0;
+
+    for( size_t i = 0; i < M.n_rows; ++i ) {
+        for( size_t j = 0; j < M.n_cols; ++j ) {
+            for( size_t r = 0; r < M.n_slices; ++r ) {
+                dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+            }
+        }
+    }
+
+    return  dRet;
+}
+
+IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K )
+{
+    IVector vRet;
+    DVector e( K );
+    for( size_t k = 0; k < K; ++k ) {
+//        for(  )
+    }
+    vRet = e;
+    return vRet;
+
+}
 
 double meanMatrix( const DMatrix & p_matrix )
 {
