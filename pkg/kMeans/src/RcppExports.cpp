@@ -36,10 +36,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// criterialFunction
+double criterialFunction(const Array& M, const IVector& clu, const Array& weights, int dimensions);
+RcppExport SEXP _kmBlock_criterialFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP dimensionsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Array& >::type M(MSEXP);
+    Rcpp::traits::input_parameter< const IVector& >::type clu(cluSEXP);
+    Rcpp::traits::input_parameter< const Array& >::type weights(weightsSEXP);
+    Rcpp::traits::input_parameter< int >::type dimensions(dimensionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(criterialFunction(M, clu, weights, dimensions));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_kmBlock_meanByBlocks", (DL_FUNC) &_kmBlock_meanByBlocks, 4},
     {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 5},
+    {"_kmBlock_criterialFunction", (DL_FUNC) &_kmBlock_criterialFunction, 4},
     {NULL, NULL, 0}
 };
 

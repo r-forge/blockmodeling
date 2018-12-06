@@ -12,12 +12,16 @@
 Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const std::string diagonal = "same" );
 // [[Rcpp::export]]
 Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const IVector & n, const IVector & nClu );
+// [[Rcpp::export]]
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, int dimensions );
 
 // Function declarations
 Array meansByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal = Diagonale::Same );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
-IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K );
+DVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K );
 double meanMatrix( const DMatrix & p_matrix );
+
+
 
 Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const IVector & n, const IVector & nClu )
 {
@@ -49,6 +53,13 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
     }
     return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes );
 
+}
+
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, int dimensions )
+{
+    DMatrix pSeparate;
+    Array aRes = meansByBlocks( M, clu, dimensions, pSeparate, Diagonale::Ignore );
+    return criterialFunction( M, clu, weights, aRes );
 }
 
 Array meansByBlocks( const Array & M, const IVector & clu, int dimensions, DMatrix & p_pSepare, Diagonale sDiagonal )
@@ -138,15 +149,25 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K )
+DVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K )
 {
     IVector vRet;
     DVector e( K );
     for( size_t k = 0; k < K; ++k ) {
-//        for(  )
+        for( size_t i = 0; i < clu.size(); ++i ) {
+//            for( size_t j = 0; j < ; ++j ) {
+            size_t j = clu( i );
+            for( size_t r = 0; r < M.n_slices; ++r ) {
+                e[ k ] += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+                e[ k ] += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( clu.at( j ), clu.at( i ), r ), 2 );
+                Rcpp::Rcout << "e[" << k << "]=" << e[ k ] << std::endl;
+            }
+//            }
+        }
     }
-    vRet = e;
-    return vRet;
+
+//    return vRet;
+    return e;
 
 }
 

@@ -9,3 +9,6 @@ nClu<-5
 meanByBlocks(M, clu,nClu, diag="same")
 meanByBlocks(M, clu,nClu, diag="ignore")
 meanByBlocks(M, clu,nClu, diag="seperate")
+
+
+#criterialFunction( M, clu, weights, sum(nClu) )
