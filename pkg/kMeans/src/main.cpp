@@ -29,7 +29,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const
     Array aRes = meansByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate, Diagonale::Ignore );
     double cf = criterialFunction( M, clu, weights, aRes );
     Rcpp::Rcout << "Criterial function value: " << cf << std::endl;
-    Rcpp::Rcout << "Set Groups: " << setGroups( M, clu, weights, aRes, Rcpp::sum( nClu ) ) << std::endl;
+    // Rcpp::Rcout << "Set Groups: " << setGroups( M, clu, weights, aRes, Rcpp::sum( nClu ) ) << std::endl;
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -149,27 +149,51 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
+
+/*  tole vse sem zakomentiral, ker sem nekaj spreminjal in popravlja, a so zagotovo napake, ker se nisem pretirano
+ukvarjal s tem, da bi bila pravilna c++ koda. To poskrbite vi. Zaradi tega sem tudi zakomentiral klic te funkciej v kmBlock
+
 DVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const size_t K )
 {
+	
+//  tale vektor e se računa za vsako enoto posebej. Torej, ko računate e, je i fiksen. Je pa potrebno potem to ponoviti za vse enote
+//  nato je potrebno za ta i izračunati, pri katerem indeksu (k) je e najmanjši. Pravzaprav, zdaj ko razmišljam, bi bilo celo bolj učinkovito tako, kot sem naredil jaz spodaj. Prosim preveriti, če je prav, ker je dodan komentar //###, pomeni, da sem to dodal ali spreminjal
+
+	double eMin = Inf; //###
+	double eTmp //###
+	int kMin;//###
+	DVector eVec(clu.size()); //###
     IVector vRet;
-    DVector e( K );
-    for( size_t k = 0; k < K; ++k ) {
-        for( size_t i = 0; i < clu.size(); ++i ) {
-//            for( size_t j = 0; j < ; ++j ) {
-            size_t j = clu( i );
-            for( size_t r = 0; r < M.n_slices; ++r ) {
-                e[ k ] += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
-                e[ k ] += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( clu.at( j ), clu.at( i ), r ), 2 );
-                Rcpp::Rcout << "e[" << k << "]=" << e[ k ] << std::endl;
-            }
-//            }
-        }
-    }
+//  DVector e( K );
+    for( size_t i = 0; i < clu.size(); ++i ) {//###
+		eTmp = 0;//###
+		// predlagam, da zaradi  večje učinkovitosti, clu.at( i ) tu shranite v eno spremenljivko in jo potem v sledečih zankah uporabljate leto (razen, če menite, da se pri izvajajnju to skoraj ne pozna
+		for( size_t k = 0; k < K; ++k ) {
+			for( size_t j = 0; j < clu.size(); ++j ) { // tu sem i spremenil v j
+				for( size_t r = 0; r < M.n_slices; ++r ) {
+					eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+					eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( clu.at( j ), clu.at( i ), r ), 2 );
+					Rcpp::Rcout << "k = " << k << ", eTmp " << eTmp << ", eMin " << eMin << ", kMin " << kMin << std::endl;
+				}
+			}
+			if (eTmp < eMin){//###
+				kMin = k;//###
+				eMin = eTmp		//###	
+			}//###
+		}
+		clu[i] = kMin //###	 Tole in spodnje še posebej ne vem, če je prav	
+		eVec[i] = eMin //###		
+	}
 
-//    return vRet;
-    return e;
-
+	//    return vRet;
+	// Kar tukaj sedaj še manjka je, da se prepričamo,da nobena skupina ni prazna. 
+	// Za to morate nekako šteti, koliko enot je v vsaki skupini (od 0 do K)
+	// če je kakšna prazna, date notri enoto, ki ima največjo vrednost v eVec
+	// to ponavljate, dokler ni nobene prazne skupine.
+	
+    return clu; //### oziroma, bistvo je, da se posodobi clu - lahko tudi nič ne vrača, le pregleda se
 }
+*/
 
 double meanMatrix( const DMatrix & p_matrix )
 {
