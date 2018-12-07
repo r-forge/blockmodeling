@@ -98,11 +98,27 @@ nanRep<-function(x, rep=0){
 #' @param cluParts A partition spliting the units into different sets
 #' @param k A vecotor of number of clusters for each set of units in the network.
 #' @param mWeights The number of repetitions for computing random errors. Defaults to 1000
+#' @param nCores The number of to use for parallel computing. 0 means all available - 1, 1 means only once core - no parallel computing.
 #' @return Weights and "intermediate results":
 #'  \item{"errArr"}{A 3d array of errors (\code{mWeights} for each part of the network)}
 #'  \item{"errMatSum"}{\code{errArr} summed over all repretitions.}
 #'  \item{"weightsMat"}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
-weightsMlSS<-function(mlNet,cluParts, k, mWeights=1000){
+weightsMlSS<-function(mlNet,cluParts, k, mWeights=1000, nCores=0){
+  library(foreach)
+  library(doParallel)
+  library(doRNG)
+  if (nCores == 0) {
+    nCores <- detectCores() - 1
+  }
+  if(nCores>1 & !getDoParRegistered()){
+    registerDoParallel(nCores)
+  }
+  if(require(blockmodelingTest)){
+    pack<-"blockmodelingTest"
+  }else{
+    library(blockmodeling)
+    pack<-"blockmodeling"
+  }
   cluParts<-as.numeric(factor(cluParts))
   nn<-table(cluParts)
   mlOrNet<-apply(mlNet, c(1,2),sum)
@@ -118,7 +134,7 @@ weightsMlSS<-function(mlNet,cluParts, k, mWeights=1000){
           tnet[cluParts[cluParts %in% c(i1,i2)]==i1, cluParts[cluParts %in% c(i1,i2)]==i2]<-net
           net<-tnet
         }
-        for(i in 1:mWeights){
+        errArr[i1,i2,]<-foreach(i =1:mWeights,.combine = c, .packages =  pack)%dorng%{
           if(i1==i2){
             tclu<-genRandomPar(k = k[i1],n = nn[i1],addParam=list(genPajekPar = FALSE))
           } else {
@@ -127,8 +143,8 @@ weightsMlSS<-function(mlNet,cluParts, k, mWeights=1000){
             tclu<-unlist(tclu)
           }
           tCF<-critFunC(net, clu=tclu, approach="hom",homFun="ss", blocks="com")
-          
-          errArr[i1,i2,i]<-tCF$err
+		  
+          tCF$err
         }
       }
       cat("i1 = ", i1, ", i2 = ", i2,"\n")
@@ -138,6 +154,7 @@ weightsMlSS<-function(mlNet,cluParts, k, mWeights=1000){
   weightsMat<-relInv2(errMatSum)
   res<-list(errArr=errArr, errMatSum=errMatSum, weightsMat=weightsMat)
 }
+
 
 
 
