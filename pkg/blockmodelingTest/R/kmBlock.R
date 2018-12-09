@@ -19,7 +19,6 @@ kmBlock<-function(M,
   MnoDiag<-M
   diag(MnoDiag)<-NA
   
-  
   if(is.null(weights)){
     weights<-M
     weights[,]<-1
