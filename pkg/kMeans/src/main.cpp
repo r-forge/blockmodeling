@@ -137,11 +137,16 @@ Array meansByBlocks( const Array & M, const IVector & clu, int dimensions, DMatr
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat )
 {
     double dRet = 0;
+//    Rcpp::Rcout << "meansMat= " << meansMat << std::endl << std::endl;
 
     for( size_t i = 0; i < M.n_rows; ++i ) {
         for( size_t j = 0; j < M.n_cols; ++j ) {
             for( size_t r = 0; r < M.n_slices; ++r ) {
-                dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+				if(i!=j){
+					dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+				}
+//            Rcpp::Rcout << std::endl << "i=" << i<< std::endl << "j=" << j<< "clu(i)=" << clu.at( i )<< std::endl << "clu(j)=" << clu.at( j )<< std::endl << "r=" << r << "M val =" << M(i, j, r)<< std::endl << "means val =" << meansMat( clu.at( i ), clu.at( j ), r )<< std::endl<< std::endl;
+
             }
         }
     }

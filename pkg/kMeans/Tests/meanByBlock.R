@@ -20,3 +20,5 @@ W<-M
 W[,,]<-1.0
 
 critFunction( M, clu, W, sum(nClu) )
+critFunction( M[,,1,drop=FALSE], clu, W[,,1,drop=FALSE], sum(nClu) )
+critFunC(M[,,1],clu = clu, approaches = "hom", homFun = "ss", blocks = "com")$err

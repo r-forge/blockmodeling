@@ -9,7 +9,7 @@ kmBlock <- function(M, clu, weights, n, nClu) {
     .Call(`_kmBlock_kmBlock`, M, clu, weights, n, nClu)
 }
 
-criterialFunction <- function(M, clu, weights, dimensions) {
-    .Call(`_kmBlock_criterialFunction`, M, clu, weights, dimensions)
+critFunction <- function(M, clu, weights, dimensions) {
+    .Call(`_kmBlock_critFunction`, M, clu, weights, dimensions)
 }
 

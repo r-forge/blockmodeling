@@ -67,8 +67,9 @@ kmBlock<-function(M,
     }
   }
   
-  #err<-Inf
-  while(sum((oldIM-IM)^2)>eps){
+  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+  oldErr<-Inf
+  while(err<oldErr){
     iMode<-1
     tresh<-tmN[1]
     allowedClus<- 1:tmNclu[1]
@@ -150,11 +151,11 @@ kmBlock<-function(M,
         IM[i,j] <- limits[[i,j]](IM[i,j])
       }
     }
-#    oldErr<-err
-#    err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
-#    if(oldErr<=err) print(c(old=oldErr, new=err))
+    oldErr<-err
+    err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+    #if(oldErr<=err) print(c(old=oldErr, new=err))
   }
-  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+#  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
   
   res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   class(res)<-"opt.par"
