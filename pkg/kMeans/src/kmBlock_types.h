@@ -1,3 +1,5 @@
+#include <float.h>
+#include <algorithm>
 #include <RcppArmadillo.h>
 
 using DVector = Rcpp::NumericVector;

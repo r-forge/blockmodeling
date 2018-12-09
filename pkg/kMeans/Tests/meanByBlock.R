@@ -19,4 +19,4 @@ fun.by.blocks(M[,,1],clu=clu,ignore.diag = FALSE)==meanByBlocks(M, clu,nClu, dia
 W<-M
 W[,,]<-1.0
 
-criterialFunction( M, clu, weights, sum(nClu) )
+critFunction( M, clu, W, sum(nClu) )
