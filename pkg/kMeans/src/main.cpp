@@ -29,7 +29,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, Array & weights, const
     Array aRes = meansByBlocks( M, clu, Rcpp::sum( nClu ), pSeparate, Diagonale::Ignore );
     double cf = criterialFunction( M, clu, weights, aRes );
     Rcpp::Rcout << "Criterial function value: " << cf << std::endl;
-     Rcpp::Rcout << "Set Groups: " << setGroups( M, clu, weights, aRes, Rcpp::sum( nClu ) ) << std::endl;
+    Rcpp::Rcout << "Updated clu: " << setGroups( M, clu, weights, aRes, Rcpp::sum( nClu ) ) << std::endl;
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -142,9 +142,10 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     for( size_t i = 0; i < M.n_rows; ++i ) {
         for( size_t j = 0; j < M.n_cols; ++j ) {
             for( size_t r = 0; r < M.n_slices; ++r ) {
-				if(i!=j){
-					dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
-				}
+                if( i == j ) {
+                    continue;
+                }
+                dRet += weights( i, j, r ) * std::pow( ( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ) ), 2 );
 //            Rcpp::Rcout << std::endl << "i=" << i<< std::endl << "j=" << j<< "clu(i)=" << clu.at( i )<< std::endl << "clu(j)=" << clu.at( j )<< std::endl << "r=" << r << "M val =" << M(i, j, r)<< std::endl << "means val =" << meansMat( clu.at( i ), clu.at( j ), r )<< std::endl<< std::endl;
 
             }
@@ -164,8 +165,8 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
 //  tale vektor e se računa za vsako enoto posebej. Torej, ko računate e, je i fiksen. Je pa potrebno potem to ponoviti za vse enote
 //  nato je potrebno za ta i izračunati, pri katerem indeksu (k) je e najmanjši. Pravzaprav, zdaj ko razmišljam, bi bilo celo bolj učinkovito tako, kot sem naredil jaz spodaj. Prosim preveriti, če je prav, ker je dodan komentar //###, pomeni, da sem to dodal ali spreminjal
 
-    double eMin( DBL_MAX ); //###
-    double eTmp( 0 ); //###
+    double eMin; //###
+    double eTmp; //###
     size_t kMin( 0 );//###
     DVector eVec( clu.size() ); //###
     IVector vRet = Rcpp::clone( clu );
@@ -173,6 +174,7 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
     DVector e( K );
     for( size_t i = 0; i < static_cast<size_t>( clu.size() ); ++i ) {//###
 		eTmp = 0;//###
+        eMin = DBL_MAX;
         int cluI = clu.at( i );
 		// predlagam, da zaradi  večje učinkovitosti, clu.at( i ) tu shranite v eno spremenljivko in jo potem v sledečih zankah uporabljate leto (razen, če menite, da se pri izvajajnju to skoraj ne pozna
 		for( size_t k = 0; k < K; ++k ) {
@@ -195,32 +197,32 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
 //		eVec[i] = eMin //###
 	}
 
-//    double max( DBL_MIN );
-//    double iMax;
-
-//    for( size_t i = 0; i < eVec.size(); ++i ) {
-//        if( eVec.at( i ) > max ) {
-//            iMax = i;
+//     Find empty groups - which of 0..K-1 does not appear in vRet - new clu vector
+//    IVector vEmpty;
+//    for( size_t k = 0; k < K; ++k ) {
+//        Rcpp::Rcout << "Looking for: " << k << std::endl;
+//        if( !( std::find( vRet.begin(), vRet.end(), k ) != vRet.end() ) )
+//        {
+//            vEmpty.push_back( k );
 //        }
 //    }
 
-    // Find empty groups - which of 0..K-1 does not appear in vRet - new clu vector
-    IVector vEmpty;
+//    Rcpp::Rcout << "Empty groups: " << vEmpty << std::endl;
+
+//    // for each empty group, find index of max element in eVec, set vRet = new clu - to x ( empty group ), set eVec[maxElement] = 0, so that next empty group gets next max(eVec)
+//    for( const auto & x : vEmpty ) {
+//        size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+//        vRet.at( i ) = x;
+//        eVec.at( i ) = 0;
+//    }
+
     for( size_t k = 0; k < K; ++k ) {
-        Rcpp::Rcout << "Looking for: " << k << std::endl;
-        if( !( std::find( vRet.begin(), vRet.end(), k ) != vRet.end() ) )
-        {
-            vEmpty.push_back( k );
+        if( !( std::find( vRet.begin(), vRet.end(), k ) != vRet.end() ) ) { // if k is not in vRet
+            size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+            vRet.at( i ) = k;
+            eVec.at( i ) = 0;
+            k = 0;
         }
-    }
-
-    Rcpp::Rcout << "Empty groups: " << vEmpty << std::endl;
-
-    // for each empty group, find index of max element in eVec, set vRet = new clu - to x ( empty group ), set eVec[maxElement] = 0, so that next empty group gets next max(eVec)
-    for( const auto & x : vEmpty ) {
-        size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
-        vRet.at( i ) = x;
-        eVec.at( i ) = 0;
     }
 
 
@@ -229,8 +231,8 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
 	// Za to morate nekako šteti, koliko enot je v vsaki skupini (od 0 do K)
 	// če je kakšna prazna, date notri enoto, ki ima največjo vrednost v eVec
 	// to ponavljate, dokler ni nobene prazne skupine.
-    Rcpp::Rcout << "clu: " << vRet << std::endl;
-    Rcpp::Rcout << "eVec: " << eVec << std::endl;
+//    Rcpp::Rcout << "clu: " << vRet << std::endl;
+//    Rcpp::Rcout << "eVec: " << eVec << std::endl;
     return vRet; //### oziroma, bistvo je, da se posodobi clu - lahko tudi nič ne vrača, le pregleda se
 }
 
