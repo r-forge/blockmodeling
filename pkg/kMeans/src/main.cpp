@@ -173,23 +173,25 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
 //    std::copy( clu.begin(), clu.end(), vRet.begin() );
     DVector e( K );
     for( size_t i = 0; i < static_cast<size_t>( clu.size() ); ++i ) {//###
-		eTmp = 0;//###
         eMin = DBL_MAX;
-        int cluI = clu.at( i );
+        //int cluI = clu.at( i );
 		// predlagam, da zaradi  večje učinkovitosti, clu.at( i ) tu shranite v eno spremenljivko in jo potem v sledečih zankah uporabljate leto (razen, če menite, da se pri izvajajnju to skoraj ne pozna
 		for( size_t k = 0; k < K; ++k ) {
+			eTmp = 0;//###
             for( size_t j = 0; j < static_cast<size_t>( clu.size() ); ++j ) { // tu sem i spremenil v j
                 int cluJ = clu.at( j );
-				for( size_t r = 0; r < M.n_slices; ++r ) {
-                    eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( cluJ, cluI, r ), 2 );
-                    eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( cluJ, cluI, r ), 2 );
-//                    Rcpp::Rcout << "k = " << k << ", eTmp " << eTmp << ", eMin " << eMin << ", kMin " << kMin << std::endl;
+				if( i != j) for( size_t r = 0; r < M.n_slices; ++r ) {
+                    eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, cluJ, r ), 2 );
+                    eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( cluJ, k, r ), 2 );
+//					Rcpp::Rcout << "i = " << i << "j = " << j << "r = " << r << "M ijr = " << M( i, j, r )<< "M ijr = " << M( i, j, r ) << ", k = " << k << ", eTmp " << eTmp << ", cluI " << cluI << ", cluJ " << cluJ << ", kMin " << kMin << std::endl;
 				}
 			}
             if (eTmp < eMin){//###
                 kMin = k;//###
                 eMin = eTmp;		//###
             }//###
+            //Rcpp::Rcout << "i = " << i << ", k = " << k << ", eTmp " << eTmp << ", eMin " << eMin << ", kMin " << kMin << std::endl;
+
         }
         vRet.at( i ) = static_cast<int>( kMin );
         eVec.at( i ) = eMin;

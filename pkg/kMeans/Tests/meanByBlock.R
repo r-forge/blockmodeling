@@ -20,4 +20,8 @@ W<-M
 W[,,]<-1.0
 
 critFunction( M, clu, W, sum(nClu) )
-kmBlock::kmBlock(M,clu,W,clu,c(2,3))
+kmBlock::kmBlock(M,clu,W,sum(n),sum(nClu))
+
+clu2<-c(0:4, 0:4)
+critFunction( M, clu2, W, sum(nClu) )
+kmBlock::kmBlock(M,clu2,W,sum(n),sum(nClu))
