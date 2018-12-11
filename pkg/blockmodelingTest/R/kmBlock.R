@@ -66,9 +66,9 @@ kmBlock<-function(M,
     }
   }
   
-  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
-  oldErr<-Inf
-  while(err<oldErr){
+  #err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+  #oldErr<-Inf
+  while(sum((oldIM-IM)^2)>eps){
     iMode<-1
     tresh<-tmN[1]
     allowedClus<- 1:tmNclu[1]
@@ -127,14 +127,17 @@ kmBlock<-function(M,
     # }
     
     while(length(tclu)<k){
-      missingClus<-(1:k)[!(as.character(1:k) %in% names(table(clu)))]
-      iClu<-sample(missingClus,size = 1)
+      missingClus<-(1:k)[!(as.character(1:k) %in% names(tclu))]
+      iClu <- if(length(missingClus)>1){
+		sample(missingClus,size = 1)
+	  } else missingClus
+
       iMode<-Mode[iClu]
       allowedClus<- (c(0,cumsum(tmNclu))[iMode]+1):cumsum(tmNclu)[iMode]
       ids<-which(clu%in%allowedClus)
       selectId<-ids[which.max(ssMin[ids])]
       clu[selectId]<-iClu
-      ssMin[selectId]<-min(ssMin)
+      ssMin[selectId]<-0
       tclu<-table(clu)
     }
 
@@ -150,11 +153,11 @@ kmBlock<-function(M,
         IM[i,j] <- limits[[i,j]](IM[i,j])
       }
     }
-    oldErr<-err
-    err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+   # oldErr<-err
+   # err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
     #if(oldErr<=err) print(c(old=oldErr, new=err))
   }
-#  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+  err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
   
   res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   class(res)<-"opt.par"
@@ -355,13 +358,16 @@ kmBlockORP<-function(M, #a square matrix
       nCores<-detectCores()-1                    
     }
     
+	pkgName<-utils::packageName()
+	if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
     if(useParLapply) {
       if(is.null(cl)) cl<-makeCluster(nCores)
       clusterSetRNGStream(cl)
       nC<-nCores
       #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
-      clusterExport(cl, varlist = "kmBlock")
-      clusterEvalQ(cl, expr=library(blockmodeling))
+      #clusterExport(cl, varlist = "kmBlock")
+	  exprLib=substitute(expression(library(pkgName)), list(pkgName=pkgName))
+      clusterEvalQ(cl, expr=exprLib)
       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
       if(stopcl) stopCluster(cl)
       res<-lapply(res,function(x)x[[1]])
@@ -375,11 +381,12 @@ kmBlockORP<-function(M, #a square matrix
 		} else registerDoParallel(nCores)
       }
       nC<-getDoParWorkers()
-      res<-foreach(i=1:rep,.combine=c, .packages='blockmodelingTest', .export = c("kmBlock")) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+
+      res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
 	  if(!is.null(cl) & stopcl) {
 		registerDoSEQ()
 		stopCluster(cl)
-	}
+	  }
     }
     err<-sapply(res,function(x)x$err)    
   }
