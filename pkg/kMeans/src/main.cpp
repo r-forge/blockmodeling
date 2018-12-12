@@ -16,9 +16,9 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions );
 
 // Function declarations
-Array meansByBlocks( const Array & M, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal = Diagonale::Same );
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal = Diagonale::Same );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
-IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const int K );
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const int K );
 double meanMatrix( const DMatrix & p_matrix );
 
 
@@ -28,9 +28,13 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     const int K = Rcpp::sum( nClu );
 
     DMatrix pSeparate;
-    Array meanBlocks = meansByBlocks( M, clu, K, pSeparate, Diagonale::Ignore );
+    Array meanBlocks;
+    meansByBlocks( M, meanBlocks, clu, K, pSeparate, Diagonale::Ignore );
 
-    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
+
+//    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
+    IVector newClu = Rcpp::clone( clu );
+    setGroups( M, newClu, weights, meanBlocks, K );
     IVector bestClu;
 
     double newCf = criterialFunction( M, clu, weights, meanBlocks );
@@ -39,19 +43,19 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     while( newCf < bestCf ) {
         bestClu = newClu;
         bestCf = newCf;
-        meanBlocks = meansByBlocks( M, newClu, K, pSeparate, Diagonale::Ignore );
-        newClu = setGroups( M, newClu, weights, meanBlocks, K );
+        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, Diagonale::Ignore );
+        setGroups( M, newClu, weights, meanBlocks, K );
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
     }
 
     Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
     Rcpp::Rcout << "BestClu: " << bestClu << std::endl;
 
-    if( !pSeparate.is_empty() ) {
-        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
-    }
+//    if( !pSeparate.is_empty() ) {
+//        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
+//    }
 
-    return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks );
+    return Rcpp::List::create( Rcpp::Named( "bestCf" ) = bestCf, Rcpp::Named( "bestClu" ) = bestClu );
 
 }
 
@@ -64,7 +68,8 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
     else Rcpp::stop( "Unknow diagonal parameter\nOptions are: [ same, ignore, seperate ]\n" );
 
     DMatrix pSeparate;
-    Array aRes = meansByBlocks( M, clu, dimensions, pSeparate, dDiag );
+    Array aRes;
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, dDiag );
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -75,15 +80,21 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions )
 {
     DMatrix pSeparate;
-    Array aRes = meansByBlocks( M, clu, dimensions, pSeparate, Diagonale::Ignore );
+    Array aRes;
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, Diagonale::Ignore );
     return criterialFunction( M, clu, weights, aRes );
 }
 
-Array meansByBlocks( const Array & M, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal )
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal )
 {
-    Array aRes( dimensions, dimensions, M.n_slices, arma::fill::zeros );
-    Array S = aRes;
-    Array N = aRes;
+    if( res.is_empty() ) {
+        res = Array( dimensions, dimensions, M.n_slices, arma::fill::zeros );
+    }
+    else {
+        res.fill( 0 );
+    }
+    Array S = res;
+    Array N = res;
     DMatrix mDiagonalRes;
     DMatrix mSseprateDiagonal;
     DMatrix mNseprateDiagonal;
@@ -111,19 +122,19 @@ Array meansByBlocks( const Array & M, const IVector & clu, const int dimensions,
         }
     }
 
-    for( size_t r = 0; r < aRes.n_slices; ++r ) {
+    for( size_t r = 0; r < res.n_slices; ++r ) {
         double diagMean( sDiagonal == Diagonale::Ignore ? meanMatrix( M.slice( r ) ) : 0 ); // calculate it only once per each iteration
-        for( size_t i = 0; i < aRes.n_rows; ++i ) {
+        for( size_t i = 0; i < res.n_rows; ++i ) {
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
                 mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
             }
-            for( size_t j = 0; j < aRes.n_cols; ++j ) {
+            for( size_t j = 0; j < res.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
                 if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
-                    aRes(i, j, r ) = diagMean;
+                    res(i, j, r ) = diagMean;
                 }
                 else {
-                    aRes( i, j, r ) = dVal / N( i, j, r );
+                    res( i, j, r ) = dVal / N( i, j, r );
                 }
             }
         }
@@ -132,8 +143,6 @@ Array meansByBlocks( const Array & M, const IVector & clu, const int dimensions,
     if( sDiagonal == Diagonale::Seperate ) { // Save seperate digaonal values to input parameter
         p_pSepare = std::move( mDiagonalRes );
     }
-
-    return aRes;
 }
 
 
@@ -154,13 +163,13 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-IVector setGroups( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const int K )
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const int K )
 {
     double eMin;
     double eTmp;
     int kMin( 0 );
     DVector eVec( clu.size() );
-    IVector vRet = Rcpp::clone( clu );
+//    IVector vRet = Rcpp::clone( clu );
     DVector e( K );
     for( unsigned int i = 0; i < static_cast<unsigned int>( clu.size() ); ++i ) {
         eMin = DBL_MAX;
@@ -182,20 +191,18 @@ IVector setGroups( const Array & M, const IVector & clu, const Array & weights, 
             }
 
         }
-        vRet.at( i ) = kMin;
+        clu.at( i ) = kMin;
         eVec.at( i ) = eMin;
 	}
 
     for( int k = 0; k < K; ++k ) {
-        if( !( std::find( vRet.begin(), vRet.end(), k ) != vRet.end() ) ) { // if k is not in vRet
+        if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
             size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
-            vRet.at( i ) = k;
+            clu.at( i ) = k;
             eVec.at( i ) = 0;
             k = 0;
         }
     }
-
-    return vRet;
 }
 
 
