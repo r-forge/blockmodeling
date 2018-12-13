@@ -25,3 +25,13 @@ kmBlock::kmBlock(M,clu,W,sum(n),sum(nClu))
 clu2<-c(0:4, 0:4)
 critFunction( M, clu2, W, sum(nClu) )
 kmBlock::kmBlock(M,clu2,W,sum(n),sum(nClu))
+
+clu3<-sample(c(0:4, 0:4))
+critFunction( M, clu3, W, sum(nClu) )
+kmBlock::kmBlock(M,clu3,W,sum(n),sum(nClu))
+
+
+clu3<-sample(c(0:4, 0:4))
+critFunction( M[,,1,drop=FALSE], clu3, W, sum(nClu) )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu3,W,sum(n),sum(nClu))
+kmBlock(M[,,1],clu = clu3)$err
