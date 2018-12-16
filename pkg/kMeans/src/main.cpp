@@ -18,7 +18,8 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 // Function declarations
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal = Diagonale::Same );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const int K );
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu );
+unsigned int belongsTo( const int & group, const IVector & borders );
 double meanMatrix( const DMatrix & p_matrix );
 
 
@@ -34,7 +35,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
-    setGroups( M, newClu, weights, meanBlocks, K );
+    setGroups( M, newClu, weights, meanBlocks, nClu );
     IVector bestClu;
 
     double newCf = criterialFunction( M, clu, weights, meanBlocks );
@@ -44,7 +45,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
         bestClu = newClu;
         bestCf = newCf;
         meansByBlocks( M, meanBlocks, newClu, K, pSeparate, Diagonale::Ignore );
-        setGroups( M, newClu, weights, meanBlocks, K );
+        setGroups( M, newClu, weights, meanBlocks, nClu );
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
     }
 
@@ -163,17 +164,28 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const int K )
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu )
 {
+    IVector borders = Rcpp::cumsum( nClu );
+    Rcpp::Rcout << "Cumsum: " << borders << std::endl;
     double eMin;
     double eTmp;
+    int K = Rcpp::sum( nClu );
     int kMin( 0 );
     DVector eVec( clu.size() );
 //    IVector vRet = Rcpp::clone( clu );
     DVector e( K );
     for( unsigned int i = 0; i < static_cast<unsigned int>( clu.size() ); ++i ) {
         eMin = DBL_MAX;
-        for( unsigned int k = 0; k < static_cast<unsigned int>( K ); ++k ) {
+        int group( clu.at( i ) );
+        unsigned int iBelongsTo( belongsTo( group, borders ) );
+//        Rcpp::Rcout << "iBelongsTo=" << iBelongsTo << std::endl;
+        unsigned int k = 0;
+        if( iBelongsTo ) {
+            k = borders.at( iBelongsTo - 1 );
+        }
+//        Rcpp::Rcout << "for k in " << k << ":" << borders.at( iBelongsTo ) << std::endl;
+        for( ; k < static_cast<unsigned int>( borders.at( iBelongsTo ) ); ++k ) {
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 unsigned int cluJ = clu.at( j );
@@ -203,6 +215,16 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             k = 0;
         }
     }
+}
+
+unsigned int belongsTo( const int & group, const IVector & borders )
+{
+    for( int i = 0; i < borders.size(); ++i ) {
+        if( group < borders[ i ] ) {
+            return i;
+        }
+    }
+    return Rcpp::sum( borders );
 }
 
 
