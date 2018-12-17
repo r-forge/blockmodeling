@@ -207,14 +207,35 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         eVec.at( i ) = eMin;
 	}
 
-    for( int k = 0; k < K; ++k ) {
-        if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
-            size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
-            clu.at( i ) = k;
-            eVec.at( i ) = 0;
+    K = 0;
+    int k = 0;
+    for( int i = 0; i < borders.size(); ++i ) {
+        if( i ) {
+            k = borders[ i - 1 ];
+            K = borders[ i ];
+        }
+        else {
             k = 0;
+            K = borders[ i ];
+        }
+        for( ; k < K; ++k ) {
+            if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
+                size_t j = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+                clu.at( j ) = k;
+                eVec.at( j ) = 0;
+                k = i == 0 ? 0 : borders[ i - 1]; // if i == 0 then k = 0 else k = borders[ i - 1 ]
+            }
         }
     }
+
+//    for( int k = 0; k < K; ++k ) {
+//        if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
+//            size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+//            clu.at( i ) = k;
+//            eVec.at( i ) = 0;
+//            k = 0;
+//        }
+//    }
 }
 
 unsigned int belongsTo( const int & group, const IVector & borders )
