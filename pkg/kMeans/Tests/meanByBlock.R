@@ -30,8 +30,16 @@ clu3<-sample(c(0:4, 0:4))
 critFunction( M, clu3, W, sum(nClu) )
 kmBlock::kmBlock(M,clu3,W,sum(n),sum(nClu))
 
+n<-c(4,6)
+nClu<-c(2,3)
+clu4<-c(rep(0:1,times=2),rep(2:4,times=2))
+critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu) )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu)
+blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
 
-clu3<-sample(c(0:4, 0:4))
-critFunction( M[,,1,drop=FALSE], clu3, W, sum(nClu) )
-kmBlock::kmBlock(M[,,1,drop=FALSE],clu3,W,sum(n),sum(nClu))
-kmBlock(M[,,1],clu = clu3)$err
+
+clu4<-c(sample(rep(0:1,times=2)),sample(rep(2:4,times=2)))
+critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu) )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu)
+blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
+
