@@ -18,7 +18,7 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 // Function declarations
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal = Diagonale::Same );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu );
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n );
 unsigned int belongsTo( const int & group, const IVector & borders );
 double meanMatrix( const DMatrix & p_matrix );
 
@@ -35,7 +35,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
-    setGroups( M, newClu, weights, meanBlocks, nClu );
+    setGroups( M, newClu, weights, meanBlocks, nClu, n );
     IVector bestClu;
 
     double newCf = criterialFunction( M, clu, weights, meanBlocks );
@@ -45,7 +45,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
         bestClu = newClu;
         bestCf = newCf;
         meansByBlocks( M, meanBlocks, newClu, K, pSeparate, Diagonale::Ignore );
-        setGroups( M, newClu, weights, meanBlocks, nClu );
+        setGroups( M, newClu, weights, meanBlocks, nClu, n );
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
     }
 
@@ -164,7 +164,7 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu )
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n )
 {
     IVector borders = Rcpp::cumsum( nClu );
     Rcpp::Rcout << "Cumsum: " << borders << std::endl;
@@ -207,26 +207,58 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         eVec.at( i ) = eMin;
 	}
 
-    K = 0;
-    int k = 0;
-    for( int i = 0; i < borders.size(); ++i ) {
-        if( i ) {
-            k = borders[ i - 1 ];
-            K = borders[ i ];
+    IVector countGroups( K );
+    for( int i = 0; i < countGroups.size(); ++i ) {
+        countGroups.at( i ) = std::count( clu.begin(), clu.end(), i );
+    }
+
+    IVector nBorders( Rcpp::cumsum( n ) );
+
+    IVector::iterator itB, itE;
+    for( unsigned int i = 0; i < nBorders.size(); ++i ){
+        if( !i ) {
+            itB = clu.begin();
+            itE = clu.begin() + nBorders.at( i );
+//            Rcpp::Rcout << "From " << 0 << " to " << nBorders.at( i ) << std::endl;
         }
         else {
-            k = 0;
-            K = borders[ i ];
+            itB = clu.begin() + nBorders.at( i - 1 );
+            itE = clu.begin() + nBorders.at( i );
+//            Rcpp::Rcout << "From " << nBorders.at( i - 1 ) << " to " << nBorders.at( i ) << std::endl;
         }
-        for( ; k < K; ++k ) {
-            if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
-                size_t j = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
-                clu.at( j ) = k;
-                eVec.at( j ) = 0;
-                k = i == 0 ? 0 : borders[ i - 1]; // if i == 0 then k = 0 else k = borders[ i - 1 ]
+//        Rcpp::Rcout << "itB " << *itB << ",itE " << *( itE - 1 ) << std::endl;
+        for( int k = *itB; k < *( itE - 1 ); ++k ) {
+            if( !( std::find( itB, itE, k ) != itE ) ) {
+                size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+                clu.at( i ) = k;
+                eVec.at( i ) = 0;
+                k = *itB;
             }
+            itB++;
         }
     }
+
+//    K = 0;
+//    int k = 0;
+//    for( int i = 0; i < borders.size(); ++i ) {
+//        if( i ) {
+//            k = borders[ i - 1 ];
+//            K = borders[ i ];
+//        }
+//        else {
+//            k = 0;
+//            K = borders[ i ];
+//        }
+//        Rcpp::Rcout << "for k in " << k << ":" << K << std::endl;
+//        for( ; k < K; ++k ) {
+//            if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) && countGroups.at( k ) > 1 ) { // if k is not in vRet
+//                size_t j = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
+//                clu.at( j ) = k;
+//                eVec.at( j ) = 0;
+//                k = i == 0 ? 0 : borders[ i - 1]; // if i == 0 then k = 0 else k = borders[ i - 1 ]
+//            }
+//        }
+//    }
 
 //    for( int k = 0; k < K; ++k ) {
 //        if( !( std::find( clu.begin(), clu.end(), k ) != clu.end() ) ) { // if k is not in vRet
