@@ -228,7 +228,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         }
 //        Rcpp::Rcout << "itB " << *itB << ",itE " << *( itE - 1 ) << std::endl;
         for( int k = *itB; k < *( itE - 1 ); ++k ) {
-            if( !( std::find( itB, itE, k ) != itE ) ) {
+            if( !( std::find( itB, itE, k ) != itE ) && countGroups.at( k ) > 1 ) {
                 size_t i = std::distance( eVec.begin(), std::max_element( eVec.begin(), eVec.end() ) );
                 clu.at( i ) = k;
                 eVec.at( i ) = 0;
