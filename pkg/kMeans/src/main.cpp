@@ -167,7 +167,7 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
 void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n )
 {
     IVector borders = Rcpp::cumsum( nClu );
-    Rcpp::Rcout << "Cumsum: " << borders << std::endl;
+//    Rcpp::Rcout << "Cumsum: " << borders << std::endl;
     double eMin;
     double eTmp;
     int K = Rcpp::sum( nClu );
@@ -229,10 +229,17 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 //        Rcpp::Rcout << "iBegin: " << iBegin << ", iEnd: " << iEnd << std::endl;
 //        Rcpp::Rcout << "k: " << k << ", K: " << K << std::endl;
 //        Rcpp::Rcout << "itB " << *itB << ",itE " << *( itE - 1 ) << std::endl;
+//        Rcpp::Rcout << "CLU: " << clu << std::endl;
+//        Rcpp::Rcout << "Begin element: " << *( clu.begin() + iBegin ) << ", End element: " << *( clu.begin() + iEnd - 1 ) << std::endl;
         for( ; k < K; ++k ) {
             if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
                 size_t i = std::distance( eVec.begin() + iBegin, std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
 //                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
+                if( countGroups[ k ] < 2 ) {
+                    k--;
+                    eVec.at( i ) = 0;
+                    continue;
+                }
                 clu.at( i ) = k;
                 eVec.at( i ) = 0;
                 k = i == 0 ? 0 : borders.at( i - 1);
