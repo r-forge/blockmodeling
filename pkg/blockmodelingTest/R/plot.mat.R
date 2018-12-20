@@ -310,32 +310,35 @@ function(
     }
 	
 	if((length(colLabels)==1)&&is.logical(colLabels)){
-		if(is.null(clu)){
-			warning("clu not used!")
-			colYlabels <- colXlabels <- 1
-
-		} else {
-			colYlabels <- if(colLabels) clu[[1]] else 1
-			colXlabels <- if(colLabels) clu[[2]] else 1
+		if(colLabels){
+			if(is.null(clu)){
+				warning("clu not used!")
+				colYlabels <- colXlabels <- 1
+			} else {
+				colYlabels <- clu[[1]]
+				colXlabels <- clu[[2]]
+			}
 		}
 	} else{
 		if(!is.list(colLabels))colLabels<-list(colLabels,colLabels)
 		if(length(colLabels[[1]])==dm[1]){
 			colYlabels<-colLabels[[1]]
-			if(!is.null(clu)) colYlabels<-colYlabels[or.r]
 		} else {
 			warning("colLabels for first dimmension of wrong length, no colors will be used!")
 			colXlabels<-1
 		}
 		if(length(colLabels[[2]])==dm[2]){
 			colXlabels<-colLabels[[2]]
-			if(!is.null(clu)) colXlabels<-colXlabels[or.c]
 		} else {
 			warning("colLabels for second dimmension of wrong length, no colors will be used!")
 			colXlabels<-1
 		}	
 	}		
-
+	if(!is.null(clu)){
+		colXlabels<-colXlabels[or.c]
+		colYlabels<-colYlabels[or.r]
+	}
+	
     if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1, col=colYlabels)
     if(print.x.axis.val) text(y=x.axis.val.pos, x = (1:dm[2])/dm[2]-1/dm[2]/2 +val.x.coor.cor, srt=90, labels = xaxe, cex=cex.x.axis,adj=0, , col=colXlabels)
     title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
