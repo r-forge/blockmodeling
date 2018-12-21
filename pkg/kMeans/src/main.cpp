@@ -23,7 +23,6 @@ unsigned int belongsTo( const int & group, const IVector & borders );
 double meanMatrix( const DMatrix & p_matrix );
 
 
-
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu )
 {
     const int K = Rcpp::sum( nClu );
@@ -49,8 +48,8 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
     }
 
-    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
-    Rcpp::Rcout << "BestClu: " << bestClu << std::endl;
+//    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
+//    Rcpp::Rcout << "BestClu: " << bestClu << std::endl;
 
 //    if( !pSeparate.is_empty() ) {
 //        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
@@ -88,6 +87,7 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal )
 {
+//    Rcpp::Rcout << "meansByBlocks: begin" << std::endl;
     if( res.is_empty() ) {
         res = Array( dimensions, dimensions, M.n_slices, arma::fill::zeros );
     }
@@ -144,6 +144,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
     if( sDiagonal == Diagonale::Seperate ) { // Save seperate digaonal values to input parameter
         p_pSepare = std::move( mDiagonalRes );
     }
+//    Rcpp::Rcout << "meansByBlocks: end" << std::endl;
 }
 
 
@@ -206,13 +207,19 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         clu.at( i ) = kMin;
         eVec.at( i ) = eMin;
 	}
-
     IVector countGroups( K );
     for( int i = 0; i < countGroups.size(); ++i ) {
         countGroups.at( i ) = std::count( clu.begin(), clu.end(), i );
     }
 
     IVector nBorders( Rcpp::cumsum( n ) );
+
+//    Rcpp::Rcout << "nBorders: " << nBorders << std::endl;
+//    Rcpp::Rcout << "borders: " << borders << std::endl;
+//    Rcpp::Rcout << "nClu: " << nClu << std::endl;
+//    Rcpp::Rcout << "clu: " << clu << std::endl;
+//    Rcpp::Rcout << "eVec: " << eVec << std::endl;
+//    Rcpp::Rcout << "-----------------------" << std::endl;
 
     int iBegin, iEnd, k;
     for( unsigned int i = 0; i < nBorders.size(); ++i ){
@@ -228,21 +235,28 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         K = borders.at( i );
 //        Rcpp::Rcout << "iBegin: " << iBegin << ", iEnd: " << iEnd << std::endl;
 //        Rcpp::Rcout << "k: " << k << ", K: " << K << std::endl;
-//        Rcpp::Rcout << "itB " << *itB << ",itE " << *( itE - 1 ) << std::endl;
 //        Rcpp::Rcout << "CLU: " << clu << std::endl;
 //        Rcpp::Rcout << "Begin element: " << *( clu.begin() + iBegin ) << ", End element: " << *( clu.begin() + iEnd - 1 ) << std::endl;
         for( ; k < K; ++k ) {
+//            Rcpp::Rcout << "nBorders: " << nBorders << std::endl;
+//            Rcpp::Rcout << "borders: " << borders << std::endl;
+//            Rcpp::Rcout << "nClu: " << nClu << std::endl;
+//            Rcpp::Rcout << "clu: " << clu << std::endl;
+//            Rcpp::Rcout << "countGroups: " << countGroups << std::endl;
+//            Rcpp::Rcout << "eVec: " << eVec << std::endl;
+//            Rcpp::Rcout << "-----------------------" << std::endl;
             if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
                 size_t i = std::distance( eVec.begin() + iBegin, std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
+//                Rcpp::Rcout << "INSIDE IF i="<< i << ", countGroupst(clu(i))=" << countGroups.at( clu.at( i ) ) << std::endl;
 //                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
-                if( countGroups[ k ] < 2 ) {
+                if( countGroups.at( clu.at( i ) ) < 2 ) {
                     k--;
-                    eVec.at( i ) = 0;
+                    eVec.at( i ) = -1;
                     continue;
                 }
                 clu.at( i ) = k;
                 eVec.at( i ) = 0;
-                k = i == 0 ? 0 : borders.at( i - 1);
+                k = i == 0 ? 0 : borders.size() > 1 ? borders.at( i - 1) : 0;
             }
         }
     }
@@ -282,7 +296,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 unsigned int belongsTo( const int & group, const IVector & borders )
 {
     for( int i = 0; i < borders.size(); ++i ) {
-        if( group < borders[ i ] ) {
+        if( group < borders.at( i ) ) {
             return i;
         }
     }
