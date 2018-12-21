@@ -235,13 +235,16 @@ function(
     dens<-dens[or.r,or.c]
   }
 
-
-    if(cex.axes=="default"){    #defining the size of text on the axes
-        cex.x.axis<-min(15/dm[2],1)
+	if(length(cex.axes)==1) cex.axes<-c(cex.axes,cex.axes)
+    if(cex.axes[1]=="default"){    #defining the size of text on the axes
         cex.y.axis<-min(15/dm[1],1)
     }else{
-        cex.x.axis<-cex.axes
-        cex.y.axis<-cex.axes
+        cex.y.axis<-cex.axes[1]
+    }
+    if(cex.axes[2]=="default"){    #defining the size of text on the axes
+        cex.x.axis<-min(15/dm[2],1)
+    }else{
+        cex.x.axis<-cex.axes[2]
     }
 
     #defining text on the axes
@@ -309,34 +312,32 @@ function(
         if(!is.null(lines.col)) segments(y0=y0ParLine,y1=y1ParLine,x0=lines.col,x1=lines.col,col=par.line.col,lwd=par.line.width )
     }
 	
+	colYlabels <- colXlabels <- 1
 	if((length(colLabels)==1)&&is.logical(colLabels)){
 		if(colLabels){
 			if(is.null(clu)){
 				warning("clu not used!")
-				colYlabels <- colXlabels <- 1
 			} else {
 				colYlabels <- clu[[1]]
 				colXlabels <- clu[[2]]
 			}
-		}
+		} 
 	} else{
 		if(!is.list(colLabels))colLabels<-list(colLabels,colLabels)
 		if(length(colLabels[[1]])==dm[1]){
 			colYlabels<-colLabels[[1]]
 		} else {
 			warning("colLabels for first dimmension of wrong length, no colors will be used!")
-			colXlabels<-1
 		}
 		if(length(colLabels[[2]])==dm[2]){
 			colXlabels<-colLabels[[2]]
 		} else {
 			warning("colLabels for second dimmension of wrong length, no colors will be used!")
-			colXlabels<-1
 		}	
 	}		
 	if(!is.null(clu)){
-		colXlabels<-colXlabels[or.c]
-		colYlabels<-colYlabels[or.r]
+		if(length(colXlabels)>1) colXlabels<-colXlabels[or.c]
+		if(length(colYlabels)>1) colYlabels<-colYlabels[or.r]
 	}
 	
     if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1, col=colYlabels)
