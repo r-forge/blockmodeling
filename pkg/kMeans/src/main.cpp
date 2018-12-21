@@ -46,10 +46,13 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
         meansByBlocks( M, meanBlocks, newClu, K, pSeparate, Diagonale::Ignore );
         setGroups( M, newClu, weights, meanBlocks, nClu, n );
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
+    Rcpp::Rcout << "newCf: " << newCf << std::endl;
+    Rcpp::Rcout << "newClu: " << newClu<< std::endl;
+		
     }
 
-//    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
-//    Rcpp::Rcout << "BestClu: " << bestClu << std::endl;
+    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
+    Rcpp::Rcout << "BestClu: " << bestClu << std::endl;
 
 //    if( !pSeparate.is_empty() ) {
 //        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
@@ -176,6 +179,8 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
     DVector eVec( clu.size() );
 //    IVector vRet = Rcpp::clone( clu );
     DVector e( K );
+    IVector countGroups( K );
+	
     for( unsigned int i = 0; i < static_cast<unsigned int>( clu.size() ); ++i ) {
         eMin = DBL_MAX;
         int group( clu.at( i ) );
@@ -206,14 +211,50 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         }
         clu.at( i ) = kMin;
         eVec.at( i ) = eMin;
+		++countGroups.at(kMin);
 	}
-    IVector countGroups( K );
-    for( int i = 0; i < countGroups.size(); ++i ) {
-        countGroups.at( i ) = std::count( clu.begin(), clu.end(), i );
-    }
-
+//    IVector countGroups( K );
+//    for( int i = 0; i < countGroups.size(); ++i ) {
+//        countGroups.at( i ) = std::count( clu.begin(), clu.end(), i );
+//    }
+//
     IVector nBorders( Rcpp::cumsum( n ) );
 
+	int iBegin, iEnd, kBegin, kEnd, iMax;
+	double eMax;
+    for( int s = 0; s < nBorders.size(); ++s ) {
+        if( !s ) {
+            iBegin = 0;
+			kBegin = 0;
+        } else {
+            iBegin = nBorders.at( s - 1 );
+            kBegin = borders.at( s - 1 );
+        }
+		
+		iEnd = nBorders.at( s);
+		kEnd = borders.at( s);
+		for(int k = kBegin; k < kEnd; k++){
+			if(countGroups.at(k)==0){
+				eMax=-1;
+				iMax=iBegin;
+				for(int i = iBegin; i< iEnd; ++i){
+//					Rcpp::Rcout << " clu.at(i) " << clu.at(i) << std::endl;				
+					if(eVec.at(i)>eMax && countGroups.at(clu.at(i))>1){
+//						Rcpp::Rcout << "i " << i << std::endl;
+						eMax=eVec.at(i);
+						iMax=i;
+					}					
+				}
+//				Rcpp::Rcout << " old k " << clu.at(iMax) << " new k " << k << std::endl;			
+				-- countGroups.at(clu.at(iMax));
+				clu.at(iMax)=k;
+				eVec.at(iMax)=0; //this is not really needed
+			}
+		}
+    }
+	
+	
+	
 //    Rcpp::Rcout << "nBorders: " << nBorders << std::endl;
 //    Rcpp::Rcout << "borders: " << borders << std::endl;
 //    Rcpp::Rcout << "nClu: " << nClu << std::endl;
@@ -221,46 +262,46 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 //    Rcpp::Rcout << "eVec: " << eVec << std::endl;
 //    Rcpp::Rcout << "-----------------------" << std::endl;
 
-    int iBegin, iEnd, k;
-    for( unsigned int i = 0; i < nBorders.size(); ++i ){
-        if( !i ) {
-            iBegin = 0;
-            k = 0;
-        }
-        else {
-            iBegin = nBorders.at( i - 1 );
-            k = borders.at( i - 1 );
-        }
-        iEnd = nBorders.at( i );
-        K = borders.at( i );
-//        Rcpp::Rcout << "iBegin: " << iBegin << ", iEnd: " << iEnd << std::endl;
-//        Rcpp::Rcout << "k: " << k << ", K: " << K << std::endl;
-//        Rcpp::Rcout << "CLU: " << clu << std::endl;
-//        Rcpp::Rcout << "Begin element: " << *( clu.begin() + iBegin ) << ", End element: " << *( clu.begin() + iEnd - 1 ) << std::endl;
-        for( ; k < K; ++k ) {
-//            Rcpp::Rcout << "nBorders: " << nBorders << std::endl;
-//            Rcpp::Rcout << "borders: " << borders << std::endl;
-//            Rcpp::Rcout << "nClu: " << nClu << std::endl;
-//            Rcpp::Rcout << "clu: " << clu << std::endl;
-//            Rcpp::Rcout << "countGroups: " << countGroups << std::endl;
-//            Rcpp::Rcout << "eVec: " << eVec << std::endl;
-//            Rcpp::Rcout << "-----------------------" << std::endl;
-            if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
-                size_t i = std::distance( eVec.begin() + iBegin, std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
-//                Rcpp::Rcout << "INSIDE IF i="<< i << ", countGroupst(clu(i))=" << countGroups.at( clu.at( i ) ) << std::endl;
-//                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
-                if( countGroups.at( clu.at( i ) ) < 2 ) {
-                    k--;
-                    eVec.at( i ) = -1;
-                    continue;
-                }
-                clu.at( i ) = k;
-                eVec.at( i ) = 0;
-                k = i == 0 ? 0 : borders.size() > 1 ? borders.at( i - 1) : 0;
-            }
-        }
-    }
-
+//    int iBegin, iEnd, k;
+//    for( unsigned int i = 0; i < nBorders.size(); ++i ){
+//        if( !i ) {
+//            iBegin = 0;
+//            k = 0;
+//        }
+//        else {
+//            iBegin = nBorders.at( i - 1 );
+//            k = borders.at( i - 1 );
+//        }
+//        iEnd = nBorders.at( i );
+//        K = borders.at( i );
+////        Rcpp::Rcout << "iBegin: " << iBegin << ", iEnd: " << iEnd << std::endl;
+////        Rcpp::Rcout << "k: " << k << ", K: " << K << std::endl;
+////        Rcpp::Rcout << "CLU: " << clu << std::endl;
+////        Rcpp::Rcout << "Begin element: " << *( clu.begin() + iBegin ) << ", End element: " << *( clu.begin() + iEnd - 1 ) << std::endl;
+//        for( ; k < K; ++k ) {
+////            Rcpp::Rcout << "nBorders: " << nBorders << std::endl;
+////            Rcpp::Rcout << "borders: " << borders << std::endl;
+////            Rcpp::Rcout << "nClu: " << nClu << std::endl;
+////            Rcpp::Rcout << "clu: " << clu << std::endl;
+////            Rcpp::Rcout << "countGroups: " << countGroups << std::endl;
+////            Rcpp::Rcout << "eVec: " << eVec << std::endl;
+////            Rcpp::Rcout << "-----------------------" << std::endl;
+//            if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
+//                size_t i = std::distance( eVec.begin() + iBegin, std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
+////                Rcpp::Rcout << "INSIDE IF i="<< i << ", countGroupst(clu(i))=" << countGroups.at( clu.at( i ) ) << std::endl;
+////                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
+//                if( countGroups.at( clu.at( i ) ) < 2 ) {
+//                    k--;
+//                    eVec.at( i ) = -1;
+//                    continue;
+//                }
+//                clu.at( i ) = k;
+//                eVec.at( i ) = 0;
+//                k = i == 0 ? 0 : borders.size() > 1 ? borders.at( i - 1) : 0;
+//            }
+//        }
+//    }
+//
 //    K = 0;
 //    int k = 0;
 //    for( int i = 0; i < borders.size(); ++i ) {

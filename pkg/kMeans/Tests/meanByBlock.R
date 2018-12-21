@@ -18,7 +18,7 @@ fun.by.blocks(M[,,1],clu=clu,ignore.diag = FALSE)==meanByBlocks(M, clu,nClu, dia
 #set weights to have the same dimensions as M and set al values to 1 (for testing)
 W<-M
 W[,,]<-1.0
-
+M[5:10,5:10,]<-0
 critFunction( M, clu, W, sum(nClu) )
 kmBlock::kmBlock(M,clu,W,sum(n),sum(nClu))
 
@@ -37,9 +37,19 @@ critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu) )
 kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu)
 blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
 
-
+set.seed(1)
 clu4<-c(sample(rep(0:1,times=2)),sample(rep(2:4,times=2)))
 critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu) )
 kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu)
 blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
+
+
+
+n<-c(4,6)
+nClu<-c(3,5)
+clu5<-c(sample(c(0:2,2)),sample(c(3:7,7)))
+critFunction( M[,,1,drop=FALSE], clu5, W, sum(nClu) )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu5,W,n,nClu)
+blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
+
 
