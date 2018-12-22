@@ -248,6 +248,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 //				Rcpp::Rcout << " old k " << clu.at(iMax) << " new k " << k << std::endl;			
 				-- countGroups.at(clu.at(iMax));
 				clu.at(iMax)=k;
+				countGroups.at(k)=1;				
 				eVec.at(iMax)=0; //this is not really needed
 			}
 		}
