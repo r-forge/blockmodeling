@@ -18,15 +18,17 @@ critFunC(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     blockTypeWeights = 1, combWeights = NULL, returnEnv = FALSE)
     
     
-optParC(M, nMode = NULL,isSym = NULL, diag = 1, clu, approaches, blocks,
-    useMulti = FALSE, maxPar = 50, IM = NULL, EM = NULL, Earr = NULL,
-    justChange = FALSE, sameIM = FALSE, regFun = "max", homFun = "ss",
-    usePreSpecM = NULL, preSpecM = NULL, minUnitsRowCluster = 1,
-    minUnitsColCluster = 1, maxUnitsRowCluster = 9999,
-    maxUnitsColCluster = 9999, relWeights = 1, posWeights = 1,
-    blockTypeWeights = 1, combWeights = NULL, exchageClusters = "all",
-    save.initial.param = TRUE)
-}
+optParC(M, clu, approaches, blocks, nMode = NULL, isSym =
+     NULL, diag = 1, useMulti = FALSE, maxPar = 50, IM =
+     NULL, EM = NULL, Earr = NULL, justChange = FALSE,
+     sameIM = FALSE, regFun = "max", homFun = "ss",
+     usePreSpecM = NULL, preSpecM = NULL,
+     minUnitsRowCluster = 1, minUnitsColCluster = 1,
+     maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999,
+     relWeights = 1, posWeights = 1, blockTypeWeights = 1,
+     combWeights = NULL, exchageClusters = "all",
+     save.initial.param = TRUE)
+  }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselves). If the network is not two-mode, the matrix must be square.}

@@ -72,7 +72,7 @@ plotMat(x = M, M = x, clu = NULL,
                  colByUnits = NULL, colByRow = NULL, colByCol = NULL,
                  mulCol = 2, joinColOperator = "+", colTies = FALSE,
                  maxValPlot = NULL, printMultipliedMessage = TRUE,
-                 replaceNAdiagWith0 = TRUE, ...)
+                 replaceNAdiagWith0 = TRUE, colLabels = FALSE, ...)
 
 
 % plot.mat.nm(x = M, M = x, ..., main.title = NULL,
@@ -121,7 +121,7 @@ plotArray(x = M, M = x, IM = NULL, ..., main.title = NULL, main.title.line
                  colByUnits = NULL, colByRow = NULL, colByCol = NULL,
                  mulCol = 2, joinColOperator = "+", colTies = FALSE,
                  maxValPlot = NULL, printMultipliedMessage = TRUE,
-                 replaceNAdiagWith0 = TRUE, ...)
+                 replaceNAdiagWith0 = TRUE, colLabels = FALSE, ...)
 
 \method{plot}{crit.fun}(x, main = NULL, ...)
 
@@ -206,6 +206,7 @@ then this should be a vector, else a list of vectors, one for each mode.}
    \item{title.col}{Title for the column-normalized matrix in nm version}
    \item{par.set}{A list of possible plotting parameters (to \code{par}) to be used in nm version}
   \item{which}{Which (if there are more than one) of optimal solutions to plot.}
+    \item{colLabels}{Should the labels of units be colored. If \code{FALSE}, these are not collored, if \code{TRUE}, they are colored with colors of clusters as defined by palette. This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.}
   \item{\dots}{Aditional arguments to \code{plot.default} for \code{plotMat} and also to \code{plotMat} for other functions.}
 }
 \value{

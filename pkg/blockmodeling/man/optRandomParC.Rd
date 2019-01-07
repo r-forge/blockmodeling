@@ -12,16 +12,16 @@ A list of paritions can or the number of clusters and a number of partitions to 
 }
 \usage{
 
-optRandomParC(M, k, rep, save.initial.param = TRUE,
-              save.initial.param.opt = FALSE, deleteMs = TRUE,
-              max.iden = 10, switch.names = NULL, return.all =
-              FALSE, return.err = TRUE, seed = NULL, RandomSeed =
-              NULL, parGenFun = genRandomPar, mingr = NULL, maxgr =
-              NULL, addParam = list(genPajekPar = TRUE, probGenMech
-              = NULL), maxTriesToFindNewPar = rep * 10, skip.par =
-              NULL, useOptParMultiC = FALSE, useMulti =
-              useOptParMultiC, printRep = ifelse(rep <= 10, 1,
-              round(rep/10)), n = NULL, nCores = 1, ...) 
+optRandomParC(M, k, approaches, blocks, rep, save.initial.param =
+             TRUE, save.initial.param.opt = FALSE, deleteMs = TRUE,
+             max.iden = 10, switch.names = NULL, return.all =
+             FALSE, return.err = TRUE, seed = NULL, RandomSeed =
+             NULL, parGenFun = genRandomPar, mingr = NULL, maxgr =
+             NULL, addParam = list(genPajekPar = TRUE, probGenMech
+             = NULL), maxTriesToFindNewPar = rep * 10, skip.par =
+             NULL, useOptParMultiC = FALSE, useMulti =
+             useOptParMultiC, printRep = ifelse(rep <= 10, 1,
+             round(rep/10)), n = NULL, nCores = 1, ...)
 
 
 }
@@ -29,6 +29,8 @@ optRandomParC(M, k, rep, save.initial.param = TRUE,
 \arguments{
   \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks   are supported. The network can have one or more modes (different kinds of units with no ties among themselves. If the network is not two-mode, the matrix must be square.}
   \item{k}{The number of clusters used in the generation of partitions.}
+  \item{approaches}{Generalized blockmodeling approach.}
+  \item{blocks}{Allowed block types as a vector, list or array.}
   \item{rep}{The number of repetitions/different starting partitions to check.}
   \item{save.initial.param}{Should the initial parameters (\code{approaches}, ...) be saved. The        default value is \code{TRUE}.}
   \item{save.initial.param.opt}{Should the inital parameters(\code{approaches}, ...) of using          \code{optParC} be saved. The default value is \code{FALSE}.}
