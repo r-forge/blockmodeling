@@ -20,6 +20,7 @@ addParam = list(
         find.new.par<-TRUE
 		while(find.new.par){
       	  ver<-sample(1:4,size=1,prob=probGenMech)
+		  if(k==n) ver<-4
 		  if(ver!=4){
 			temppar<-integer(n)
 

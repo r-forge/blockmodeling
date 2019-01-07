@@ -3,8 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 
-
 2018
+November 29, 2018
+A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
+
 November 9, 2018
 Version 0.3.3
 Bug fixed in critFunC.
@@ -33,15 +35,12 @@ April 25, 2018
 Version 0.3.1
 A bug fix which prevented the use of functions gplot1 and gplot2.
 
-
 April 10, 2018
 Version 0.3.0
 Final tweaks before submission to CRAN.
 
-
 March 28, 2018
 Correcting some FORTRAN warnings.
-
 
 March 2, 2018
 Version 0.2.4
@@ -59,15 +58,18 @@ Added formating to returned clu from these functions.
 June 30, 2017
 Seveal bug fixes.
 
+
 2014
 May 14, 2014
 Version: 0.2.2
 A bug in sedist fixed.
 
+
 2013
 Version: 0.2.2
 Several improvements, added additional block types (rfn, cfn, cdo, rdo) and support for multilevel blockmodeling.
 
+2012
 November 15, 2012
 Version: 0.2.2
 Added posibility to differentially weight relations, block type and positions or based on specially designed weights.
