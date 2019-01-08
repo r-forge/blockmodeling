@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2018
+Version 0.3.5
+December 24, 2018
+Added two arguments into optRandomParC (approaches and blocks). Also the description of these arguments was added into optRandomParC.Rd file
+
 November 29, 2018
 A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
 
