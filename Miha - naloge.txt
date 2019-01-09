@@ -1,0 +1,11 @@
+Splošne opombe:
+- blockmodelingTest paketek sem nadgradil z k-means algoritmom. To je za enkrat zelo eksperimentalno, zato se te spremembe NE SME prenašati v blockmodeling. Gre za funkcije v datotekah kmBlock.R in mlKmeasHelperFun.R.
+
+Naloge:
+- Bi pa vas prosil, če za funkcije iz datotek kmBlock.R, mlKmeasHelperFun.R naredite Rd datoteke (help-file). V obeh datotekah sem v bistvu že dokumentiral funkcije s formatom roxygen. Ne vem, ali se da s tem avtomatično zgenerirati Rd datoteke za samo izbrane funkcije, a tudi če se da, boste morali prej kaj ročno popraviti, saj sem uporabljal tudi @inheritParams iz funkcij, ki so dokumentirane na »star« način.
+- Tudi sicer mi je tale roxygen zelo všeč, tako da bi bilo morda smiselno cel paket »prevesti« na ta sistem, saj bi bilo vzdrževanje verjetno lažje. Za to tudi obstaja nek paket. Ali lahko preizkusite (najprej lokalno)?
+https://yihui.name/rd2roxygen/
+
+
+Opravljene naloge:
+
