@@ -20,13 +20,13 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
 void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n );
 unsigned int belongsTo( const int & group, const IVector & borders );
+DMatrix relationsMeans( const Array & M, const IVector & n );
 double meanMatrix( const DMatrix & p_matrix );
 
 
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu )
 {
     const int K = Rcpp::sum( nClu );
-
     DMatrix pSeparate;
     Array meanBlocks;
 //    Rcpp::Rcout << "DEBUG1" << std::endl;
@@ -55,6 +55,11 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //    if( !pSeparate.is_empty() ) {
 //        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
 //    }
+
+    DMatrix d = relationsMeans( M, n );
+    Rcpp::Rcout << "Relations means matrix:" << std::endl << "-----------------" << std::endl << std::endl;
+    Rcpp::Rcout << d << std::endl << "Dimensions: " << d.n_rows << " " << d.n_cols << std::endl;
+    Rcpp::Rcout << "-----------------" << std::endl << std::endl;
 
     return Rcpp::List::create( Rcpp::Named( "bestCf" ) = bestCf, Rcpp::Named( "bestClu" ) = bestClu );
 
@@ -132,7 +137,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
             }
             for( size_t j = 0; j < res.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
-                if( !dVal && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+                if( !N( i, j, r ) && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
                     res(i, j, r ) = diagMean;
                 }
                 else {
@@ -314,12 +319,30 @@ unsigned int belongsTo( const int & group, const IVector & borders )
 }
 
 
+DMatrix relationsMeans( const Array & M, const IVector & n )
+{
+    const int S = n.size();
+    DMatrix mMeans( S, M.n_slices, arma::fill::zeros );
+    IVector cumN = Rcpp::cumsum( n );
+    cumN.push_front( 0 );
+    for( int s = 0; s < S; ++s ) {
+        for( unsigned int r = 0; r < M.n_slices; ++r ) {
+            Array subArray = M.subcube( cumN.at( s ), cumN.at( s ), r, cumN.at( s + 1 ) - 1, cumN.at( s + 1 ) - 1, r );
+            mMeans.at( s, r ) = meanMatrix( subArray.slice( 0 ) );
+        }
+    }
+
+    return mMeans;
+}
+
+
 double meanMatrix( const DMatrix & p_matrix )
 {
     size_t sElementsN = 0;
     size_t sum = 0;
     for( size_t i = 0; i < static_cast<size_t>( p_matrix.n_rows ); ++i ) {
         for( size_t j = 0; j < static_cast<size_t>( p_matrix.n_cols ); ++j ) {
+            if( i == j ) continue;
             sum += p_matrix.at( i, j );
             ++sElementsN;
         }
