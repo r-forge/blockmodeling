@@ -15,14 +15,15 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 // [[Rcpp::export]]
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions );
 
-// Function declarations
-void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal = Diagonale::Same );
+// Functions forward declarations
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const MeanObject & p_moMeans, const Diagonale sDiagonal = Diagonale::Same );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
 void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n );
 unsigned int belongsTo( const int & group, const IVector & borders );
 DMatrix relationsMeans( const Array & M, const IVector & n );
 double meanMatrix( const DMatrix & p_matrix );
 
+int getS( const int rows, const IVector & n );
 
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu )
 {
@@ -30,8 +31,10 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     DMatrix pSeparate;
     Array meanBlocks;
 //    Rcpp::Rcout << "DEBUG1" << std::endl;
-    meansByBlocks( M, meanBlocks, clu, K, pSeparate, Diagonale::Ignore );
+    MeanObject moMeans( M, n );
+    meansByBlocks( M, meanBlocks, clu, K, pSeparate, moMeans, Diagonale::Ignore );
 //    Rcpp::Rcout << "DEBUG2" << std::endl;
+
 
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
@@ -44,7 +47,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     while( newCf < bestCf ) {
         bestClu = newClu;
         bestCf = newCf;
-        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, Diagonale::Ignore );
+        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, moMeans, Diagonale::Ignore );
         setGroups( M, newClu, weights, meanBlocks, nClu, n );
         newCf = criterialFunction( M, newClu, weights, meanBlocks );
     }
@@ -57,9 +60,9 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //    }
 
     DMatrix d = relationsMeans( M, n );
-    Rcpp::Rcout << "Relations means matrix:" << std::endl << "-----------------" << std::endl << std::endl;
-    Rcpp::Rcout << d << std::endl << "Dimensions: " << d.n_rows << " " << d.n_cols << std::endl;
-    Rcpp::Rcout << "-----------------" << std::endl << std::endl;
+//    Rcpp::Rcout << "Relations means matrix:" << std::endl << "-----------------" << std::endl << std::endl;
+//    Rcpp::Rcout << d << std::endl << "Dimensions: " << d.n_rows << " " << d.n_cols << std::endl;
+//    Rcpp::Rcout << "-----------------" << std::endl << std::endl;
 
     return Rcpp::List::create( Rcpp::Named( "bestCf" ) = bestCf, Rcpp::Named( "bestClu" ) = bestClu );
 
@@ -75,7 +78,8 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
 
     DMatrix pSeparate;
     Array aRes;
-    meansByBlocks( M, aRes, clu, dimensions, pSeparate, dDiag );
+    MeanObject moMeans( M );
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, moMeans, dDiag );
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -87,11 +91,12 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 {
     DMatrix pSeparate;
     Array aRes;
-    meansByBlocks( M, aRes, clu, dimensions, pSeparate, Diagonale::Ignore );
+    MeanObject moMeans( M );
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, moMeans, Diagonale::Ignore );
     return criterialFunction( M, clu, weights, aRes );
 }
 
-void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const Diagonale sDiagonal )
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const MeanObject & p_moMeans, const Diagonale sDiagonal )
 {
 //    Rcpp::Rcout << "meansByBlocks: begin" << std::endl;
     if( res.is_empty() ) {
@@ -130,14 +135,29 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
     }
 
     for( size_t r = 0; r < res.n_slices; ++r ) {
-        double diagMean( sDiagonal == Diagonale::Ignore ? meanMatrix( M.slice( r ) ) : 0 ); // calculate it only once per each iteration
+        double diagMean;
+        if( sDiagonal == Diagonale::Ignore ) {
+//            diagMean = meanMatrix( M.slice( r ) ); // calculate it only once per each iteration
+//            diagMean = p_moMeans.mean( r );
+        }
+        else {
+            diagMean = 0;
+        }
         for( size_t i = 0; i < res.n_rows; ++i ) {
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
                 mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
             }
             for( size_t j = 0; j < res.n_cols; ++j ) {
                 double dVal( S( i, j, r ) );
-                if( !N( i, j, r ) && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+                if( N( i, j, r ) == 0 && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+//                    res(i, j, r ) = diagMean;
+                    if( p_moMeans.type() == MeanObject::Type::Matrix ) {
+                        int s = getS( i, p_moMeans.n() );
+                        diagMean = p_moMeans.mean( s, r );
+                    }
+                    else {
+                        diagMean = p_moMeans.mean( r );
+                    }
                     res(i, j, r ) = diagMean;
                 }
                 else {
@@ -348,4 +368,84 @@ double meanMatrix( const DMatrix & p_matrix )
         }
     }
     return static_cast<double>( sum ) / sElementsN;
+}
+
+int getS( const int rows, const IVector & n )
+{
+    int s = 0;
+    int sCount = 0;
+    for( int i = 0; i < rows; ++i ) {
+        ++sCount;
+        if( sCount > n.at( s ) ) {
+            ++s;
+            sCount = 0;
+        }
+    }
+
+    return s;
+}
+
+MeanObject::MeanObject( const Array & p_array, const IVector & p_n )
+    : m_type( MeanObject::Type::Matrix )
+    , m_vN( p_n )
+{
+    m_mMeans = relationsMeans( p_array, p_n );
+
+}
+
+MeanObject::MeanObject( const Array & p_array )
+    : m_type( MeanObject::Type::Vector )
+{
+    m_vMeans = IVector( p_array.n_slices );
+    for( unsigned int i = 0; i < p_array.n_slices; ++i ) {
+        m_vMeans.at( i ) = meanMatrix( p_array.slice( i ) );
+    }
+}
+
+MeanObject::Type MeanObject::type() const
+{
+    return m_type;
+}
+
+double MeanObject::mean( const int r ) const
+{
+    if( m_type == MeanObject::Type::Vector ) {
+        return m_vMeans.at( r );
+    }
+    else {
+        Rcpp::stop( "Wrong type of mean object" );
+    }
+    return 0;
+}
+
+double MeanObject::mean( const int i, const int r ) const
+{
+    if( m_type == MeanObject::Type::Matrix ) {
+        return m_mMeans.at( i, r );
+    }
+    else {
+        Rcpp::stop( "Wrong type of mean object" );
+    }
+    return 0;
+}
+
+IVector MeanObject::n() const
+{
+    if( m_type == MeanObject::Type::Matrix )
+        return m_vN;
+    else
+        Rcpp::stop( "Cannot return n vector, wrong type" );
+}
+
+std::ostream & operator << ( std::ostream & stream, const MeanObject::Type & type )
+{
+    switch( type ) {
+    case MeanObject::Vector:
+        stream << "Vector";
+        break;
+    case MeanObject::Matrix:
+        stream << "Matrix";
+        break;
+    }
+    return stream;
 }
