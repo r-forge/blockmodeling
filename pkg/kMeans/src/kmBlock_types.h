@@ -38,7 +38,7 @@ public:
 
 protected:
     Type m_type;
-    IVector m_vMeans;
+    DVector m_vMeans;
 
     DMatrix m_mMeans;
     IVector m_vN;
