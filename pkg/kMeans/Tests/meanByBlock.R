@@ -50,4 +50,5 @@ critFunction( M[,,1,drop=FALSE], clu5, W, sum(nClu),n )
 (tmp<-kmBlock::kmBlock(M[,,1,drop=FALSE],clu5,W,n,nClu))
 blockmodelingTest::kmBlock(M[,,1],clu = clu5)[c("clu","err")]
 
+critFunC(M, clu=tmp$bestClu,approaches = "hom",homFun = "ss", blocks=c("com"))$err
 critFunction( M[,,1,drop=FALSE], tmp$bestClu, W, sum(nClu),n )
