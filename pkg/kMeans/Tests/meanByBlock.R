@@ -47,7 +47,7 @@ n<-c(4,6)
 nClu<-c(3,5)
 clu5<-c(sample(c(0:2,2)),sample(c(3:7,7)))
 critFunction( M[,,1,drop=FALSE], clu5, W, sum(nClu),n )
-kmBlock::kmBlock(M[,,1,drop=FALSE],clu5,W,n,nClu)
+(tmp<-kmBlock::kmBlock(M[,,1,drop=FALSE],clu5,W,n,nClu))
 blockmodelingTest::kmBlock(M[,,1],clu = clu5)[c("clu","err")]
 
-
+critFunction( M[,,1,drop=FALSE], tmp$bestClu, W, sum(nClu),n )
