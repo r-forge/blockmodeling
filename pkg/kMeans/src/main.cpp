@@ -209,8 +209,9 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 unsigned int cluJ = clu.at( j );
-                if( i == j ) { // ignore diagonal
-                    continue;
+                if( i == j ) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
+                    // AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
+					continue;
                 }
                 for( unsigned int r = 0; r < M.n_slices; ++r ) {
                     eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, cluJ, r ), 2 );
