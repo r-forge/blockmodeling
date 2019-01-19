@@ -141,7 +141,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
                 mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
             }
-            if( sCount > n.at( s ) ) {
+            if( sCount >= n.at( s ) ) {
                 ++s;
                 sCount = 0;
             }
