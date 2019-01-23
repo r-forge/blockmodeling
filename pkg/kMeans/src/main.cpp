@@ -222,17 +222,28 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 unsigned int cluJ = clu.at( j );
-                if( p_diagonale == Diagonale::Ignore && i == j ) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
-                    // AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
-					continue;
-                }
-                else if( p_diagonale == Diagonale::Seperate && i == j ) {
-                    for( unsigned int r = 0; r < M.n_slices; ++r ) {
-//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
-                        eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - p_mSeparate.at( k, r ), 2 );
-                        eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( cluJ, r ), 2 );
-                    }
-                }
+				if(i==j){
+					if( p_diagonale == Diagonale::Ignore) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
+						// AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
+						continue; 
+					}
+					else if( p_diagonale == Diagonale::Seperate) {
+						for( unsigned int r = 0; r < M.n_slices; ++r ) {
+	//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
+							eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - p_mSeparate.at( k, r ), 2 );
+							// eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( k, r ), 2 );
+							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
+						}
+					}
+					else if( p_diagonale == Diagonale::Same) {
+						for( unsigned int r = 0; r < M.n_slices; ++r ) {
+	//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
+							eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, k, r ), 2 );
+							// eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( k, r ), 2 );
+							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
+						}
+					}
+				}
                 else {
                     for( unsigned int r = 0; r < M.n_slices; ++r ) {
                         eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, cluJ, r ), 2 );
