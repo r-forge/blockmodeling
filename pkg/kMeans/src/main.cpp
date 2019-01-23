@@ -9,47 +9,54 @@
 
 // Exposed functions
 // [[Rcpp::export]]
-Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal = "same" );
+Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal = "ignore" );
 // [[Rcpp::export]]
-Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu );
+Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & p_sDiagonal = "ignore" );
 // [[Rcpp::export]]
-double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n );
+double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & p_sDiagonal = "ignore" );
 
 // Functions forward declarations
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Diagonale sDiagonal = Diagonale::Same );
-double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat );
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n );
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
 unsigned int belongsTo( const int & group, const IVector & borders );
 DMatrix relationsMeans( const Array & M, const IVector & n );
 double meanMatrix( const DMatrix & p_matrix );
+Diagonale getDiagonale( const std::string & p_sDiagonal );
 
-int getS( const int rows, const IVector & n );
+std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag );
 
-Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu )
+
+Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & p_sDiagonal )
 {
     const int K = Rcpp::sum( nClu );
+    const Diagonale dDiag = getDiagonale( p_sDiagonal );
+
     DMatrix pSeparate;
-    Array meanBlocks;
+//    Array pSeparate;
+    Array meanBlocks, mSeparate;
 //    Rcpp::Rcout << "DEBUG1" << std::endl;
     const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, Diagonale::Ignore );
-//    Rcpp::Rcout << "DEBUG2" << std::endl;
+    meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, dDiag );
+//    Rcpp::Rcout << "DEBUG2" << std::endl << pSeparate << std::endl;
 
 
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
-    setGroups( M, newClu, weights, meanBlocks, nClu, n );
+    setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
     IVector bestClu;
 
-    double newCf = criterialFunction( M, clu, weights, meanBlocks );
+//    Rcpp::stop( "DEBUG" );
+
+    double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;
 
     while( newCf < bestCf ) {
         bestClu = newClu;
         bestCf = newCf;
-        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, Diagonale::Ignore );
-        setGroups( M, newClu, weights, meanBlocks, nClu, n );
-        newCf = criterialFunction( M, newClu, weights, meanBlocks );
+        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, dDiag );
+        setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
+        newCf = criterialFunction( M, newClu, weights, meanBlocks, pSeparate, dDiag );
     }
 
 //    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
@@ -70,11 +77,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal )
 {
-    Diagonale dDiag( Diagonale::Same );
-    if( diagonal == "same" );
-    else if( diagonal == "seperate" ) dDiag = Diagonale::Seperate;
-    else if( diagonal == "ignore"   ) dDiag = Diagonale::Ignore;
-    else Rcpp::stop( "Unknow diagonal parameter\nOptions are: [ same, ignore, seperate ]\n" );
+    Diagonale dDiag = getDiagonale( diagonal );
 
     DMatrix pSeparate;
     Array aRes;
@@ -87,13 +90,14 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
 
 }
 
-double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n )
+double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & p_sDiagonal )
 {
+    Diagonale dDiagonale = getDiagonale( p_sDiagonal );
     DMatrix pSeparate;
     Array aRes;
     const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, Diagonale::Ignore );
-    return criterialFunction( M, clu, weights, aRes );
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, dDiagonale );
+    return criterialFunction( M, clu, weights, aRes, pSeparate, dDiagonale );
 }
 
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Diagonale sDiagonal )
@@ -112,6 +116,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
     DMatrix mNseprateDiagonal;
 
     if( sDiagonal == Diagonale::Seperate ) {
+//        mDiagonalRes = DMatrix( dimensions, M.n_slices, arma::fill::zeros );
         mDiagonalRes = DMatrix( dimensions, M.n_slices, arma::fill::zeros );
         mSseprateDiagonal = mDiagonalRes;
         mNseprateDiagonal = mDiagonalRes;
@@ -138,15 +143,18 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
         int s = 0;
         int sCount = 0;
         for( size_t i = 0; i < res.n_rows; ++i ) {
-            if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
-                mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
-            }
+//            if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
+//                mDiagonalRes( i, j, r ) = double( mSseprateDiagonal( i, j, r ) ) / mNseprateDiagonal( i, j, r );
+//            }
             if( sCount >= n.at( s ) ) {
                 ++s;
                 sCount = 0;
             }
             ++sCount;
             for( size_t j = 0; j < res.n_cols; ++j ) {
+                if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
+                    mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
+                }
                 double dVal( S( i, j, r ) );
                 if( i == j && N( i, j, r ) == 0 && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
 //                    diagMean = p_mMeans.at( s, r ); // p_mMeans.at( getS( i, n ), r );
@@ -166,16 +174,21 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
 }
 
 
-double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat )
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale )
 {
     double dRet = 0;
     for( size_t i = 0; i < M.n_rows; ++i ) {
         for( size_t j = 0; j < M.n_cols; ++j ) {
             for( size_t r = 0; r < M.n_slices; ++r ) {
-                if( i == j ) { // ignore diagonal
+                if( p_diagonale == Diagonale::Ignore && i == j ) { // ignore diagonal
                     continue;
                 }
-                dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+                else if( p_diagonale == Diagonale::Seperate && i == j ) {
+                    dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - p_mSeparate( clu.at( i ), r ), 2 );
+                }
+                else {
+                    dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( clu.at( i ), clu.at( j ), r ), 2 );
+                }
             }
         }
     }
@@ -183,7 +196,7 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n )
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale )
 {
     IVector borders = Rcpp::cumsum( nClu );
 //    Rcpp::Rcout << "Cumsum: " << borders << std::endl;
@@ -209,16 +222,25 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 unsigned int cluJ = clu.at( j );
-                if( i == j ) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
+                if( p_diagonale == Diagonale::Ignore && i == j ) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
                     // AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
 					continue;
                 }
-                for( unsigned int r = 0; r < M.n_slices; ++r ) {
-                    eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, cluJ, r ), 2 );
-                    eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( cluJ, k, r ), 2 );
+                else if( p_diagonale == Diagonale::Seperate && i == j ) {
+                    for( unsigned int r = 0; r < M.n_slices; ++r ) {
+//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
+                        eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - p_mSeparate.at( k, r ), 2 );
+                        eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( cluJ, r ), 2 );
+                    }
+                }
+                else {
+                    for( unsigned int r = 0; r < M.n_slices; ++r ) {
+                        eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - meansMat( k, cluJ, r ), 2 );
+                        eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - meansMat( cluJ, k, r ), 2 );
+                    }
                 }
             }
-            if (eTmp < eMin){
+            if ( eTmp < eMin ){
                 kMin = k;
                 eMin = eTmp;
             }
@@ -361,4 +383,40 @@ double meanMatrix( const DMatrix & p_matrix )
         }
     }
     return static_cast<double>( sum ) / sElementsN;
+}
+
+Diagonale getDiagonale( const std::string & p_sDiagonal )
+{
+    Diagonale dRet = Diagonale::Ignore;
+    std::string sTmp = p_sDiagonal;
+    std::transform( sTmp.begin(), sTmp.end(), sTmp.begin(), ::tolower );
+    if( sTmp == "ignore" );
+    else if( sTmp == "same" )
+    {
+        dRet = Diagonale::Same;
+    }
+    else if( sTmp == "seperate" )
+    {
+        dRet = Diagonale::Seperate;
+    }
+    else Rcpp::stop( "Unknow diagonal parameter\nOptions are: [ same, ignore, seperate ]\n" );
+
+    return dRet;
+}
+
+std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag )
+{
+    switch ( p_diag ) {
+        case Diagonale::Ignore:
+            p_stream << "Ignore";
+        break;
+        case Diagonale::Same:
+            p_stream << "Same";
+        break;
+        case Diagonale::Seperate:
+            p_stream << "Seperate";
+        break;
+    }
+
+    return p_stream;
 }

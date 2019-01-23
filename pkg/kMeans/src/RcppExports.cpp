@@ -23,8 +23,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // kmBlock
-Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const IVector& n, const IVector& nClu);
-RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP) {
+Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const IVector& n, const IVector& nClu, const std::string& p_sDiagonal);
+RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP, SEXP p_sDiagonalSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,13 +33,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Array& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type nClu(nCluSEXP);
-    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, n, nClu));
+    Rcpp::traits::input_parameter< const std::string& >::type p_sDiagonal(p_sDiagonalSEXP);
+    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, n, nClu, p_sDiagonal));
     return rcpp_result_gen;
 END_RCPP
 }
 // critFunction
-double critFunction(const Array& M, const IVector& clu, const Array& weights, const int dimensions, const IVector& n);
-RcppExport SEXP _kmBlock_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP) {
+double critFunction(const Array& M, const IVector& clu, const Array& weights, const int dimensions, const IVector& n, const std::string& p_sDiagonal);
+RcppExport SEXP _kmBlock_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP p_sDiagonalSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,15 +49,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Array& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const int >::type dimensions(dimensionsSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, dimensions, n));
+    Rcpp::traits::input_parameter< const std::string& >::type p_sDiagonal(p_sDiagonalSEXP);
+    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, dimensions, n, p_sDiagonal));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_kmBlock_meanByBlocks", (DL_FUNC) &_kmBlock_meanByBlocks, 5},
-    {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 5},
-    {"_kmBlock_critFunction", (DL_FUNC) &_kmBlock_critFunction, 5},
+    {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 6},
+    {"_kmBlock_critFunction", (DL_FUNC) &_kmBlock_critFunction, 6},
     {NULL, NULL, 0}
 };
 
