@@ -100,7 +100,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, dDiag );
 //    Rcpp::Rcout << "DEBUG2" << std::endl << pSeparate << std::endl;
 
-    Borders<Array> bordersMeanstMat( M.n_rows, M.n_cols, M.n_slices );
+    Borders<Array> bordersMeanstMat( meanBlocks.n_rows, meanBlocks.n_cols, meanBlocks.n_slices );
     Borders<DMatrix> bordersSeperate( pSeparate.n_rows, pSeparate.n_cols );
 
 //    Rcpp::Rcout << bordersMeanstMat.getLower() << std::endl << bordersMeanstMat.getUpper() << std::endl;
@@ -162,7 +162,7 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
     const DMatrix MEANS = relationsMeans( M, n );
     meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, dDiagonale );
 
-    Borders<Array> bordersMeanstMat( M.n_rows, M.n_cols, M.n_slices );
+    Borders<Array> bordersMeanstMat( aRes.n_rows, aRes.n_cols, aRes.n_slices );
     Borders<DMatrix> bordersSeperate( pSeparate.n_rows, pSeparate.n_cols );
 
     return criterialFunction( M, clu, weights, aRes, pSeparate, bordersMeanstMat, bordersSeperate, dDiagonale );
@@ -211,18 +211,18 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
         int s = 0;
         int sCount = 0;
         for( size_t i = 0; i < res.n_rows; ++i ) {
-//            if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
-//                mDiagonalRes( i, j, r ) = double( mSseprateDiagonal( i, j, r ) ) / mNseprateDiagonal( i, j, r );
-//            }
+            if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
+                mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
+            }
             if( sCount >= n.at( s ) ) {
                 ++s;
                 sCount = 0;
             }
             ++sCount;
             for( size_t j = 0; j < res.n_cols; ++j ) {
-                if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
-                    mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
-                }
+//                if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
+//                    mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
+//                }
                 double dVal( S( i, j, r ) );
                 if( i == j && N( i, j, r ) == 0 && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
 //                    diagMean = p_mMeans.at( s, r ); // p_mMeans.at( getS( i, n ), r );
@@ -298,7 +298,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 unsigned int cluJ = clu.at( j );
-                if( i==j ){
+                if( i == j ){
 					if( p_diagonale == Diagonale::Ignore) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
 						// AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
 						continue; 
