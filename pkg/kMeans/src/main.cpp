@@ -10,6 +10,7 @@ class Borders {
 
 public:
 
+    Borders(){}
     Borders( const size_t rows, const size_t cols, const size_t slices = -1 );
     Borders( const T & p_lower, const T & p_upper ) : m_lower( p_lower ), m_upper( p_upper ) {}
     virtual ~Borders() {}
@@ -74,11 +75,9 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & p_sDiagonal = "ignore" );
 
 // Functions forward declarations
-void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Diagonale sDiagonal = Diagonale::Same );
-template < typename T, typename G >
-double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate,  const Borders<T> & p_btBorders, const Borders<G> & p_btBordersSeperate, const Diagonale p_diagonale );
-template < typename T, typename G >
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Borders<T> & p_btBorders, const Borders<G> & p_btBordersSeperate, const Diagonale p_diagonale );
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal = Diagonale::Same );
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
 unsigned int belongsTo( const int & group, const IVector & borders );
 DMatrix relationsMeans( const Array & M, const IVector & n );
 double meanMatrix( const DMatrix & p_matrix );
@@ -86,6 +85,14 @@ Diagonale getDiagonale( const std::string & p_sDiagonal );
 
 std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag );
 
+//void test( const Rcpp::Nullable<Array> & a1 )
+//{
+//    Array a;
+//    if( a1.isNotNull() ) {
+//        a = Rcpp::as<Array>( a1 );
+//    }
+//    Rcpp::Rcout << "dasdasdas " << a << std::endl;
+//}
 
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & p_sDiagonal )
 {
@@ -96,31 +103,34 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //    Array pSeparate;
     Array meanBlocks, mSeparate;
 //    Rcpp::Rcout << "DEBUG1" << std::endl;
-    const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, dDiag );
-//    Rcpp::Rcout << "DEBUG2" << std::endl << pSeparate << std::endl;
+    Borders<Array> bordersMeanstMat( K, K, M.n_slices );
+    Borders<DMatrix> bordersSeperate;
+    if( dDiag == Diagonale::Seperate ) {
+        bordersSeperate = Borders<DMatrix>( K, K, M.n_slices );
+    }
 
-    Borders<Array> bordersMeanstMat( meanBlocks.n_rows, meanBlocks.n_cols, meanBlocks.n_slices );
-    Borders<DMatrix> bordersSeperate( pSeparate.n_rows, pSeparate.n_cols );
+    const DMatrix MEANS = relationsMeans( M, n );
+    meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
+//    Rcpp::Rcout << "DEBUG2" << std::endl << pSeparate << std::endl;
 
 //    Rcpp::Rcout << bordersMeanstMat.getLower() << std::endl << bordersMeanstMat.getUpper() << std::endl;
 
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
-    setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, bordersMeanstMat, bordersSeperate, dDiag );
+    setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
     IVector bestClu;
 
 //    Rcpp::stop( "DEBUG" );
 
-    double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, bordersMeanstMat, bordersSeperate, dDiag );
+    double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;
 
     while( newCf < bestCf ) {
         bestClu = newClu;
         bestCf = newCf;
-        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, dDiag );
-        setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, bordersMeanstMat, bordersSeperate, dDiag );
-        newCf = criterialFunction( M, newClu, weights, meanBlocks, pSeparate, bordersMeanstMat, bordersSeperate, dDiag );
+        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
+        setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
+        newCf = criterialFunction( M, newClu, weights, meanBlocks, pSeparate, dDiag );
     }
 
 //    Rcpp::Rcout << "BestCf: " << bestCf << std::endl;
@@ -145,8 +155,10 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
 
     DMatrix pSeparate;
     Array aRes;
+    Borders<Array> bordersMeanstMat( dimensions, dimensions, M.n_slices );
+    Borders<DMatrix> bordersSeperate( dimensions, dimensions, M.n_slices );
     const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, dDiag );
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
     }
@@ -160,15 +172,15 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
     DMatrix pSeparate;
     Array aRes;
     const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, dDiagonale );
+    Borders<Array> bordersMeanstMat( dimensions, dimensions, M.n_slices );
+    Borders<DMatrix> bordersSeperate( dimensions, dimensions, M.n_slices );
+    meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiagonale );
 
-    Borders<Array> bordersMeanstMat( aRes.n_rows, aRes.n_cols, aRes.n_slices );
-    Borders<DMatrix> bordersSeperate( pSeparate.n_rows, pSeparate.n_cols );
 
-    return criterialFunction( M, clu, weights, aRes, pSeparate, bordersMeanstMat, bordersSeperate, dDiagonale );
+    return criterialFunction( M, clu, weights, aRes, pSeparate, dDiagonale );
 }
 
-void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Diagonale sDiagonal )
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal )
 {
 //    Rcpp::Rcout << "meansByBlocks: begin" << std::endl;
     if( res.is_empty() ) {
@@ -212,7 +224,10 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
         int sCount = 0;
         for( size_t i = 0; i < res.n_rows; ++i ) {
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
-                mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
+                double dVal = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
+                if( dVal < p_btBordersSeperate.getLowerAt( i, r ) ) mDiagonalRes.at( i, r ) = p_btBordersSeperate.getLowerAt( i, r );
+                if( dVal > p_btBordersSeperate.getUpperAt( i, r ) ) mDiagonalRes.at( i, r ) = p_btBordersSeperate.getUpperAt( i, r );
+                else mDiagonalRes( i, r ) = dVal;
             }
             if( sCount >= n.at( s ) ) {
                 ++s;
@@ -231,6 +246,9 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
                 else {
                     res( i, j, r ) = dVal / N( i, j, r );
                 }
+
+                if( res.at( i, j, r ) < p_btBorders.getLowerAt( i, j, r ) ) res.at( i, j, r ) = p_btBorders.getLowerAt( i, j, r );
+                else if( res.at( i, j, r ) > p_btBorders.getUpperAt( i, j, r ) ) res.at( i, j, r ) = p_btBorders.getUpperAt( i, j, r );
             }
         }
     }
@@ -241,8 +259,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
 //    Rcpp::Rcout << "meansByBlocks: end" << std::endl;
 }
 
-template < typename T, typename G >
-double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Borders<T> & p_btBordersMeansMat, const Borders<G> & p_btBordersSeperate, const Diagonale p_diagonale )
+double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale )
 {
 //    Rcpp::Rcout << "blala " << std::endl << p_btBordersSeperate.getLower() << std::endl << p_btBordersSeperate.getUpper() << std::endl;
     double dRet = 0;
@@ -254,14 +271,14 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
                 }
                 else if( p_diagonale == Diagonale::Seperate && i == j ) {
                     double dAvg = p_mSeparate( clu.at( i ), r );
-                    if( dAvg < p_btBordersSeperate.getLowerAt( clu.at( i ), r ) ) dAvg = p_btBordersSeperate.getLowerAt( clu.at( i ), r );
-                    else if( dAvg > p_btBordersSeperate.getUpperAt( clu.at( i ), r ) ) dAvg = p_btBordersSeperate.getUpperAt( clu.at( i ), r );
+//                    if( dAvg < p_btBordersSeperate.getLowerAt( clu.at( i ), r ) ) dAvg = p_btBordersSeperate.getLowerAt( clu.at( i ), r );
+//                    else if( dAvg > p_btBordersSeperate.getUpperAt( clu.at( i ), r ) ) dAvg = p_btBordersSeperate.getUpperAt( clu.at( i ), r );
                     dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - dAvg, 2 );
                 }
                 else {
                     double dAvg = meansMat( clu.at( i ), clu.at( j ), r );
-                    if( dAvg < p_btBordersMeansMat.getLowerAt( clu.at( i ), clu.at( j ), r ) ) dAvg = p_btBordersMeansMat.getLowerAt( clu.at( i ), clu.at( j ), r );
-                    else if( dAvg > p_btBordersMeansMat.getUpperAt( clu.at( i ), clu.at( j ), r ) ) dAvg = p_btBordersMeansMat.getUpperAt( clu.at( i ), clu.at( j ), r );
+//                    if( dAvg < p_btBordersMeansMat.getLowerAt( clu.at( i ), clu.at( j ), r ) ) dAvg = p_btBordersMeansMat.getLowerAt( clu.at( i ), clu.at( j ), r );
+//                    else if( dAvg > p_btBordersMeansMat.getUpperAt( clu.at( i ), clu.at( j ), r ) ) dAvg = p_btBordersMeansMat.getUpperAt( clu.at( i ), clu.at( j ), r );
                     dRet += weights( i, j, r ) * std::pow( M( i, j, r ) - dAvg, 2 );
                 }
             }
@@ -271,8 +288,7 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
     return  dRet;
 }
 
-template < typename T, typename G >
-void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Borders<T> & p_btBordersMeansMat, const Borders<G> & p_btBordersSeperate, const Diagonale p_diagonale )
+void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale )
 {
     IVector borders = Rcpp::cumsum( nClu );
 //    Rcpp::Rcout << "Cumsum: " << borders << std::endl;
@@ -307,8 +323,8 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 						for( unsigned int r = 0; r < M.n_slices; ++r ) {
 	//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
                             double dAvg = p_mSeparate.at( k, r );
-                            if( dAvg < p_btBordersSeperate.getLowerAt( k, r ) ) dAvg = p_btBordersSeperate.getLowerAt( k, r );
-                            else if ( dAvg > p_btBordersSeperate.getUpperAt( k, r ) ) dAvg = p_btBordersSeperate.getUpperAt( k, r );
+//                            if( dAvg < p_btBordersSeperate.getLowerAt( k, r ) ) dAvg = p_btBordersSeperate.getLowerAt( k, r );
+//                            else if ( dAvg > p_btBordersSeperate.getUpperAt( k, r ) ) dAvg = p_btBordersSeperate.getUpperAt( k, r );
                             eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - dAvg, 2 );
 							// eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( k, r ), 2 );
 							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
@@ -318,8 +334,8 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 						for( unsigned int r = 0; r < M.n_slices; ++r ) {
 	//                        Rcpp::Rcout << "k=" << k << ", cluJ=" << cluJ << ", r=" << r << std::endl;
                             double dAvg = meansMat( k, k, r );
-                            if( dAvg < p_btBordersMeansMat.getLowerAt( k, k, r ) ) dAvg = p_btBordersMeansMat.getLowerAt( k, k, r );
-                            else if( dAvg > p_btBordersMeansMat.getUpperAt( k, k, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( k, k, r );
+//                            if( dAvg < p_btBordersMeansMat.getLowerAt( k, k, r ) ) dAvg = p_btBordersMeansMat.getLowerAt( k, k, r );
+//                            else if( dAvg > p_btBordersMeansMat.getUpperAt( k, k, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( k, k, r );
                             eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - dAvg, 2 );
 							// eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - p_mSeparate.at( k, r ), 2 );
 							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
@@ -329,13 +345,13 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
                 else {
                     for( unsigned int r = 0; r < M.n_slices; ++r ) {
                         double dAvg = meansMat( k, cluJ, r );
-                        if( dAvg < p_btBordersMeansMat.getLowerAt( k, cluJ, r ) ) dAvg = p_btBordersMeansMat.getLowerAt( k, cluJ, r );
-                        else if( dAvg > p_btBordersMeansMat.getUpperAt( k, cluJ, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( k, cluJ, r );
+//                        if( dAvg < p_btBordersMeansMat.getLowerAt( k, cluJ, r ) ) dAvg = p_btBordersMeansMat.getLowerAt( k, cluJ, r );
+//                        else if( dAvg > p_btBordersMeansMat.getUpperAt( k, cluJ, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( k, cluJ, r );
                         eTmp += weights( i, j, r ) * std::pow( M( i, j, r ) - dAvg, 2 );
 
                         dAvg = meansMat( cluJ, k, r );
-                        if( dAvg < p_btBordersMeansMat.getLowerAt( cluJ, k, r ) ) dAvg = p_btBordersMeansMat.getLowerAt(cluJ, k, r );
-                        else if( dAvg > p_btBordersMeansMat.getUpperAt( cluJ, k, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( cluJ, k, r );
+//                        if( dAvg < p_btBordersMeansMat.getLowerAt( cluJ, k, r ) ) dAvg = p_btBordersMeansMat.getLowerAt(cluJ, k, r );
+//                        else if( dAvg > p_btBordersMeansMat.getUpperAt( cluJ, k, r ) ) dAvg = p_btBordersMeansMat.getUpperAt( cluJ, k, r );
                         eTmp += weights( j, i, r ) * std::pow( M( j, i, r ) - dAvg, 2 );
                     }
                 }
