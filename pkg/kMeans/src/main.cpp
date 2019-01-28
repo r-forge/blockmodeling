@@ -29,7 +29,7 @@ protected:
 };
 
 template < typename T >
-Borders<T>::Borders( const size_t rows, const size_t cols, const size_t slices )
+Borders<T>::Borders( const size_t rows, const size_t cols, const size_t /* slices */ )
 {
     m_lower = T( rows, cols );
     m_upper = T( rows, cols );
@@ -68,46 +68,61 @@ double Borders<Array>::getUpperAt( const size_t i, const size_t j, const size_t 
 
 // Exposed functions
 // [[Rcpp::export]]
-Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal = "ignore" );
+Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal = "ignore",
+                         const bool useBorders = false, const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
+                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue );
 // [[Rcpp::export]]
-Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & p_sDiagonal = "ignore" );
+Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & diagonal = "ignore",
+                    const bool useBorders = false, const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue );
 // [[Rcpp::export]]
-double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & p_sDiagonal = "ignore" );
+double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & diagonal = "ignore",
+                     const bool useBorders = false, const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
+                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue );
 
 // Functions forward declarations
-void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n, const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal = Diagonale::Same );
+void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int dimensions, DMatrix & p_pSepare, const DMatrix & p_mMeans, const IVector & n,
+                    const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal = Diagonale::Ignore );
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
 void setGroups( const Array & M, IVector & clu, const Array & weights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale );
 unsigned int belongsTo( const int & group, const IVector & borders );
 DMatrix relationsMeans( const Array & M, const IVector & n );
 double meanMatrix( const DMatrix & p_matrix );
 Diagonale getDiagonale( const std::string & p_sDiagonal );
+void checkInputBorders( const Diagonale & p_diagonale,
+                    const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper );
 
 std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag );
 
-//void test( const Rcpp::Nullable<Array> & a1 )
-//{
-//    Array a;
-//    if( a1.isNotNull() ) {
-//        a = Rcpp::as<Array>( a1 );
-//    }
-//    Rcpp::Rcout << "dasdasdas " << a << std::endl;
-//}
-
-Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & p_sDiagonal )
+Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & diagonal,
+                    const bool useBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
 {
+    const Diagonale dDiag = getDiagonale( diagonal );
     const int K = Rcpp::sum( nClu );
-    const Diagonale dDiag = getDiagonale( p_sDiagonal );
+    Borders<Array> bordersMeanstMat;
+    Borders<DMatrix> bordersSeperate;
+
+    if( useBorders ) {
+        checkInputBorders( dDiag, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper );
+        if( dDiag == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( Rcpp::as<DMatrix>( bordersSeperateLower ), Rcpp::as<DMatrix>( bordersSeperateUpper ) );
+        }
+        bordersMeanstMat = Borders<Array>( Rcpp::as<Array>( bordersMatLower ), Rcpp::as<Array>( bordersMatUpper ) );
+    }
+    else {
+        if( dDiag == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( K, M.n_slices );
+        }
+        bordersMeanstMat = Borders<Array>( K, K, M.n_slices );
+    }
+
 
     DMatrix pSeparate;
 //    Array pSeparate;
     Array meanBlocks, mSeparate;
 //    Rcpp::Rcout << "DEBUG1" << std::endl;
-    Borders<Array> bordersMeanstMat( K, K, M.n_slices );
-    Borders<DMatrix> bordersSeperate;
-    if( dDiag == Diagonale::Seperate ) {
-        bordersSeperate = Borders<DMatrix>( K, K, M.n_slices );
-    }
 
     const DMatrix MEANS = relationsMeans( M, n );
     meansByBlocks( M, meanBlocks, clu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
@@ -140,7 +155,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //        return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = meanBlocks, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
 //    }
 
-    DMatrix d = relationsMeans( M, n );
+//    DMatrix d = relationsMeans( M, n );
 //    Rcpp::Rcout << "Relations means matrix:" << std::endl << "-----------------" << std::endl << std::endl;
 //    Rcpp::Rcout << d << std::endl << "Dimensions: " << d.n_rows << " " << d.n_cols << std::endl;
 //    Rcpp::Rcout << "-----------------" << std::endl << std::endl;
@@ -149,14 +164,31 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 }
 
-Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal )
+Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensions, const IVector & n, const std::string diagonal,
+                         const bool useBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
+                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
 {
     Diagonale dDiag = getDiagonale( diagonal );
 
+    Borders<Array> bordersMeanstMat;
+    Borders<DMatrix> bordersSeperate;
+
+    if( useBorders ) {
+        checkInputBorders( dDiag, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper );
+        if( dDiag == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( Rcpp::as<DMatrix>( bordersSeperateLower ), Rcpp::as<DMatrix>( bordersSeperateUpper ) );
+        }
+        bordersMeanstMat = Borders<Array>( Rcpp::as<Array>( bordersMatLower ), Rcpp::as<Array>( bordersMatUpper ) );
+    }
+    else {
+        if( dDiag == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( dimensions, M.n_slices );
+        }
+        bordersMeanstMat = Borders<Array>( dimensions, dimensions, M.n_slices );
+    }
+
     DMatrix pSeparate;
     Array aRes;
-    Borders<Array> bordersMeanstMat( dimensions, dimensions, M.n_slices );
-    Borders<DMatrix> bordersSeperate( dimensions, dimensions, M.n_slices );
     const DMatrix MEANS = relationsMeans( M, n );
     meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
     if( !pSeparate.is_empty() ) {
@@ -166,14 +198,34 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const int dimensi
 
 }
 
-double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & p_sDiagonal )
+double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const std::string & diagonal,
+                     const bool useBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
+                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
 {
-    Diagonale dDiagonale = getDiagonale( p_sDiagonal );
+    Diagonale dDiagonale = getDiagonale( diagonal );
+
+    Borders<Array> bordersMeanstMat;
+    Borders<DMatrix> bordersSeperate;
+
+    if( useBorders ) {
+        checkInputBorders( dDiagonale, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper );
+        if( dDiagonale == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( Rcpp::as<DMatrix>( bordersSeperateLower ), Rcpp::as<DMatrix>( bordersSeperateUpper ) );
+        }
+        bordersMeanstMat = Borders<Array>( Rcpp::as<Array>( bordersMatLower ), Rcpp::as<Array>( bordersMatUpper ) );
+    }
+    else {
+        if( dDiagonale == Diagonale::Seperate ) {
+            bordersSeperate = Borders<DMatrix>( dimensions, M.n_slices );
+        }
+        bordersMeanstMat = Borders<Array>( dimensions, dimensions, M.n_slices );
+    }
+
     DMatrix pSeparate;
     Array aRes;
     const DMatrix MEANS = relationsMeans( M, n );
-    Borders<Array> bordersMeanstMat( dimensions, dimensions, M.n_slices );
-    Borders<DMatrix> bordersSeperate( dimensions, dimensions, M.n_slices );
+//    Borders<Array> bordersMeanstMat( dimensions, dimensions, M.n_slices );
+//    Borders<DMatrix> bordersSeperate( dimensions, M.n_slices );
     meansByBlocks( M, aRes, clu, dimensions, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiagonale );
 
 
@@ -518,6 +570,17 @@ Diagonale getDiagonale( const std::string & p_sDiagonal )
     else Rcpp::stop( "Unknow diagonal parameter\nOptions are: [ same, ignore, seperate ]\n" );
 
     return dRet;
+}
+
+void checkInputBorders( const Diagonale & p_diagonale, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
+{
+    if( bordersMatLower.isNull() ) Rcpp::stop( "Invalid argument: bordersMatLower is null" );
+    if( bordersMatUpper.isNull() ) Rcpp::stop( "Invalid argument: bordersMatUpper is null" );
+    if( p_diagonale == Diagonale::Seperate ) {
+        if( bordersSeperateLower.isNull() ) Rcpp::stop( "Invalid argument: bordersSeperateLower is null" );
+        if( bordersSeperateUpper.isNull() ) Rcpp::stop( "Invalid argument: bordersSeperateUpper is null" );
+    }
 }
 
 std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag )

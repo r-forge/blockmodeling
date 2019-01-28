@@ -8,8 +8,8 @@
 using namespace Rcpp;
 
 // meanByBlocks
-Rcpp::List meanByBlocks(const Array& M, const IVector& clu, const int dimensions, const IVector& n, const std::string diagonal);
-RcppExport SEXP _kmBlock_meanByBlocks(SEXP MSEXP, SEXP cluSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP diagonalSEXP) {
+Rcpp::List meanByBlocks(const Array& M, const IVector& clu, const int dimensions, const IVector& n, const std::string diagonal, const bool useBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper);
+RcppExport SEXP _kmBlock_meanByBlocks(SEXP MSEXP, SEXP cluSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP diagonalSEXP, SEXP useBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -18,13 +18,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type dimensions(dimensionsSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
     Rcpp::traits::input_parameter< const std::string >::type diagonal(diagonalSEXP);
-    rcpp_result_gen = Rcpp::wrap(meanByBlocks(M, clu, dimensions, n, diagonal));
+    Rcpp::traits::input_parameter< const bool >::type useBorders(useBordersSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatLower(bordersMatLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatUpper(bordersMatUpperSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
+    rcpp_result_gen = Rcpp::wrap(meanByBlocks(M, clu, dimensions, n, diagonal, useBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper));
     return rcpp_result_gen;
 END_RCPP
 }
 // kmBlock
-Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const IVector& n, const IVector& nClu, const std::string& p_sDiagonal);
-RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP, SEXP p_sDiagonalSEXP) {
+Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const IVector& n, const IVector& nClu, const std::string& diagonal, const bool useBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper);
+RcppExport SEXP _kmBlock_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP nSEXP, SEXP nCluSEXP, SEXP diagonalSEXP, SEXP useBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,14 +38,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Array& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type nClu(nCluSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type p_sDiagonal(p_sDiagonalSEXP);
-    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, n, nClu, p_sDiagonal));
+    Rcpp::traits::input_parameter< const std::string& >::type diagonal(diagonalSEXP);
+    Rcpp::traits::input_parameter< const bool >::type useBorders(useBordersSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatLower(bordersMatLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatUpper(bordersMatUpperSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
+    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, n, nClu, diagonal, useBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper));
     return rcpp_result_gen;
 END_RCPP
 }
 // critFunction
-double critFunction(const Array& M, const IVector& clu, const Array& weights, const int dimensions, const IVector& n, const std::string& p_sDiagonal);
-RcppExport SEXP _kmBlock_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP p_sDiagonalSEXP) {
+double critFunction(const Array& M, const IVector& clu, const Array& weights, const int dimensions, const IVector& n, const std::string& diagonal, const bool useBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper);
+RcppExport SEXP _kmBlock_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP diagonalSEXP, SEXP useBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -49,16 +59,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Array& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< const int >::type dimensions(dimensionsSEXP);
     Rcpp::traits::input_parameter< const IVector& >::type n(nSEXP);
-    Rcpp::traits::input_parameter< const std::string& >::type p_sDiagonal(p_sDiagonalSEXP);
-    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, dimensions, n, p_sDiagonal));
+    Rcpp::traits::input_parameter< const std::string& >::type diagonal(diagonalSEXP);
+    Rcpp::traits::input_parameter< const bool >::type useBorders(useBordersSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatLower(bordersMatLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatUpper(bordersMatUpperSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
+    Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
+    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, dimensions, n, diagonal, useBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_kmBlock_meanByBlocks", (DL_FUNC) &_kmBlock_meanByBlocks, 5},
-    {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 6},
-    {"_kmBlock_critFunction", (DL_FUNC) &_kmBlock_critFunction, 6},
+    {"_kmBlock_meanByBlocks", (DL_FUNC) &_kmBlock_meanByBlocks, 10},
+    {"_kmBlock_kmBlock", (DL_FUNC) &_kmBlock_kmBlock, 11},
+    {"_kmBlock_critFunction", (DL_FUNC) &_kmBlock_critFunction, 11},
     {NULL, NULL, 0}
 };
 
