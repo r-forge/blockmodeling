@@ -7,6 +7,8 @@ aut<-eval(parse(text=meta$"Authors@R"))
 autText<-format(aut, include = c("family", "given"),
    braces = list(family = c("", ",")))
 
+   
+   
 citEntry(entry = "Article",
 	title = "Generalized blockmodeling of valued networks",
 	volume = "29",
@@ -31,6 +33,19 @@ citEntry(entry = "Article",
 	number = "1",
 	pages = "57--84",
 	textVersion = "Žiberna, Aleš (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology 32(1), 57–84."
+)
+
+
+citEntry(entry = "Article",
+	title = "Blockmodeling of Multilevel Networks",
+	volume = "39",
+	shorttitle = "Blockmodeling of Multilevel Networks",
+	doi = "10.1016/j.socnet.2014.04.002",
+	journal = "Social Networks",
+	author = as.person("Aleš Žiberna"),
+ 	year = "2014",
+	pages ="46-61",
+	textVersion = "Žiberna, Aleš (2014). Blockmodeling of multilevel networks. Social Networks 39, 46–61. https://doi.org/10.1016/j.socnet.2014.04.002."
 )
 
 citEntry(entry="Manual",
