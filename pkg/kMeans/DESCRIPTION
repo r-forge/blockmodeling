@@ -1,12 +1,13 @@
 Package: kmBlock
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
-Date: 2018-11-30
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Title: k-means like blockmodeling of one-mode and linked networks
+Version: 0.0.1
+Date: 2019-02-08
+Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
+                  role = c("aut", "cre"))
+Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>
+Description: k-means like blockmodeling of one-mode and linked networks
+License: GPL (>=2)
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
