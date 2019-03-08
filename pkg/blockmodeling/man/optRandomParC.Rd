@@ -27,7 +27,7 @@ optRandomParC(M, k, approaches, blocks, rep, save.initial.param =
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks   are supported. The network can have one or more modes (different kinds of units with no ties among themselves. If the network is not two-mode, the matrix must be square.}
+  \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselves). If the network is not two-mode, the matrix must be square.}
   \item{k}{The number of clusters used in the generation of partitions.}
  \item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2007). Possible values are:\cr
   "bin" - binary blockmodeling,\cr
