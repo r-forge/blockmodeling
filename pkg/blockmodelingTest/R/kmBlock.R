@@ -2,7 +2,7 @@
 #'
 #' @param M A matrix representing a network (multirelational networks are currently not supported)
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param eps When the sum of squared differences in block means is less than \code{eps}, the algorithm terminates. Defaults to 1
+#' @param eps When the sum of squared differences in block means is less than \code{eps}, the algorithm terminates. Defaults to 0.
 #' @param each Should the block means be computed after each unit is reassigned. Defaults to \code{FALSE}, as otherwise this is too slow.
 #' @param weights The weights for each cell in the matrix. A matrix with the same dimmensions as \code{M}. 
 #' @param limits The matrix with dimentsions "number of clusters"x"number of clusters" where each element is a function. The functions are applied to the computed block means and modify them. This can be used to "pre-specify" them.  
