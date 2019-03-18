@@ -11,7 +11,7 @@ diag(M)<-100
 
 nRep<-20
 
-tmp<-system.time(test60sKmBlockC<-kmBlock::testORPtimeLim(M, k=k, blockFun = kmBlock::kmBlockC, timeLim = 60))
+tmp<-system.time(test60sKmBlockC<-kmBlock::testORPtimeLim(M, k=k, blockFun = kmBlock::kmBlockC, timeLim = 5))
 
 attr(test60sKmBlockC,which = "totalTime")<-tmp
 test60sKmBlockC$nStarts
@@ -19,14 +19,14 @@ test60sKmBlockC$nStarts
 
 
 
-tmp<-system.time(test60sKmBlockR<-kmBlock::testORPtimeLim(M, k=k, blockFun = blockmodelingTest::kmBlock, timeLim = 60))
+tmp<-system.time(test60sKmBlockR<-kmBlock::testORPtimeLim(M, k=k, blockFun = blockmodelingTest::kmBlock, timeLim = 5))
 
 attr(test60sKmBlockR,which = "totalTime")<-tmp
 test60sKmBlockR$nStarts
 
 
 
-tmp<-system.time(test60sHomCmoveAndChange<-kmBlock::testORPtimeLim(M, k=k, blockFun = blockmodelingTest::optParC, timeLim = 0.000000000000000000000000001,approach="hom", blocks="com"))
+tmp<-system.time(test60sHomCmoveAndChange<-kmBlock::testORPtimeLim(M, k=k, blockFun = blockmodelingTest::optParC, timeLim = 5,approach="hom", blocks="com"))
 
 attr(test60sHomCmoveAndChange,which = "totalTime")<-tmp
 test60sHomCmoveAndChange$nStarts
