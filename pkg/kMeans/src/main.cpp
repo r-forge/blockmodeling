@@ -160,7 +160,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //    Rcpp::Rcout << d << std::endl << "Dimensions: " << d.n_rows << " " << d.n_cols << std::endl;
 //    Rcpp::Rcout << "-----------------" << std::endl << std::endl;
 
-    return Rcpp::List::create( Rcpp::Named( "bestCf" ) = bestCf, Rcpp::Named( "bestClu" ) = bestClu );
+    return Rcpp::List::create( Rcpp::Named( "bestCf" ) = bestCf, Rcpp::Named( "bestClu" ) = bestClu, Rcpp::Named( "IM" ) = meanBlocks );
 
 }
 
@@ -291,7 +291,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const int
 //                    mDiagonalRes( i, r ) = double( mSseprateDiagonal( i, r ) ) / mNseprateDiagonal( i, r );
 //                }
                 double dVal( S( i, j, r ) );
-                if( i == j && N( i, j, r ) == 0 && sDiagonal == Diagonale::Ignore ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
+                if( i == j && N( i, j, r ) == 0 && ((sDiagonal == Diagonale::Ignore)||(sDiagonal == Diagonale::Seperate)) ) { // If value of the block is 0 and we ignored diagonal values, set value of the block to mean (M[ , , r ] )
 //                    diagMean = p_mMeans.at( s, r ); // p_mMeans.at( getS( i, n ), r );
                     res(i, j, r ) = p_mMeans.at( s, r );
                 }
