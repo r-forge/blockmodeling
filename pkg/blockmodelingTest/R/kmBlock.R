@@ -244,7 +244,6 @@ kmBlockORP<-function(M, #a square matrix
     best<-NULL
     best.clu<-NULL
     for(i in 1:length(res1)){
-      for(j in 1:length(res1[[i]]$best)){
         if(
           ifelse(is.null(best.clu),
                  TRUE,
@@ -263,8 +262,6 @@ kmBlockORP<-function(M, #a square matrix
           warning("Only the first ",max.iden," solutions out of ",length(na.omit(err))," solutions with minimal sum of square deviations will be saved.\n")
           break
         }
-        
-      }
     }
     
     names(best)<-paste("best",1:length(best),sep="")

@@ -670,7 +670,6 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
     best<-NULL
     best.clu<-NULL
     for(i in 1:length(res1)){
-      for(j in 1:length(res1[[i]]$best)){
         if(
           ifelse(is.null(best.clu),
             TRUE,
@@ -691,8 +690,6 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             warning("Only the first ",max.iden," solutions out of ",length(na.omit(err))," solutions with minimal error will be saved.\n")
             break
         }
-  
-      }
     }
   
       names(best)<-paste("best",1:length(best),sep="")
