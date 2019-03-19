@@ -8,4 +8,6 @@ https://yihui.name/rd2roxygen/
 
 
 Opravljene naloge:
-
+ - Trenutno delo (19.3.2019): Rd-file za fumkcijo optRandomParC
+ - (19.3.2019) Narejeni RD-filei za funkcije iz datotek kmBlock.R, mlKmeasHelperFun.R. Trentuno se datoteke nahajajo na: Sync\MultilevelBlockmodelingProjekt\Miha R.Package.Blockmodeling\Rd to roxygen
+ 
