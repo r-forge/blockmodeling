@@ -20,7 +20,7 @@ critFunC(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     
 optParC(M, clu, approaches, blocks, nMode = NULL, isSym =
      NULL, diag = 1, useMulti = FALSE, maxPar = 50, IM =
-     NULL, EM = NULL, Earr = NULL, justChange = FALSE,
+     NULL, EM = NULL, Earr = NULL, justChange = TRUE,
      sameIM = FALSE, regFun = "max", homFun = "ss",
      usePreSpecM = NULL, preSpecM = NULL,
      minUnitsRowCluster = 1, minUnitsColCluster = 1,
