@@ -1,7 +1,10 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
-
+2019
+March 27, 2019
+Version 0.3.5
+Changed the default value of the paramter justChange in optPar(C) to TRUE. This speeds up the optimization. Previously it was set to FALSE so that tests could be made if the faster option gives the same/correct results.
 
 2018
 December 24, 2018
@@ -11,7 +14,7 @@ November 29, 2018
 A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
 
 November 9, 2018
-Version 0.3.3
+Version 0.3.4
 Bug fixed in critFunC.
 
 November 7, 2018
