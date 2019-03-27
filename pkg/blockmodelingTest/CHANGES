@@ -2,6 +2,15 @@ Name: blockmodelingTest
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
+2019
+March 27, 2019
+Version 0.3.5.9000
+Added the option justMove to optPar(C). Default is FALSE, wich is the way things were implemented before. Value specifying if only moves of units between clusters and not exchanges of units from different clusters should be tried. Currently defaults to \code{FALSE} (that is also exchanges are tired). Using just moves (that is no exchanges) dramatically speeds up the execution. Some simulation studies using others applications of relocation algorithm suggest that given fixed time, it is better to use just moves and thus achieving more restarts than to use both moves and exchanges and thus achieving less restarts. This would suggests setting the parameter to \code{TRUE}. The default may change in the future.
+
+Changed the default value of the paramter justChange in optPar(C) to TRUE. This speeds up the optimization. Previously it was set to FALSE so that tests could be made if the faster option gives the same/correct results.
+
+New versioning scheme used for testing versions.
+
 2018
 Version 0.3.5
 December 24, 2018

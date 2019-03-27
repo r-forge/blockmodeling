@@ -1705,7 +1705,7 @@ void parVec2Arr(const int *pn, int *pnClus, int *pnUnitsClu, int *pParArr, const
 
 /* for now this function moves to improved partition as soon as it findes one */
 /* however, the "move" is selected randomly, while it is true that "moves" are tried before "exchanges" */
-void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters){
+void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pjustMove){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
@@ -1742,6 +1742,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 	int *pmaxUnitsColCluster - pointer to the maximum number of units in col cluster
 	double *pcombWeights - pointer to a array of weights of the same dimmensions as blocks
 	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangable
+	int *pjustMove - should only moves (and not exchanges of units from different clusters be tested)	
 	*/
 
 /*Rprintf("OptParC\n");*/
@@ -2070,7 +2071,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 						}
 
 						/*check the exchange of units only if iClu1 < iClu2 to avoid repeating the same move */
-						if(iClu < iClu2){
+						if((!(*pjustMove))&&(iClu < iClu2)){
 							/* to make the order of evaluation random - start*/
 							int rndUnitsInClu2[pnUnitsRowClu[iClu2]];
 							for(int i=0;i<pnUnitsRowClu[iClu2];i++){
@@ -2263,7 +2264,7 @@ void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const
 
 
 
-void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix){
+void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pjustMove){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
@@ -2303,6 +2304,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 	int *pmaxPar - pointer to maximum number of "best" partitions to be saved
 	int *pbestColParMatrix - pointer to maximum od pmaxPar best column partitions in a matrix
 	int *pbestRowParMatrix - pointer to maximum od pmaxPar best row partitions in a matrix
+	int *pjustMove - should only moves (and not exchanges of units from different clusters be tested)
 	*/
 
 /*Rprintf("OptParC\n");*/
@@ -2745,7 +2747,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 						}
 
 						/*check the exchange of units only if iClu1 < iClu2 to avoid repeating the same move */
-						if(iClu < iClu2){
+						if((!(*pjustMove))&&(iClu < iClu2)){
 							/* to make the order of evaluation random - start*/
 /*							int rndUnitsInClu2[pnUnitsRowClu[iClu2]];
 							for(int i=0;i<pnUnitsRowClu[iClu2];i++){

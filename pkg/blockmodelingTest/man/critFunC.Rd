@@ -20,9 +20,9 @@ critFunC(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     
 optParC(M, clu, approaches, blocks, nMode = NULL, isSym =
      NULL, diag = 1, useMulti = FALSE, maxPar = 50, IM =
-     NULL, EM = NULL, Earr = NULL, justChange = TRUE,
-     sameIM = FALSE, regFun = "max", homFun = "ss",
-     usePreSpecM = NULL, preSpecM = NULL,
+     NULL, EM = NULL, Earr = NULL, justChange = TRUE, 
+	 justMove=FALSE, sameIM = FALSE, regFun = "max", 
+	 homFun = "ss", usePreSpecM = NULL, preSpecM = NULL,
      minUnitsRowCluster = 1, minUnitsColCluster = 1,
      maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999,
      relWeights = 1, posWeights = 1, blockTypeWeights = 1,
@@ -64,6 +64,7 @@ A vector with names of allowed blocktypes. For multi-relational networks, it can
 \item{EM}{Block errors by blocks. For debugging purposes only.}
 \item{Earr}{The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array. For debugging purposes only.}
 \item{justChange}{Value specifying if only the errors for changed clusters should be computed. Used only for debugging purposes by developers.}
+\item{justMove}{Value specifying if only moves of units between clusters and not exchanges of units from different clusters should be tried. Currently defaults to \code{FALSE} (that is also exchanges are tired). Using just moves (that is no exchanges) dramatically speeds up the execution. Some simulation studies using others applications of relocation algorithm suggest that given fixed time, it is better to use just moves and thus achieving more restarts than to use both moves and exchanges and thus achieving less restarts. This would suggests setting the parameter to \code{TRUE}. The default may change in the future.}
 \item{rowCluChange}{An array holding the two row clusters where the change occured. Used only for debugging purposes by developers.}
 \item{colCluChange}{An array holding the col row clusters where the change occured. Used only for debugging purposes by developers.}
 \item{sameIM}{Should we damand the same blockmodel image for all relations. The default value is set to \code{FALSE}.}
