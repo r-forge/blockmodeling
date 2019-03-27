@@ -2,7 +2,7 @@ library(kmBlock)
 library(blockmodelingTest)
 
 
-k<-3
+k<-5
 n<-20
 IM<-outer(1:k,1:k)
 clu<-sort(rep_len(1:k,length.out = n))
