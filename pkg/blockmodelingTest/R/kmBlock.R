@@ -15,6 +15,8 @@ kmBlock<-function(M,
 #                  eachProb=FALSE, 
 #                  nMode=NULL, 
                   limits=NULL){
+  
+  needCorrect<-TRUE
   n<-dim(M)[1]
   MnoDiag<-M
   diag(MnoDiag)<-NA
@@ -68,6 +70,50 @@ kmBlock<-function(M,
   
   err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
   oldErr<-Inf
+  needCorrect<-FALSE
+  
+  on.exit({
+	if(needCorrect){
+		 tclu<-table(clu)
+
+		while(length(tclu)<k){
+		  missingClus<-(1:k)[!(as.character(1:k) %in% names(tclu))]
+		  iClu <- if(length(missingClus)>1){
+			sample(missingClus,size = 1)
+		  } else missingClus
+
+		  iMode<-Mode[iClu]
+		  allowedClus<- (c(0,cumsum(tmNclu))[iMode]+1):cumsum(tmNclu)[iMode]
+		  ids<-which(clu%in%allowedClus)
+		  selectId<-ids[which.max(ssMin[ids])]
+		  clu[selectId]<-iClu
+		  ssMin[selectId]<-0
+		  tclu<-table(clu)
+		}
+
+    
+		IM<-fun.by.blocks(M,clu=clu, FUN="mean",ignore.diag = TRUE)
+		IMna<-which(is.na(diag(IM)))
+		if(length(IMna)>0){
+		  diag(IM)[IMna]<-Means[Mode[IMna]]
+		}
+		
+		if(!is.null(limits)){
+		  for(i in 1:k)for(j in 1:k){
+			IM[i,j] <- limits[[i,j]](IM[i,j])
+		  }
+		}
+		oldErr<-err
+		err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+	}
+
+    res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
+	class(res)<-"opt.par"
+	return(res)  
+  })
+  
+    
+  
   #while(sum((oldIM-IM)^2)>eps){
   while(err<oldErr){
     iMode<-1
@@ -75,6 +121,7 @@ kmBlock<-function(M,
     allowedClus<- 1:tmNclu[1]
     oldIM<-IM
     oldClu<-clu
+	needCorrect<-TRUE
     for(i in 1:n){
       x<-c(M[i,-i],M[-i,i])
       iw<-c(w[i,-i],w[-i,i])
@@ -156,13 +203,12 @@ kmBlock<-function(M,
     }
     oldErr<-err
     err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
+	needCorrect<-FALSE
     #if(oldErr<=err) print(c(old=oldErr, new=err))
   }
   #err<-sum(w*(MnoDiag-IM[clu,clu])^2,na.rm=TRUE)
   
-  res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
-  class(res)<-"opt.par"
-  return(res)
+
 }
 
 

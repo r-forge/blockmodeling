@@ -549,12 +549,12 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
 		bestRowParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[1])
 		
 		resC<-.C("optParMulti", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix,justMove=justMove, NAOK=TRUE)
+		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix,justMove=as.integer(justMove), interrupted=as.integer(0), NAOK=TRUE)
         clu<- resC$rowPar
     
 	} else{	
 		resC<-.C("optPar", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters,justMove=justMove, NAOK=TRUE)
+		, isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters,justMove==as.integer(justMove), interrupted=as.integer(0), NAOK=TRUE)
 		
 		clu<- parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus)
 	}
@@ -761,11 +761,13 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
             res[[i]]$M<-NULL
             res[[i]]$resC$M<-NULL
         }
-
+		
         err[i]<-res[[i]]$err
         nIter[i]<-res[[i]]$resC$nIter
         if(printRep==1) cat("Final error:",err[i],"\n")
         if(printRep==1) cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
+		
+		if(res[[i]]$resC$interrupted) break
       }
    } else {
      requireNamespace("doParallel")

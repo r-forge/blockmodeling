@@ -36,6 +36,7 @@ TODO:
 
 #include <stdio.h>
 #include <R.h>
+#include <Rinternals.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -60,6 +61,18 @@ double ssPmin(double *px, int n, double preSpecVal);
 double ad(double *px, int n, double preSpecVal);
 double adP(double *px, int n, double preSpecVal);
 double ad0(double *px, int n, double preSpecVal);
+
+
+
+
+void chkIntFn() {
+  R_CheckUserInterrupt();
+}
+
+int checkInterrupt() {
+  return (R_ToplevelExec(chkIntFn, NULL) == FALSE);
+}
+
 
 int randomInt(int n);
 
@@ -1345,7 +1358,7 @@ int *pblocks - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifiyi
 int *pIM - pointer to 3d array (Rel, row, col) specifiying the image matrix
 double *pEM - pointer to 3d array (Rel, row, col) specifiying the error for each block
 double *pEarr - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifiying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
-double *perr - pointer to the error retunred by this function
+double *perr - pointer to the error returned by this function
 int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
 int *prowCluChange - pointer to an array holding the two row clusters where the change occured
 int *pcolCluChange - pointer to an array holding the col row clusters where the change occured
@@ -1705,7 +1718,7 @@ void parVec2Arr(const int *pn, int *pnClus, int *pnUnitsClu, int *pParArr, const
 
 /* for now this function moves to improved partition as soon as it findes one */
 /* however, the "move" is selected randomly, while it is true that "moves" are tried before "exchanges" */
-void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pjustMove){
+void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pjustMove, int *interrupted){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
@@ -1742,7 +1755,8 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 	int *pmaxUnitsColCluster - pointer to the maximum number of units in col cluster
 	double *pcombWeights - pointer to a array of weights of the same dimmensions as blocks
 	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangable
-	int *pjustMove - should only moves (and not exchanges of units from different clusters be tested)	
+	int *pjustMove - should only moves (and not exchanges of units from different clusters be tested)
+	int *interrupted - was optimization interrupted by the user or time limit.
 	*/
 
 /*Rprintf("OptParC\n");*/
@@ -1885,6 +1899,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 		/* loop until no impovement is found */
 		*pnIter=0;
 		while(improve){
+				
 			*pnIter = *pnIter + 1;
 			/* copy temp results to permanent  - start*/
 			/* partition*/
@@ -1959,6 +1974,14 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 
 				for(int iRndUnit=0;iRndUnit < pnUnitsRowClu[iClu];iRndUnit++){
 /*Rprintf("Start loop unit in cluster 1\n");*/
+
+					if(checkInterrupt()) {
+						*interrupted = 1;
+						/* In this version this is used just to return that the interrupt has occoured. The following line is used to end all loops.*/
+						improve=0;
+						/* in this version improve signales to end all loops and it is therfore useed. This is ok as improve is not used for anything else.*/
+						break;
+					}
 					/* to make the order of evaluation random - start */
 					rnd=randomInt(pnUnitsRowClu[iClu]-iRndUnit);
 /*Rprintf("OK 1.01\n");*/
@@ -2158,6 +2181,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 				}
 				if(improve) break;
 			}
+			
 		}
 
 		free(pbestnUnitsRowClu);
@@ -2264,7 +2288,7 @@ void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const
 
 
 
-void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pjustMove){
+void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pjustMove, int *interrupted){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
@@ -2464,6 +2488,8 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 		*pnIter=0;
 
 		while(improve){
+			
+
 			*pnIter = *pnIter + 1;
 			/* copy best results to permanent  - start*/
 			/* partition*/
@@ -2546,6 +2572,11 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*Rprintf("\n");*/
 
 				for(int iUnit=0;iUnit < pnUnitsRowClu[iClu];iUnit++){
+					if(checkInterrupt()) {
+						*interrupted = 1;
+						/* In this version this is used just both to return that the interrupt has occoured and to end all loops (higher level) loops.*/
+						break;
+					}
 /*				for(int iRndUnit=0;iRndUnit < pnUnitsRowClu[iClu];iRndUnit++){					*/
 /*Rprintf("Start loop unit in cluster 1\n");*/
 					/* to make the order of evaluation random - start */
@@ -2880,9 +2911,12 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 					}
 /*					if(improve) break; */
 				}
+				if(*interrupted) break;
 /*				if(improve) break; */
 			}
+			if(*interrupted) break;
 /*Rprintf("Iteration %i completed, improve = %i\n", *pnIter, improve); */
+
 		}
 		for(int i=0;i<(*pnc);i++){
 			prowPar[i] = pbestrowPar[i];
