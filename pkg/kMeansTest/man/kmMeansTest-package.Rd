@@ -1,24 +1,26 @@
-\name{kmBlock-package}
-\alias{kmBlock-package}
-\alias{kmBlock}
+\name{kMeansTest-package}
+\alias{kMeansTest-package}
+\alias{kMeansTest}
+\alias{kMeans-package}
+\alias{kMeans}
 \docType{package}
 \title{
-\packageTitle{kmBlock}
+\packageTitle{kMeansTest}
 }
 \description{
-\packageDescription{kmBlock}
+\packageDescription{kMeansTest}
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{kmBlock}
-\packageIndices{kmBlock}
+\packageDESCRIPTION{kMeansTest}
+\packageIndices{kMeansTest}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{kmBlock}
+\packageAuthor{kMeansTest}
 
-Maintainer: \packageMaintainer{kmBlock}
+Maintainer: \packageMaintainer{kMeansTest}
 }
 \references{
 ~~ Literature or other references for background information ~~
