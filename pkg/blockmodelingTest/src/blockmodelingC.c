@@ -1974,12 +1974,9 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 
 				for(int iRndUnit=0;iRndUnit < pnUnitsRowClu[iClu];iRndUnit++){
 /*Rprintf("Start loop unit in cluster 1\n");*/
-
 					if(checkInterrupt()) {
 						*interrupted = 1;
-						/* In this version this is used just to return that the interrupt has occoured. The following line is used to end all loops.*/
-						improve=0;
-						/* in this version improve signales to end all loops and it is therfore useed. This is ok as improve is not used for anything else.*/
+						/* In this version this is used just both to return that the interrupt has occoured and to end all loops (higher level) loops.*/
 						break;
 					}
 					/* to make the order of evaluation random - start */
@@ -2179,9 +2176,9 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 					}
 					if(improve) break;
 				}
-				if(improve) break;
+				if(improve||(*interrupted)) break;
 			}
-			
+			if(*interrupted) break;
 		}
 
 		free(pbestnUnitsRowClu);
