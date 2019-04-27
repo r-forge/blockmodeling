@@ -55,8 +55,8 @@ kmBlock::kmBlock(M,clu2,W,sum(n),sum(nClu))
 
 
 clu3<-sample(c(0:4, 0:4))
-critFunction( M, clu3, W, sum(nClu),n, "seperate", TRUE, bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
-kmBlock::kmBlock(M,clu3,W,sum(n),sum(nClu), "seperate", TRUE, bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+critFunction( M, clu3, W, sum(nClu),n, "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+kmBlock::kmBlock(M,clu3,W,sum(n),sum(nClu), "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
 
 
 lim2<-lim
@@ -99,14 +99,14 @@ clu4<-c(rep(0:1,times=2),rep(2:4,times=2))
 bordersSeperateLower = matrix( -Inf, sum(nClu), dim(M)[3] )
 bordersSeperateUpper = matrix( Inf, sum(nClu), dim(M)[3] )
 
-critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu),n, "ignore", TRUE, bordersLower, bordersUpper )
-kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu, "ignore", TRUE, bordersLower, bordersUpper )
+critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu),n, "ignore", "inside", bordersLower, bordersUpper )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu, "ignore", "inside", bordersLower, bordersUpper )
 blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
 
 set.seed(1)
 clu4<-c(sample(rep(0:1,times=2)),sample(rep(2:4,times=2)))
-critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu),n, "seperate", TRUE, bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
-kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu, "seperate", TRUE, bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+critFunction( M[,,1,drop=FALSE], clu4, W, sum(nClu),n, "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+kmBlock::kmBlock(M[,,1,drop=FALSE],clu4,W,n,nClu, "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
 blockmodelingTest::kmBlock(M[,,1],clu = clu4)[c("clu","err")]
 
 n<-c(4,6)

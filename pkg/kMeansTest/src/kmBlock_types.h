@@ -14,3 +14,10 @@ enum Diagonale
     Ignore   = 1,
     Seperate = 2
 };
+
+enum BorderType
+{
+    None   = 0,
+    Inside = 1,
+    Outside = 2,
+};
