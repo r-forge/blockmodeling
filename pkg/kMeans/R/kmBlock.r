@@ -23,7 +23,7 @@ kmBlockC<-function(M,
                   weights=NULL, 
 				  diagonal = c("ignore","seperate","same"),
                   limits=NULL){
-  n<-dim(M)[1]
+  #n<-dim(M)[1]
   diagonal<-match.arg(diagonal)
   if(is.null(weights)){
     weights<-M
@@ -34,7 +34,7 @@ kmBlockC<-function(M,
   nMode<-ifelse(is.list(clu),length(clu),1)
   
   if(nMode>1){
-    tmN<-sapply(clu,length)
+    n<-sapply(clu,length)
     clu<-lapply(clu,function(x)as.integer(factor(x)))
     tmNclu<-sapply(clu,max)
     for(iMode in 2:nMode){
@@ -44,7 +44,7 @@ kmBlockC<-function(M,
   } else{
     clu<-as.integer(factor(clu))
     tmNclu<-max(clu)
-    tmN<-length(clu)
+    n<-length(clu)
   }
   clu <- clu - 1
   if(length(dim(M))==2) M<-array(M,dim=c(dim(M),1))
