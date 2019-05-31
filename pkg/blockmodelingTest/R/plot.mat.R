@@ -289,6 +289,8 @@ function(
         if(!is.null(maxValPlot)){
           aM[aM>maxValPlot]<-maxValPlot
           max.aM<-maxValPlot
+        } else{
+          max.aM<-max(aM)
         }
         
         aMnorm<-as.vector(aM)/max.aM
