@@ -288,8 +288,9 @@ function(
         aM<-abs(M)
         if(!is.null(maxValPlot)){
           aM[aM>maxValPlot]<-maxValPlot
+          max.aM<-maxValPlot
         }
-        max.aM<-max(aM)
+        
         aMnorm<-as.vector(aM)/max.aM
         if(max.aM!=0){
             col<-grey(1-aMnorm)   #definin the color of rectangules
