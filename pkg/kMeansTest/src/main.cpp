@@ -11,15 +11,15 @@ class Borders {
 public:
 
     Borders(){}
-    Borders( const size_t rows, const size_t cols, const size_t slices = -1 );
+    Borders( const size_t rows, const size_t cols, const size_t slices = 0 );
     Borders( const T & p_lower, const T & p_upper ) : m_lower( p_lower ), m_upper( p_upper ) {}
 //    virtual ~Borders() {}
 
     T getLower() const { return m_lower; }
     T getUpper() const { return m_upper; }
 
-    double getLowerAt( const size_t i, const size_t j, const size_t r = -1 ) const { return m_lower.at( i, j ); }
-    double getUpperAt( const size_t i, const size_t j, const size_t r = -1 ) const { return m_upper.at( i, j ); }
+    double getLowerAt( const size_t i, const size_t j, const size_t r = 0 ) const { return m_lower.at( i, j ); }
+    double getUpperAt( const size_t i, const size_t j, const size_t r = 0 ) const { return m_upper.at( i, j ); }
 
 protected:
 
@@ -422,22 +422,22 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
     double eMin;
     double eTmp;
     int K = Rcpp::sum( nClu );
-    int kMin( 0 );
+    size_t kMin( 0 );
     DVector eVec( clu.size() );
     IVector countGroups( K );
     DVector e( K );
     for( unsigned int i = 0; i < static_cast<unsigned int>( clu.size() ); ++i ) {
         eMin = DBL_MAX;
         int group( clu.at( i ) );
-        unsigned int iBelongsTo( belongsTo( group, borders ) );
-        unsigned int k = 0;
+        size_t iBelongsTo( belongsTo( group, borders ) );
+        size_t k = 0;
         if( iBelongsTo ) {
             k = borders.at( iBelongsTo - 1 );
         }
         for( ; k < static_cast<unsigned int>( borders.at( iBelongsTo ) ); ++k ) {
             eTmp = 0;
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
-                unsigned int cluJ = clu.at( j );
+                size_t cluJ = static_cast<size_t>( clu.at( j ) );
                 if( i == j ){
 					if( p_diagonale == Diagonale::Ignore) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
 						// AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
@@ -474,7 +474,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             }
 
         }
-        clu.at( i ) = kMin;
+        clu.at( i ) = static_cast<int>( kMin );
         eVec.at( i ) = eMin;
         ++countGroups.at( kMin );
     }
@@ -483,7 +483,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 
 
     int iBegin, iEnd, k;
-    for( unsigned int i = 0; i < nBorders.size(); ++i ){
+    for( size_t i = 0; i < static_cast<size_t>( nBorders.size() ); ++i ){
         if( !i ) {
             iBegin = 0;
             k = 0;
@@ -498,7 +498,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
                 size_t g = std::distance( eVec.begin(), std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
 //                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
-                if( countGroups.at( clu.at(g ) ) < 2 ) {
+                if( countGroups.at( clu.at( g ) ) < 2 ) {
                     k--;
                     eVec.at( g ) = -1;
                     continue;
@@ -515,23 +515,23 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 
 unsigned int belongsTo( const int & group, const IVector & borders )
 {
-    for( int i = 0; i < borders.size(); ++i ) {
+    for( size_t i = 0; i < static_cast<size_t>( borders.size() ); ++i ) {
         if( group < borders.at( i ) ) {
             return i;
         }
     }
-    return Rcpp::sum( borders );
+    return static_cast<size_t>( Rcpp::sum( borders ) );
 }
 
 
 DMatrix relationsMeans( const Array & M, const IVector & n )
 {
-    const int S = n.size();
+    const size_t S = static_cast<size_t>( n.size() );
     DMatrix mMeans( S, M.n_slices, arma::fill::zeros );
     IVector cumN = Rcpp::cumsum( n );
     cumN.push_front( 0 );
-    for( int s = 0; s < S; ++s ) {
-        for( unsigned int r = 0; r < M.n_slices; ++r ) {
+    for( size_t s = 0; s < S; ++s ) {
+        for( size_t r = 0; r < M.n_slices; ++r ) {
             Array subArray = M.subcube( cumN.at( s ), cumN.at( s ), r, cumN.at( s + 1 ) - 1, cumN.at( s + 1 ) - 1, r );
             mMeans.at( s, r ) = meanMatrix( subArray.slice( 0 ) );
         }
