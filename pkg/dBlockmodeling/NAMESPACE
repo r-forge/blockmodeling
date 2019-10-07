@@ -1,0 +1,2 @@
+useDynLib(dBlockmodeling)
+exportPattern("^[[:alpha:]]+")
