@@ -1,13 +1,14 @@
       SUBROUTINE rhgsbt(N, C, TLIMIT, OBJVAL, A, EB, NREPS)
       IMPLICIT INTEGER(A-Z)
       REAL*8 TIMEA,TIMEB,TLIMIT,OBJVAL
-      REAL S1
+      DOUBLE PRECISION S1
       INTEGER A(N,N),E(N),M(C),EB(N),CENTR(C,N)
 C
 C *******************************************************************
 C  RELOCATION ALGORITHM FOR GENERALIZED STRUCTURAL BALANCE
 C *******************************************************************
 C
+	  call fseedi()
       CALL CPU_TIME(TIMEA)  
       DO I = 1,N
         EB(I) = 0
@@ -28,7 +29,7 @@ C
           E(I) = 0
         END DO
         DO K = 1,C
- 98       CALL RANDOM_NUMBER(S1)
+ 98       CALL randr(S1)
           ISEL = S1 * FLOAT(N) + 1.
           IF(ISEL.GT.N) ISEL = N
           IF(E(ISEL).GT.0) GO TO 98
@@ -114,4 +115,5 @@ C
       CALL CPU_TIME(TIMEB)
       IF(TIMEB-TIMEA.LT.TLIMIT) GO TO 6000
       OBJVAL = FLOAT(SMAX-ZBEST)/2
+      call fseedo() 	  
       END

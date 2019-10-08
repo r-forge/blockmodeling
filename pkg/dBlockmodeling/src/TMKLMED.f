@@ -1,7 +1,7 @@
       SUBROUTINE tmklmed(RO,CO,RC,CC,TLIMIT,A,GR,GC,GBEST,NREPS)
       IMPLICIT INTEGER(A-Z)
       DOUBLE PRECISION TIMEA, TIMEB, TLIMIT
-      REAL S1
+      DOUBLE PRECISION S1
       INTEGER NR(100),A(RO,CO),NC(100),S(9300),
      1   CMEM(9300),RMEM(9300),GR(9300),GC(9300),
      1   SUM0(100,100),SUM1(100,100),TRIAL0(100,100),
@@ -14,6 +14,7 @@ C        1. OBJECT TRANSFERS ONLY -- NO EXCHANGES
 C        2. RANDOMLY CHOOSE K1/K2 CENTROIDS -- ASSIGN EACH OBJECT TO NEAREST
 C  ################################################################
 C
+	  call fseedi()
       CALL CPU_TIME(TIMEA)
       NREPS = 0
       GBEST = 999999
@@ -49,7 +50,7 @@ C    VALUE.
 C  ################################################################
 C
         DO K = 1,RC
- 98       CALL RANDOM_NUMBER(S1)
+ 98       CALL randr(S1)
           ISEL = S1 * FLOAT(RO) + 1.
           IF(ISEL.GT.RO) ISEL = RO
           IF(RMEM(ISEL).GT.0) GO TO 98
@@ -60,7 +61,7 @@ C
           END DO
         END DO
         DO L = 1,CC
- 97       CALL RANDOM_NUMBER(S1)
+ 97       CALL randr(S1)
           JSEL = S1 * FLOAT(CO) + 1.
           IF(JSEL.GT.CO) JSEL = CO
           IF(CMEM(JSEL).GT.0) GO TO 97
@@ -433,4 +434,6 @@ C
       DO J = 1,CO
         NC(GC(j)) = NC(GC(j))+1
       END DO
+      call fseedo() 	  
+      call fseedo() 	  
       END

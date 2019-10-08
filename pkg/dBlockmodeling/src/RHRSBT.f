@@ -1,7 +1,7 @@
       SUBROUTINE rhrsbt(N, C, TLIMIT, OBJVAL, A, EBEST, NREPS)
       IMPLICIT INTEGER(A-Z)
       REAL*8 TIMEA,TIMEB,TLIMIT,OBJVAL
-      REAL S1
+      DOUBLE PRECISION S1
       INTEGER A(N,N),E(N),M(C),EBEST(N),MBEST(C),
      1  POS(C,C),NEG(C,C),PTRY(C,C),NTRY(C,C),ETRY(N),CENTR(C,N)
 C
@@ -9,6 +9,7 @@ C *******************************************************************
 C  RELOCATION ALGORITHM FOR RELAXED STRUCTURAL BALANCE
 C *******************************************************************
 C
+	  call fseedi()
       CALL CPU_TIME(TIMEA)  
       SMAX= 0
       DO I = 1,N
@@ -29,7 +30,7 @@ C
           E(I) = 0
         END DO
         DO K = 1,C
- 98       CALL RANDOM_NUMBER(S1)
+ 98       CALL randr(S1)
           ISEL = S1 * FLOAT(N) + 1.
           IF(ISEL.GT.N) ISEL = N
           IF(E(ISEL).GT.0) GO TO 98
@@ -158,4 +159,6 @@ C
       CALL CPU_TIME(TIMEB)
       IF(TIMEB-TIMEA.LT.TLIMIT) GO TO 6000
       OBJVAL = FLOAT(SMAX-ZBEST)
+      call fseedo() 	  
+      call fseedo() 	  
       END

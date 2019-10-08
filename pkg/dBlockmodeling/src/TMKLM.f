@@ -3,11 +3,12 @@
       DOUBLE PRECISION TIMEA, TIMEB, A(RO,CO),V(100,100),TLIMIT,VAF,
      1                 C(2000,100),D(2000,100),ZMIN,ZBEST,Z,DMIN,DCOM,
      1                 CMIN,ASUM,ASSE,CENTR(100,2000),CENTC(2000,100)
-      REAL S1
+      DOUBLE PRECISION S1
       INTEGER NR(100),NC(100),CMEM(2000),RMEM(2000),
      1        CBEST(CO),RBEST(RO)
 C
 C  MULTISTART TWO-MODE KL-MEANS (WCSS CRITERION) BLOCK PLACEMENTS **UNKNOWN**
+	  call fseedi()
       CALL CPU_TIME(TIMEA)
       NREPS = 0
       NUMOPT = 1
@@ -52,7 +53,7 @@ C    VALUE.
 C  ################################################################
 C
         DO K = 1,RC
- 98       CALL RANDOM_NUMBER(S1)
+ 98       CALL randr(S1)
           ISEL = S1 * FLOAT(RO) + 1.
           IF(ISEL.GT.RO) ISEL = RO
           IF(RMEM(ISEL).GT.0) GO TO 98
@@ -63,7 +64,7 @@ C
           END DO
         END DO
         DO L = 1,CC
- 97       CALL RANDOM_NUMBER(S1)
+ 97       CALL randr(S1)
           JSEL = S1 * FLOAT(CO) + 1.
           IF(JSEL.GT.CO) JSEL = CO
           IF(CMEM(JSEL).GT.0) GO TO 97
@@ -265,4 +266,5 @@ C
       CALL CPU_TIME(TIMEB)
       IF(TIMEB-TIMEA.LT.TLIMIT) GO TO 1000
       VAF = 1-ZBEST/ASSE
+      call fseedo() 
       END
