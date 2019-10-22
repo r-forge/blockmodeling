@@ -1,2 +1,2 @@
-useDynLib(dBlockmodeling)
+useDynLib(dBlockmodeling, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
