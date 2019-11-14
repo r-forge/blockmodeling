@@ -13,25 +13,25 @@
 #' \item \code{restarts} - the number of restarts within the time limit.
 #' }
 #' @examples
-#' # Load the Galaskiewicz’ (1985) CEO/Club network data.
-#' data("galask")
+#' # Load the Turning Point Project network (Brusco & Doreian, 2015) data.
+#' data("nyt")
 #'
 #' # Run the two-mode blockmodeling heuristic procedure.
-#' res <- tmklmed(galask, RC = 5, CC = 5, TLIMIT = 1)
+#' res <- tmklmed(nyt, RC = 9, CC = 5, TLIMIT = 1)
 #'
 #' # See the results.
 #' res
 #'
 #' # Plot the network, in a matrix format, in line with the obtained partitions.
 #' # The function plotMat is from blockmodeling package.
-#' # plotMat(galask, clu = list(res$RP, res$CP))
+#' # plotMat(nyt, clu = list(res$RP, res$CP))
 #' @author Michael Brusco
 #' @references
-#' Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. Social Networks, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
+#' Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 #'
-#' Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. Social Networks, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
+#' Doreian, P., Batagelj, V., & Ferligoj, A. (2004). Generalized blockmodeling of two-mode network data. \emph{Social Networks}, 26, 29-53. doi:10.1016/j.socnet.2004.01.002
 #'
-#' Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. Social Networks, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
+#' Brusco, M., Stolze, H. J., Hoffman, M., Steinley, D., & Doreian, P. (2018). Deterministic blockmodeling of two-mode binary network data using two-mode KL-median partitioning. \emph{Journal of Social Structure}, 19, 1-21. Retrieved from: https://www.exeley.com/exeley/journals/journal_of_social_structure/19/1/pdf/10.21307_joss-2018-007.pdf
 
 tmklmed = function(A,RC,CC,TLIMIT) {
 	RO = dim(A)[1]

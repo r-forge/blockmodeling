@@ -25,25 +25,25 @@ The function returns the following:
 This function runs relocation heuristic for generalized structural balance on an \eqn{N x N} asymmetric matrix. The main diagonal is ignored.
 }
 \examples{
-# Load the friendship network.
-data("hafriend")
+# Load the Sampson (1968) monastery network (3rd time point).
+data("sampsonT3")
 
 # Run relocation heuristic for generalized structural balance.
-res <- rhgsbt(A = hafriend, C = 3, TLIMIT = 1)
+res <- rhgsbt(A = sampsonT3, C = 3, TLIMIT = 1)
 
 # See the results.
 res
 
 # Plot the network, in a matrix format, in line with the obtained partition P.
 # The function plotMat is from blockmodeling package.
-# plotMat(hafriend, clu = res$P)
+# plotMat(sampsonT3, clu = res$P)
 }
 \references{
-Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. Social Networks, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
+Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 
-Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. Social Networks, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
+Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. \emph{Social Networks}, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
 
-Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. Social Networks, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
+Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. \emph{Social Networks}, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
 }
 \author{
 Michael Brusco

@@ -27,11 +27,11 @@
 #' # plotMat(nyt, clu = list(res$RP, res$CP))
 #' @author Michael Brusco
 #' @references
-#' Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. Social Networks, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
+#' Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 #'
-#' Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. Social Networks, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
+#' Baier, D., Gaul, W., & Schader, M. (1997). Two-mode overlapping clustering with applications in simultaneous benefit segmentation and market structuring. In R. Klar & O. Opitz (Eds), \emph{Classification and knowledge organization} (pp. 557-566), Heidelberg: Springer.
 #'
-#' Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. Social Networks, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
+#' Brusco, M., & Doreian, P. (2015). A real-coded genetic algorithm for two-mode KL-means partitioning with application to homogeneity blockmodeling. \emph{Social Networks}, 41, 26-35. http://dx.doi.org/10.1016/j.socnet.2014.11.007
 
 tmklm = function(A,RC,CC,TLIMIT) {
 	RO = dim(A)[1]

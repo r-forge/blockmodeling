@@ -3,10 +3,11 @@ Type: Package
 Title: Deterministic Blockmodeling of Signed and Two-Mode Networks
 Version: 0.1.1
 Author: as.person(c(
-    "Michael Brusco <mbrusco@business.fsu.edu> [aut]", 
+    "Michael Brusco <mbrusco@business.fsu.edu> [aut]",
     "Aleš Žiberna <ales.ziberna@fdv.uni-lj.si> [cre]",
+    "Marjan Cugmas <marjan.cugmas@fdv.uni-lj.si> [ctb]",
     "Patrick Doreian <pitpat@pitt.edu> [ctb]",
-    "Marjan Cugmas <marjan.cugmas@fdv.uni-lj.si> [ctb]"
+    "Doug Steinley <steinleyd@missouri.edu> [ctb]"
   ))
 Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>
 Description: It contains functions to apply blockmodeling of signed (positive and negative weights are assigned to the links) and two-mode (two sets of nodes are considered, e.g. employees and organizations) networks.

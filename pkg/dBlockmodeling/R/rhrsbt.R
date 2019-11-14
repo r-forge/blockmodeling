@@ -25,11 +25,10 @@
 #' # plotMat(sampsonT3, clu = res$P)
 #' @author Michael Brusco
 #' @references
-#' Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. Social Networks, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
+#' Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 #'
-#' Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. Social Networks, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
-#'
-#' Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. Social Networks, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
+#'Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. \emph{Social Networks}, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
+
 
 rhrsbt = function(A,C,TLIMIT) {
 	N = dim(A)[1]
