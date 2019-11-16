@@ -17,12 +17,12 @@ The data set is a 18 x 18 (signed weighted) network matrix. The egos are in line
 
 The edge from a given ego to the most-liked alter (by this ego) is assigned with an edge weight of \eqn{+3}, the edge to the second-most-liked alter is assigned with a weight of \eqn{+2}, and the edge to the third-most-liked alter is assigned with \eqn{+1}. Likewise, the edge from a given ego to the most-disliked alter is assigned with an edge weight of \eqn{-3}, the edge to the second-most-disliked alter is assigned with a weight of \eqn{-2}, and the edge to the third-most-liked alter with a value of \eqn{-1}.
 }
-\details{
+%%\details{
 %%  ~~ If necessary, more details than the __description__ above ~~
-}
-\source{
+%%}
+%%\source{
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
-}
+%%}
 \references{
 Sampson, S. F. (1968). A novitiate in a period of change: An experimental case study of relationships. \emph{Unpublished Ph.D. dissertation}, Department of Sociology, Cornell University, Ithaca, NY.
 

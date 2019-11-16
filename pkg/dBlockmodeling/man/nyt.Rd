@@ -11,12 +11,12 @@ The data pertain to the Turning Point Project (TPP), where \eqn{n = 108} organiz
 \format{
 The data set is a binary network matrix with 108 rows (organizations) and 25 columns (full-page advertisements). An element of the binary network matrix assumes a value of 1 if organization \eqn{i} signed advertisement \eqn{j} and 0 otherwise.
 }
-\details{
+%%\details{
 %%  ~~ If necessary, more details than the __description__ above ~~
-}
-\source{
+%%}
+%%\source{
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
-}
+%%}
 \references{
 Brusco, M., Doreian, P., Steinley, D., & Satornino, C. B. (2013). Multiobjective blockmodeling for social network analysis. \emph{Psychometrika}, 78 (3), 498-525
 

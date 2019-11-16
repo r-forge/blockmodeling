@@ -32,6 +32,7 @@
 #' Doreian, P., Batagelj, V., & Ferligoj, A. (2004). Generalized blockmodeling of two-mode network data. \emph{Social Networks}, 26, 29-53. doi:10.1016/j.socnet.2004.01.002
 #'
 #' Brusco, M., Stolze, H. J., Hoffman, M., Steinley, D., & Doreian, P. (2018). Deterministic blockmodeling of two-mode binary network data using two-mode KL-median partitioning. \emph{Journal of Social Structure}, 19, 1-21. Retrieved from: https://www.exeley.com/exeley/journals/journal_of_social_structure/19/1/pdf/10.21307_joss-2018-007.pdf
+#' @export
 
 tmklmed = function(A,RC,CC,TLIMIT) {
 	RO = dim(A)[1]

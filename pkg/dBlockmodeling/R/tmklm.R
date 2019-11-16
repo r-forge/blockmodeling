@@ -32,6 +32,7 @@
 #' Baier, D., Gaul, W., & Schader, M. (1997). Two-mode overlapping clustering with applications in simultaneous benefit segmentation and market structuring. In R. Klar & O. Opitz (Eds), \emph{Classification and knowledge organization} (pp. 557-566), Heidelberg: Springer.
 #'
 #' Brusco, M., & Doreian, P. (2015). A real-coded genetic algorithm for two-mode KL-means partitioning with application to homogeneity blockmodeling. \emph{Social Networks}, 41, 26-35. http://dx.doi.org/10.1016/j.socnet.2014.11.007
+#' @export
 
 tmklm = function(A,RC,CC,TLIMIT) {
 	RO = dim(A)[1]

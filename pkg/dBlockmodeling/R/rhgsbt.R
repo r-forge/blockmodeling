@@ -30,7 +30,7 @@
 #' Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. \emph{Social Networks}, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
 #'
 #' Brusco, M. J., & Doreian, P. (2019). Partitioning signed networks using relocation heuristics, tabu search, and variable neighborhood search. \emph{Social Networks}, 56, 70-80. https://doi.org/10.1016/j.socnet.2018.08.007
-
+#' @export
 
 rhgsbt = function(A,C,TLIMIT) {
 	N = dim(A)[1]
