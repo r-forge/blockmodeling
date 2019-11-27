@@ -8,7 +8,7 @@
      1        CBEST(CO),RBEST(RO)
 C
 C  MULTISTART TWO-MODE KL-MEANS (WCSS CRITERION) BLOCK PLACEMENTS **UNKNOWN**
-	  call fseedi()
+      call fseedi()
       CALL CPU_TIME(TIMEA)
       NREPS = 0
       NUMOPT = 1

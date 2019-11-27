@@ -14,7 +14,7 @@ C        1. OBJECT TRANSFERS ONLY -- NO EXCHANGES
 C        2. RANDOMLY CHOOSE K1/K2 CENTROIDS -- ASSIGN EACH OBJECT TO NEAREST
 C  ################################################################
 C
-	  call fseedi()
+      call fseedi()
       CALL CPU_TIME(TIMEA)
       NREPS = 0
       GBEST = 999999
@@ -434,6 +434,5 @@ C
       DO J = 1,CO
         NC(GC(j)) = NC(GC(j))+1
       END DO
-      call fseedo() 	  
-      call fseedo() 	  
+      call fseedo()  
       END
