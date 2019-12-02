@@ -33,13 +33,9 @@ res <- rhgsbt(A = sampsonT3, C = 3, TLIMIT = 1)
 
 # See the results.
 res
-
-# Plot the network, in a matrix format, in line with the obtained partition P.
-# The function plotMat is from blockmodeling package.
-# plotMat(sampsonT3, clu = res$P)
 }
 \references{
-Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
+Brusco, M. J., Doreian, P., & Steinley, D. (2019). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 
 Doreian, P., & Mrvar, A. (1996). A partitioning approach to structural balance. \emph{Social Networks}, 18, 149-168. https://doi.org/10.1016/0378-8733(95)00259-6
 

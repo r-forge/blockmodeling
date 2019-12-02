@@ -36,13 +36,9 @@ res <- tmklm(nyt,RC = 9,CC = 5,TLIMIT = 1)
 
 # See the results.
 res
-
-# Plot the network, in a matrix format, in line with the obtained partitions.
-# The function plotMat is from blockmodeling package.
-# plotMat(nyt, clu = list(res$RP, res$CP))
 }
 \references{
-Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
+Brusco, M. J., Doreian, P., & Steinley, D. (2019). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 
 Baier, D., Gaul, W., & Schader, M. (1997). Two-mode overlapping clustering with applications in simultaneous benefit segmentation and market structuring. In R. Klar & O. Opitz (Eds), \emph{Classification and knowledge organization} (pp. 557-566), Heidelberg: Springer.
 

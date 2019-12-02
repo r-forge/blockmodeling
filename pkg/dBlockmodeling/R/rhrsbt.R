@@ -19,13 +19,9 @@
 #'
 #'# See the results.
 #'res
-#'
-#' # Plot the network, in a matrix format, in line with the obtained partition P.
-#' # The function plotMat is from blockmodeling package.
-#' # plotMat(sampsonT3, clu = res$P)
 #' @author Michael Brusco
 #' @references
-#' Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
+#' Brusco, M. J., Doreian, P., & Steinley, D. (2019). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 #'
 #'Doreian, P., & Mrvar, A. (2009). Partitioning signed social networks. \emph{Social Networks}, 31, 1-11. http://dx.doi.org/10.1016/j.socnet.2008.08.001
 #' @export

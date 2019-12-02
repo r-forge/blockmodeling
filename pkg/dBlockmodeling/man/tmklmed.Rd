@@ -36,13 +36,9 @@ res <- tmklmed(nyt, RC = 9, CC = 5, TLIMIT = 1)
 
 # See the results.
 res
-
-# Plot the network, in a matrix format, in line with the obtained partitions.
-# The function plotMat is from blockmodeling package.
-# plotMat(nyt, clu = list(res$RP, res$CP))
 }
 \references{
-Brusco, M. J., Doreian, P., & Steinley, D. (in press). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
+Brusco, M. J., Doreian, P., & Steinley, D. (2019). Deterministic blockmodeling of signed and two-mode networks: a tutorial with psychological examples. \emph{British Journal of Mathematical and Statistical Psychology}.
 
 Doreian, P., Batagelj, V., & Ferligoj, A. (2004). Generalized blockmodeling of two-mode network data. \emph{Social Networks}, 26, 29-53. doi:10.1016/j.socnet.2004.01.002
 
