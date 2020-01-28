@@ -1,10 +1,10 @@
 Package: blockmodeling
 Type: Package
 Title: Generalized and Classical Blockmodeling of Valued Networks
-Version: 0.3.5
-Date: 2019-3-27
-Imports: stats, methods, Matrix, doParallel, doRNG, parallel, foreach
-Suggests: sna
+Version: 0.3.6
+Date: 2020-1-28
+Imports: stats, methods, Matrix, parallel
+Suggests: sna, doRNG, doParallel, foreach
 Author: Aleš Žiberna [aut, cre]
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@gmail.com", 
                   role = c("aut", "cre"))
