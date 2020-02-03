@@ -1,4 +1,4 @@
-Package: kMeansTest
+Package: kmBlockTest
 Type: Package
 Title: k-means like blockmodeling of one-mode and linked networks
 Version: 0.0.1.9000
