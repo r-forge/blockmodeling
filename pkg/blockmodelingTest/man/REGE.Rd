@@ -103,7 +103,7 @@ net[clu == 2, clu == 1] <- 0
 net[clu == 2, clu == 2] <- 0
 
 D <- REGE.for(M = net)$E # Any other REGE function can be used
-plot.mat(net, clu = cutree(hclust(d = as.dist(1 - D), method = "ward"),
+plot.mat(net, clu = cutree(hclust(d = as.dist(1 - D), method = "ward.D"),
    k = 2))
 # REGE returns similarities, which have to be converted to
 # disimilarities

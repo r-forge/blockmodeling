@@ -136,7 +136,7 @@ function(
     
     dm<-dim(M)
 
-    if(class(M)!="matrix"&&class(M)!="mat"){
+    if(!inherits(M, c("matrix","mat"))){
         pack<-attr(class(M),"package")
         if(!(is.null(pack))&&pack=="Matrix"){
             if(requireNamespace("Matrix")){
