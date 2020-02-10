@@ -1,14 +1,13 @@
-\name{kMeansTest-package}
-\alias{kMeansTest-package}
-\alias{kMeansTest}
-\alias{kMeans-package}
-\alias{kMeans}
+\name{kmBlockTest-package}
+\alias{kmBlockTest-package}
+\alias{kmBlockTest}
+\alias{kmBlock}
 \docType{package}
 \title{
-\packageTitle{kMeansTest}
+\packageTitle{kmBlockTest}
 }
 \description{
-\packageDescription{kMeansTest}
+\packageDescription{kmBlockTest}
 }
 \details{
 
