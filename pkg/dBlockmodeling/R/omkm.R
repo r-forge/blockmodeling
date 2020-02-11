@@ -1,10 +1,10 @@
-#' Two-Mode KL-Means Heuristic
+#' One-Mode K-Means Heuristic
 #'
 #' @description This function runs one-mode K-means for an \eqn{RO x RO} network matrix.
 #' @param A An \eqn{RO x RO} one-mode network matrix.
 #' @param RC The number of clusters for row objects (\eqn{1 < RC < RO}).
 #' @param TLIMIT A desired time limit.
-#' @param IDIAG 0 if main diagonal to be ignored, any other value it will be included. Default is 0. 
+#' @param IDIAG 0 if main diagonal to be ignored, any other value it will be included. Default is 0.
 #' @return The function returns the following:
 #' \itemize{
 #' \item \code{sse} - the sum of the within-block sum-of-squared deviations from the block means;
@@ -16,7 +16,7 @@
 #' # Load the notes borrowing data..
 #' data("notesBorrowing")
 #'
-#' Run one-mode K-means procedure.
+#' #Run one-mode K-means procedure.
 #' res <- omkm(notesBorrowing,RC = 3, TLIMIT = 1, IDIAG = 0)
 #'
 #' # See the results.

@@ -1,7 +1,7 @@
 Package: dBlockmodeling
 Type: Package
 Title: Deterministic Blockmodeling of Signed and Two-Mode Networks
-Version: 0.2.1
+Version: 0.2.0
 Date: 2020-2-10
 Authors@R: c(person(given = "Michael", family = "Brusco", email =  "mbrusco@business.fsu.edu", role = "aut"),   person(given = "Aleš", family = "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", role = "cre"),   person(given = "Marjan", family = "Cugmas", email = "marjan.cugmas@fdv.uni-lj.si", role = "ctb"),   person(given = "Patrick", family = "Doreian", email = "pitpat@pitt.edu", role = "ctb"),   person(given = "Doug", family = "Steinley", email = "steinleyd@missouri.edu", role = "ctb"))
 Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>

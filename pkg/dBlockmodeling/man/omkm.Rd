@@ -2,7 +2,7 @@
 % Please edit documentation in R/omkm.R
 \name{omkm}
 \alias{omkm}
-\title{Two-Mode KL-Means Heuristic}
+\title{One-Mode K-Means Heuristic}
 \usage{
 omkm(A, RC, TLIMIT, IDIAG = 0)
 }
@@ -31,7 +31,7 @@ This function runs one-mode K-means for an \eqn{RO x RO} network matrix.
 # Load the notes borrowing data..
 data("notesBorrowing")
 
-Run one-mode K-means procedure.
+#Run one-mode K-means procedure.
 res <- omkm(notesBorrowing,RC = 3, TLIMIT = 1, IDIAG = 0)
 
 # See the results.

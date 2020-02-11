@@ -28,6 +28,6 @@ data(notesBorrowing)
 
 # Plot the network.
 # (The function plotMat is from blockmodeling package.)
-# plotMat(nyt)
+# plotMat(notesBorrowing)
 }
 \keyword{datasets}
