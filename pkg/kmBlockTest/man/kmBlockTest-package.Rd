@@ -12,14 +12,14 @@
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{kMeansTest}
-\packageIndices{kMeansTest}
+\packageDESCRIPTION{kmBlockTest}
+\packageIndices{kmBlockTest}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{kMeansTest}
+\packageAuthor{kmBlockTest}
 
-Maintainer: \packageMaintainer{kMeansTest}
+Maintainer: \packageMaintainer{kmBlockTest}
 }
 \references{
 ~~ Literature or other references for background information ~~
