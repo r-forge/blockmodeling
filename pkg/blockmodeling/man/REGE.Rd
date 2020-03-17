@@ -83,11 +83,11 @@ REGE.ownm.ne.for(M, iter = 3, E = 1)
 
 White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
 
-White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR}
+White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR.
 
-White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR}
+White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR.
 
-White, D. R. (2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/} 
+White, D. R. (2005). REGGE. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/. 
 }
 \author{\enc{Aleš Žiberna}{Ales Ziberna} based on Douglas R. White's original REGE and REGD}
 \seealso{\code{\link{sedist}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{plot.mat}}}

@@ -773,13 +773,14 @@ nCores=1, #number of cores to be used 0 -means all available cores, can also be 
    } else {
      requireNamespace("doParallel")
      requireNamespace("doRNG")
-        if(!getDoParRegistered()){
+     `%dorng%`<-doRNG::`%dorng%`
+        if(!foreach::getDoParRegistered()){
             if(nCores==0){
                 nCores<-detectCores()-1                    
             }
-            registerDoParallel(nCores)
+            doParallel::registerDoParallel(nCores)
         }
-        nC<-getDoParWorkers()
+        nC<-foreach::getDoParWorkers()
         oneRep<-function(i,M,approaches, blocks, n,k,mingr,maxgr,addParam,rep,nC,...){
             if(printRep) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
             temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)

@@ -24,7 +24,7 @@ Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Str
 
 White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
 
-White, D. R. (2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/}
+White, D. R. (2005). REGGE. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/.
 }
 \keyword{ package }
 \keyword{cluster}% at least one, from doc/KEYWORDS
