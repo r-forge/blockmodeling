@@ -137,14 +137,15 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 //    Rcpp::stop( "DEBUG" );
 
+    meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
     double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;
 
     while( newCf < bestCf ) {
         bestClu = newClu;
         bestCf = newCf;
-        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
         setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
+        meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
         newCf = criterialFunction( M, newClu, weights, meanBlocks, pSeparate, dDiag );
     }
 
@@ -431,7 +432,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 
 
     int iBegin, iEnd, k;
-    for( unsigned int i = 0; i < nBorders.size(); ++i ){
+    for(int i = 0; i < nBorders.size(); ++i ){
         if( !i ) {
             iBegin = 0;
             k = 0;

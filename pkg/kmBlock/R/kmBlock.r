@@ -166,7 +166,7 @@ critFunKmeans<-function(M,
   if(length(dim(w))==2) w<-array(w,dim=c(dim(w),1))
   
   if(is.null(limits)){
-    bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper
+    bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
   } else {
     if(diagonal %in% c("ignore","same")){
       bordersSeperateLower <- bordersSeperateUpper
@@ -423,8 +423,8 @@ kmBlockORPC<-function(M, #a square matrix
        nC<-nCores
        #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
        #clusterExport(cl, varlist = "kmBlock")
- 	  exprLib=substitute(expression(library(pkgName)), list(pkgName=pkgName))
-       clusterEvalQ(cl, expr=exprLib)
+  	   clusterExport(cl, varlist = "pkgName")	   
+       clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
        res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
        if(stopcl) stopCluster(cl)
        res<-lapply(res,function(x)x[[1]])

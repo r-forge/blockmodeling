@@ -1,8 +1,8 @@
 Package: kmBlock
 Type: Package
 Title: k-means like blockmodeling of one-mode and linked networks
-Version: 0.0.1
-Date: 2019-02-08
+Version: 0.0.1.0100
+Date: 2020-05-04
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre"))
 Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>

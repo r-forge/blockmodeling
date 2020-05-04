@@ -22,9 +22,11 @@ kmBlockC<-function(M,
                   clu, 
                   weights=NULL, 
 				  diagonal = c("ignore","seperate","same"),
+				  limitType=c("none","inside","outside"),				  
                   limits=NULL){
   n<-dim(M)[1]
   diagonal<-match.arg(diagonal)
+  limitType<-match.arg(limitType)  
   if(is.null(weights)){
     weights<-M
     weights[,]<-1
@@ -52,6 +54,10 @@ kmBlockC<-function(M,
   
   if(is.null(limits)){
 	  bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
+	  if(limitType!="none"){
+	    limitType<-"none"
+	    warning("limitType is set to 'none' as limits are NULL!")	  
+	 }
   } else {
   	if(diagonal %in% c("ignore","same")){
   	  bordersSeperateLower <- bordersSeperateUpper<-NULL
@@ -101,7 +107,7 @@ kmBlockC<-function(M,
   	}
   }
 	
-  res<-kmBlock(M=M, clu=clu, weights=w, n=n, nClu=tmNclu, diagonal = diagonal, useBorders = !is.null(limits), bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-kmBlock(M=M, clu=clu, weights=w, n=n, nClu=tmNclu, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   
 	  
   res<-list(M=M, clu=res$bestClu, IM=res$IM, err=res$bestCf, best=list(list(M=M, clu=res$bestClu, IM=res$IM)))
@@ -137,9 +143,11 @@ critFunKmeans<-function(M,
                    clu, 
                    weights=NULL, 
                    diagonal = c("ignore","seperate","same"),
+                   limitType=c("none","inside","outside"),    
                    limits=NULL){
   n<-dim(M)[1]
   diagonal<-match.arg(diagonal)
+  limitType<-match.arg(limitType)  
   if(is.null(weights)){
     weights<-M
     weights[,]<-1
@@ -166,7 +174,11 @@ critFunKmeans<-function(M,
   if(length(dim(w))==2) w<-array(w,dim=c(dim(w),1))
   
   if(is.null(limits)){
-    bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper
+    bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
+    if(limitType!="none"){
+      limitType<-"none"
+      warning("limitType is set to 'none' as limits are NULL!")
+    }      
   } else {
     if(diagonal %in% c("ignore","same")){
       bordersSeperateLower <- bordersSeperateUpper
@@ -213,7 +225,7 @@ critFunKmeans<-function(M,
     }
   }
   
-  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=n, diagonal = diagonal, useBorders = !is.null(limits), bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=n, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   return(res)
   
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
@@ -423,8 +435,8 @@ kmBlockORPC<-function(M, #a square matrix
        nC<-nCores
        #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
        #clusterExport(cl, varlist = "kmBlock")
- 	  exprLib=substitute(expression(library(pkgName)), list(pkgName=pkgName))
-       clusterEvalQ(cl, expr=exprLib)
+       clusterExport(cl, varlist = "pkgName")	   
+       clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
        res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
        if(stopcl) stopCluster(cl)
        res<-lapply(res,function(x)x[[1]])
