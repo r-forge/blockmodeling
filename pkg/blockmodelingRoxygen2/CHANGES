@@ -1,0 +1,88 @@
+Name: blockmodeling
+Title: Generalized and Classical Blockmodeling of Valued Networks
+
+2019
+March 27, 2019
+Version 0.3.5
+Changed the default value of the paramter justChange in optPar(C) to TRUE. This speeds up the optimization. Previously it was set to FALSE so that tests could be made if the faster option gives the same/correct results.
+
+2018
+December 24, 2018
+Added two arguments into optRandomParC (approaches and blocks). Also the description of these arguments was added into optRandomParC.Rd file
+
+November 29, 2018
+A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
+
+November 9, 2018
+Version 0.3.4
+Bug fixed in critFunC.
+
+November 7, 2018
+Version 0.3.3
+Corrected documentation on critFunC and optParC in the part on using argument "approaches". Also, the functions were updated so that "ss" and "ad" are accepted as values of the approaches argument (which was previously documented, but not supported).
+Function EM that extract the error matrix was added.
+
+November 5, 2018
+Version 0.3.3
+Some minor bug fixes, performance improvements and documentation improvements.
+
+September 3, 2018
+Version 0.3.2
+Edited grammar in help files.
+Several bug fixes in plotting functions.
+
+May 29, 2018
+Version 0.3.1
+Edited grammar in help files.
+Editing style (APA) of citaitons of blockmodeling package in publications.
+Added a reference for the method in the 'Description' field. 
+
+April 25, 2018
+Version 0.3.1
+A bug fix which prevented the use of functions gplot1 and gplot2.
+
+April 10, 2018
+Version 0.3.0
+Final tweaks before submission to CRAN.
+
+March 28, 2018
+Correcting some FORTRAN warnings.
+
+March 2, 2018
+Version 0.2.4
+Added help files for functions optRandomParC and critFunC.
+Updated help files (e.g. helpfile for function optParC was inserted (combined) in help file of function critFunC).
+Added new functions plotMat, plotArray and plotMatNm which are equivalent to the old functions plot.mat, plot.array and plot.mat.nm. The old functions will eventually be replaced with the new functions.
+
+
+2017
+December 8, 2017
+Version: 0.2.3
+Merged optParMultiC and optParC in to optParC. 
+Added formating to returned clu from these functions.
+
+June 30, 2017
+Seveal bug fixes.
+
+
+2014
+May 14, 2014
+Version: 0.2.2
+A bug in sedist fixed.
+
+
+2013
+Version: 0.2.2
+Several improvements, added additional block types (rfn, cfn, cdo, rdo) and support for multilevel blockmodeling.
+
+2012
+November 15, 2012
+Version: 0.2.2
+Added posibility to differentially weight relations, block type and positions or based on specially designed weights.
+Added additional block types in C the blocks are now limited to: "nul", "com", "reg", "cre", "rre","dnc"
+Multicore support through package doParallel for function optRandomParC.
+
+February 9, 2012
+Version: 0.2.1
+Added optParMultiC - function for searching whole neighbourhood before moving to the next partition.
+Added valued blockmodeling in C (the blocks are still limited to nul, com and reg).

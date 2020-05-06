@@ -1,0 +1,49 @@
+useDynLib(blockmodelingRoxygen2,.registration = TRUE)
+#import(foreach)
+import(Matrix)
+#import(doParallel)
+#import(doRNG)
+import(parallel)
+import(methods)
+#importFrom("sna", "gplot")
+#importFrom("methods", "as")
+importFrom("grDevices", "gray", "grey")
+importFrom("graphics", "mtext", "par", "plot.default", "rect",
+		 "segments", "text", "title")
+#importFrom("methods", "as")
+importFrom("stats", "as.dist", "cor", "cov", "median", "na.omit",
+		 "optimize", "runif")
+importFrom("utils", "citation", "read.table", "write.table")
+  
+export(critFunC, optParC, optRandomParC) #basic front end functions for interface with C
+#export(parArr2VecC, parVec2ArrC) #experimental front end functions for interface with C
+#export(check.these.par, crit.fun, opt.par, opt.random.par, opt.these.par) #basic front end functions
+export(genRandomPar) 
+export(plot.mat, plot.array, plotMat, plotMatNm, plotArray) #,plot.mat.nm
+#export(plot.check.these.par, plot.crit.fun, plot.opt.more.par, plot.opt.more.par.mode, plot.opt.par, plot.opt.par.mode)
+export(sedist)
+export(rand, rand2, crand, crand2) 
+export(nkpar, nkpartitions) #recieved my mail
+export(gplot1, gplot2)
+export(find.m, find.m2, find.cut)
+export(ss, ad)
+export(ircNorm)
+export(genMatrixMult)
+export(clu, err, IM, EM, reorderImage, partitions)
+export(one2two, two2one)
+export(recode, formatA)
+export(fun.by.blocks)
+export(loadnetwork, loadnetwork2, loadnetwork3, loadnetwork4, loadmatrix, loadvector, loadvector2, savematrix, savenetwork, savevector, loadpajek)
+export(REGD.for, REGD.ow.for, REGE, REGE.for, REGE.nm.for, REGE.nm.diag.for, REGE.ow.for, REGE.ownm.for, REGE.ownm.diag.for, REGE.ow, REGE.FC, REGE.FC.ow, REGD.ne.for, REGD.ow.ne.for,REGE.ne.for, REGE.nm.ne.for, REGE.ow.ne.for, REGE.ownm.ne.for) #REGE - some White's
+
+S3method(plot,crit.fun)
+S3method(plot,mat)
+S3method(plot,array)
+S3method(plot,opt.more.par)
+S3method(plot,opt.more.par.mode)
+S3method(plot,opt.par)
+S3method(plot,opt.par.mode)
+S3method(plot,optPar)
+
+S3method(fun.by.blocks,opt.more.par)
+S3method(fun.by.blocks,default)
