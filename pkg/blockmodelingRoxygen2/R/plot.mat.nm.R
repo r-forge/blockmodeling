@@ -1,6 +1,15 @@
-#' importFrom graphics mtext par plot.default rect segments text title
-
-"plot.mat.nm" <- plotMatNm <- 
+#' @importFrom graphics mtext par plot.default rect segments text title
+#' @rdname plotMat
+#'
+#' @param main.title Main title in \code{plot.array}, \code{plot.mat.nm} and \code{plotMatNm} version.
+#' @param title.row Title for row normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
+#' @param title.column Title for column normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
+#' @param title.column Title for column normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
+#' @param main.title.line Used instead of \code{title.line} in \code{plot.mat.nm} and \code{plotMatNm}.
+#' @param par.set Used instead of \code{title.line} in \code{plot.mat.nm} and \code{plotMatNm}.
+#' 
+#' @export
+plotMatNm <- 
 function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
 	if(is.null(main.title)){
 		objName<-deparse(substitute(M))
@@ -20,3 +29,7 @@ function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Colum
 	title(main=main.title,outer=TRUE,line=main.title.line)
 	if(!is.null(par.set))par(par.def)
 }
+
+#' @rdname plotMat
+#' @export plot.mat.nm
+plot.mat.nm <- plotMatNm

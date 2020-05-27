@@ -2,7 +2,9 @@
 #' 
 #' @description \code{savematrix} - Saves a matrix into a  Pajek ".mat" filename.
 #'
-#' importFrom utils write.table
+#' @importFrom utils write.table
+#' 
+#' @export
 
 "savematrix" <-
 structure(function(n,filename,twomode=1){

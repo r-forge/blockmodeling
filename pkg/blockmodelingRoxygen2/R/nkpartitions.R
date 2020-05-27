@@ -1,9 +1,6 @@
-#' Functions for listing all possible partitions or just counting  the number of them
+#' Functions for listing all possible partitions or just counting the number of them
 #' 
 #' The function \code{nkpartitions} lists all possible partitions of n objects in to k clusters.
-#' The function \code{nkpar} only gives the number of such partitions.
-#' 
-#' @aliases nkpar
 #' 
 # #' @usage nkpartitions(n, k, exact = TRUE, print = FALSE)
 # #' nkpar(n, k)
@@ -37,7 +34,8 @@
 #' plot(res) # We get the original partition
 #' 
 #' @keywords cluster
-#'
+#' 
+#' @export
 
 "nkpartitions" <-
 function(n, k, exact=TRUE, print=FALSE) {

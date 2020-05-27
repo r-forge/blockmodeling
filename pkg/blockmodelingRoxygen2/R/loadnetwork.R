@@ -27,7 +27,9 @@ NULL
 #' @seealso \code{\link{plot.mat}}, \code{\link{critFunC}}, \code{\link{optRandomParC}}
 #' @keywords graphs file
 #' @import Matrix
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 "loadnetwork" <-
 function(filename,useSparseMatrix=NULL,minN=50){

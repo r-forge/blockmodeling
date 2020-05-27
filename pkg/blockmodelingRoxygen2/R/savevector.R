@@ -3,6 +3,8 @@
 #' @description \code{savevector} - Saves a vector into a  Pajek ".clu" filename.
 #'
 #' @param v A vector.
+#' 
+#' @export
 
 "savevector" <-
 structure(function(v,filename){

@@ -24,6 +24,8 @@
 #' 
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' @keywords manip
+#' 
+#' @export
 
 ircNorm<-function(M,eps=10^-12,maxiter=1000){
   diffM<-function(M){

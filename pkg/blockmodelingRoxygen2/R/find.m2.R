@@ -1,3 +1,7 @@
+#' @rdname find.m
+#' 
+#' @export
+
 "find.m2" <-
 function(
 	M,	#matrix of a network
@@ -6,7 +10,7 @@ function(
 	neval=100, #number of evaluations at different ms
 	half = TRUE,	# should the returned value of m be one half of the value where the incosnistencies are the same, otherwise, the m is restricted to max(M)
 	ms=NULL,	#the values of m where the function should be evaluated
-	... #other parameters to crit.fun
+	... #other parameters to critFun
 ){
   if(is.null(ms)){
   	ms<-seq(from=min(M), to=max(M)*(1+half), length.out=neval)

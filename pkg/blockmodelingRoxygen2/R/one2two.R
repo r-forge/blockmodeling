@@ -1,3 +1,7 @@
+#' @rdname two2one
+#' 
+#' @export
+
 "one2two" <-
 function(M,clu=NULL){
   if(!is.null(clu)){

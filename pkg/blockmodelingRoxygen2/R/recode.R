@@ -17,6 +17,8 @@
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' 
 #' @keywords manip
+#' 
+#' @export
 
 "recode" <-
 function(x,oldcode=sort(unique(x)),newcode){

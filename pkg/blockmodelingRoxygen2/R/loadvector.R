@@ -1,7 +1,9 @@
 #' @rdname Pajek
 #' 
 #' @description \code{loadvector} - Loads a Pajek ".clu" filename as a vector.
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 
 "loadvector" <-

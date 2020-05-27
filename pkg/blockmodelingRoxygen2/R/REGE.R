@@ -10,9 +10,6 @@
 #' \code{REGE.FC.ow} - The above function, modified so that a best match is searched for each arc separately (and not for both arcs, if they exist, together).
 #' other - still in testing stage.
 #' 
-#' @aliases REGE.for REGE.nm.for REGE.ow REGE.ow.for REGE.ownm.for REGD.for REGD.ow.for REGE.FC REGE.FC.ow REGD.ne.for REGD.ow.ne.for REGE.ne.for REGE.nm.diag.for REGE.nm.ne.for REGE.ow.ne.for REGE.ownm.diag.for REGE.ownm.ne.for
-#' 
-#' 
 #' @param M Matrix or a 3 dimensional array representing the network. The third dimension allows for several relations to be analyzed.
 #' @param E Initial (dis)similarity in terms of regular equivalnece.
 #' @param iter The desired number of iterations.
@@ -64,6 +61,8 @@
 #' 
 #' @keywords cluster graphs 
 #' @importFrom stats as.dist
+#' 
+#' @export
  
 "REGE" <-
 function(M,E=1,iter=3,until.change=TRUE,use.diag=TRUE){

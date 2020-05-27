@@ -2,12 +2,10 @@
 #' 
 #' Computes a value of a function over blocks of a matrix, defined by a partition.
 #' 
-#' @aliases fun.by.blocks.default fun.by.blocks.mat fun.by.blocks.opt.more.par
-#' 
 # #' @usage
-# #' fun.by.blocks(x, ...)
-# #' fun.by.blocks.default (x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
-# #' fun.by.blocks.opt.more.par (x, which = 1, ...)
+# #' funByBlocks(x, ...)
+# #' funByBlocks.default (x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
+# #' funByBlocks.optMorePar (x, which = 1, ...)
 #'
 #' @param x An object of suitable class or a matrix representing the (usually valued) network.
 #' For now, only one-relational networks are supported. The network can have one or more modes (different kinds of units with no ties among themselves.
@@ -21,7 +19,7 @@
 #' @param sortNames Should the rows and columns of the matrix be sorted based on their names.
 #' @param FUN The function to be computed over the blocks.
 #' @param which Which (if several) of the "best" solutions should be used.
-#' @param \dots Further arguments to \code{fun.by.blocks.default}. 
+#' @param \dots Further arguments to \code{funByBlocks.default}. 
 #'
 #' @return A numerical matrix of \code{FUN} values by blocks, induced by a partition \code{clu}.
 #' 
@@ -44,11 +42,15 @@
 #' # Optimizing 10 random partitions with optRandomParC
 #' res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "com")
 #' plot(res) # Hopefully we get the original partition
-#' fun.by.blocks(res)
+#' funByBlocks(res)
 #' # Computing mean by blocks, ignoring the diagonal (default)
 #' 
 #' @keywords cluster math
+#' 
+#' @export
+funByBlocks <-
+function(x, ...) UseMethod("funByBlocks")
 
-"fun.by.blocks" <-
-function(x, ...) UseMethod("fun.by.blocks")
-
+#' @rdname funByBlocks
+#' @export
+fun.by.blocks<-funByBlocks

@@ -54,6 +54,8 @@
 #' 
 #' @keywords cluster graphs
 #' @importFrom stats as.dist cor cov na.omit
+#' 
+#' @export
 
 "sedist" <-
 function(

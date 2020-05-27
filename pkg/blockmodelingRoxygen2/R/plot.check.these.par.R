@@ -1,3 +1,4 @@
+#' @export
 "plot.check.these.par" <-
 function(
 	x,	#an "check.these.par" class object

@@ -2,8 +2,6 @@
 #' 
 #' The function calls function \code{gplot} from the library \code{sna} with different defaults. Use fun for plotting image graphs.
 #' 
-#' @aliases gplot2
-#' 
 # #' @usage gplot1(M, diag = TRUE,
 # #'     displaylabels = TRUE, boxed.labels = FALSE,
 # #'     loop.cex = 4, edge.lwd = 1, edge.col = "default",
@@ -39,6 +37,8 @@
 #' @seealso \code{sna:gplot}
 #' @keywords graphs
 #' @importFrom grDevices gray
+#' 
+#' @export
  
 "gplot1" <-function(M,diag=TRUE,displaylabels=TRUE,boxed.labels=FALSE,loop.cex=4,edge.lwd=1,edge.col="default",rel.thresh=0.05,...){
   if(requireNamespace("sna", quietly = TRUE)){
@@ -50,6 +50,9 @@
                    call. = FALSE)
 }
 
+#' @rdname gplot1
+#' 
+#' @export
 
 "gplot2" <-
 function(M,uselen=TRUE,usecurve=TRUE,edge.len=0.001,diag=TRUE,displaylabels=TRUE,boxed.labels=FALSE,loop.cex=4,arrowhead.cex=2.5,edge.lwd=1,edge.col="default",rel.thresh=0.05,...){

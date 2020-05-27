@@ -5,8 +5,6 @@
 #' than \code{find.m2}. However, \code{find.m} only supports regular ("reg") and complete ("com") as \code{alt.blocks}, while \code{find.m2} supports all block types.
 #' Also, \code{find.m} does not always work, especially if \code{cormet} is not "none".
 #' 
-#' @aliases find.m find.m2 find.cut
-#' 
 # #' @usage find.m(M, clu, alt.blocks = "reg", diag = !is.list(clu),
 # #' cormet = "none", half = TRUE, FUN = "max")
 # #' find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE,
@@ -36,7 +34,7 @@
 #' @param neval A number of different \code{m} values to be evaluated.
 #' @param half Should the returned value of m be one half of the value where the inconsistencies are the same.
 #' @param ms The values of m where the function should be evaluated.
-#' @param \dots Other parameters to \code{crit.fun}.
+#' @param \dots Other parameters to \code{critFunC}.
 #'
 #' @return A matrix of maximal \code{m/cut} values.
 #'
@@ -55,6 +53,7 @@
 #' 
 #' @keywords cluster
 #' @importFrom stats optimize
+#' @export
 
 "find.m" <-
 function(

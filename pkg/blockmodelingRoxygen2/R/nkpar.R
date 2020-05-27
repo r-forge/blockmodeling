@@ -1,3 +1,7 @@
+#' @rdname nkpartitions
+#' 
+#' @export
+
 "nkpar" <-
 function(n, k) {
 # Author: Chris Andrews <candrews@buffalo.edu>

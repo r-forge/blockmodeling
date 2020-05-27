@@ -5,7 +5,9 @@
 #' @param safe If \code{FALSE} error will occur if not all vertices have labels. If \code{TRUE} reading works faster.
 #' @param closeFile Should the connection be closed at the end. Should be always \code{TRUE} if function is used directly.
 #' @import Matrix
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 "loadnetwork2" <-
 function(filename,useSparseMatrix=NULL,minN=50,safe=TRUE,closeFile=TRUE){

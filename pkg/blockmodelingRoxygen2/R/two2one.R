@@ -3,8 +3,6 @@
 #' Converting  two mode networks from two to one mode matrix representation and vice versa.
 #' If a two-mode matrix is converted into a one-mode matrix, the original two-mode matrix lies in the upper right corner of the one-mode matrix.
 #' 
-#' @aliases one2two
-#' 
 # #' @usage
 # #' two2one(M, clu = NULL)
 # #' one2two(M, clu = NULL)
@@ -47,6 +45,8 @@
 #' plot.mat(one2two(M1, clu = clu)$M, clu = clu)
 #' 
 #' @keywords cluster graphs
+#' 
+#' @export
 
 "two2one" <-
 function(M,clu=NULL){

@@ -18,6 +18,8 @@
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' @seealso \code{\link{find.m}}, \code{\link{find.m2}}, \code{\link{find.cut}}
 #' @keywords character
+#' 
+#' @export
 
 "formatA" <-
 function(x,digits=2, FUN=round,...){

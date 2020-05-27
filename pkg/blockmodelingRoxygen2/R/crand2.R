@@ -1,3 +1,7 @@
+#' @rdname rand
+#' 
+#' @export
+
 "crand2" <-
 function (clu1,clu2) #Hubert & Arabie
 {

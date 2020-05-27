@@ -6,6 +6,8 @@
 \title{Sum of Squared deviations from the mean and sum of Absolute Deviations from the median}
 \usage{
 ss(x)
+
+ad(x)
 }
 \arguments{
 \item{x}{A numeric vector.}

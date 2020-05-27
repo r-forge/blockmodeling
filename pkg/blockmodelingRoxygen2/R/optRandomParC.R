@@ -1,6 +1,6 @@
 #' Optimizing a set of partitions based on the value of a criterion function
 #' 
-#' The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Å½iberna, 2007) based on other parameters (see below).
+#' The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2007) based on other parameters (see below).
 #' The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 #' A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}
 #'
@@ -25,6 +25,9 @@
 #' @param printRep Should some information about each optimization be printed.
 #' @param n The number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is one mode (both modes are in rows and columns).
 #' @param nCores Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.
+#' @param useParLapply Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.
+#' @param  cl The cluster to use (if formed beforehand). Defaults to \code{NULL}.
+#' @param  stopcl Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.
 #' @param genPajekPar Should the partitions be generated as in Pajek.
 #' @param probGenMech Should the probabilities for different mechanisms for specifying the partitions be set. If \code{probGenMech} is not set, it is determined based on the parameter \code{genPajekPar}.
 #' @param \dots Arguments passed to other functions, see \code{\link{critFunC}}.
@@ -33,7 +36,7 @@
 #' @return
 #'   \item{M}{The matrix of the network analyzed.}
 #'   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
-#'   \item{best}{A list of results from \code{crit.fun.tmp} with the same elements as the result of \code{crit.fun}, only without \code{M}.}
+#'   \item{best}{A list of results from \code{optParC}, only without \code{M}.}
 #'   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies of the empirical  network with the ideal network for a given blockmodel (model,approach,...) and parititions.}
 #'   \item{nIter}{The vector of the number of iterations used - one value for each starting partition that was optimized. It can show that \code{maxiter} is too low if a lot of these values have the value of \code{maxiter}.}
 #'   \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
@@ -49,13 +52,13 @@
 #' 
 #' Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+#' \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+#' \enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
+#' \enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 #' 
-#' @author \enc{AleÅ¡ Å½iberna}{Ales Ziberna}
+#' @author \enc{Aleš¡ Žiberna}{Ales Ziberna}
 #' @seealso \code{\link{critFunC}}
 #' 
 #' @examples
@@ -69,17 +72,6 @@
 #' net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 #' net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 #'
-#' # We select a random partition and then optimize it
-#' all.par <- nkpartitions(n = n, k = length(tclu))
-#' # Forming the partitions
-#' all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])
-#'
-#' # Optimizing one partition
-#' res <- optParC(M = net,
-#'    clu = all.par[[sample(1:length(all.par), size = 1)]],
-#'    approaches = "hom", homFun = "ss", blocks = "com")
-#' plot(res) # Hopefully we get the original partition
-#'
 #' # Optimizing 10 random chosen partitions with optRandomParC
 #' res <- optRandomParC(M = net, k = 2, rep = 10,
 #' approaches = "hom", homFun = "ss", blocks = "com")
@@ -89,6 +81,8 @@
 #' @import methods
 #' @import parallel
 #' @importFrom stats na.omit runif
+#'
+#' @export
 
 "optRandomParC" <-function(M, 
                            k,#number of clusters/groups
@@ -101,7 +95,7 @@
                            max.iden=10, #the maximum number of results that should be saved (in case there are more than max.iden results with minimal error, only the first max.iden will be saved)
                            switch.names=NULL,#should partitions that only differ in group names be considert equal (is c(1,1,2)==c(2,2,1))
                            return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
-                           return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
+                           return.err=TRUE,#if 'FALSE', only the resoults of critFun are returned (a list of all (best) soulutions including errors), else the resoult is list
                            seed=NULL,#the seed for random generation of partitions
                            RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
                            parGenFun = genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
@@ -117,6 +111,9 @@
                            printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
                            n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
                            nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object
+						   useParLapply = TRUE, # Should parLapplyLB be used (otherwise foreach is used)
+							cl = NULL, #the cluster to use (if formed beforehand)
+							stopcl = is.null(cl), # should the cluster be stoped						   
                            ... #paramters to optParC
 ){
   dots<-list(...) #this might not be need - can be removed and all latter occurencies given sufficent testing. Left for now as there is not enought time.
@@ -208,17 +205,17 @@
     } else initial.param=list(initial.param)
     
     res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, list(Random.seed=.Random.seed))
-    class(res)<-"opt.more.par"
+    class(res)<-"optMorePar"
     return(res)
   })
   
-  if(nCores==1||!requireNamespace("doParallel")||!requireNamespace("doRNG")){
-    if(nCores!=1) {
-      oldWarn<-options("warn")
-      options(warn=1)
-      warning("Only single core is used as package 'doParallel' or 'doRNG' (or both) is/are not available")
-      options(oldWarn)
-    }
+   if(nCores==1||!require(parallel)){
+     if(nCores!=1) {
+       oldWarn<-options("warn")
+       options(warn=1)
+       warning("Only single core is used as package 'parallel' is not available")
+       options(warn=oldWarn)
+     }
     for(i in 1:rep){
       if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
       find.unique.par<-TRUE
@@ -264,17 +261,7 @@
       if(printRep==1) cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
     }
   } else {
-    requireNamespace("doParallel")
-    requireNamespace("doRNG")
-    `%dorng%`<-doRNG::`%dorng%`
-	if(!foreach::getDoParRegistered()){
-		if(nCores==0){
-			nCores<-detectCores()-1                    
-		}
-		doParallel::registerDoParallel(nCores)
-	}
-	nC<-foreach::getDoParWorkers()
-    oneRep<-function(i,M,approaches, blocks, n,k,mingr,maxgr,addParam,rep,nC,...){
+    oneRep<-function(i,M,approaches, blocks, n,k,mingr,maxgr,addParam,rep,...){
       if(printRep) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
       temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
       
@@ -295,11 +282,48 @@
       #            err[i]<-res[[i]]$err
       #            nIter[i]<-res[[i]]$resC$nIter
       return(list(tres))
+    }  
+     
+	if(!requireNamespace("doParallel")|!requireNamespace("foreach")|!requireNamespace("doRNG")) useParLapply<-TRUE 
+    if(nCores==0){
+       nCores<-detectCores()-1                    
     }
-    pkgName<-utils::packageName()
-    res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,nC=nC,...)
-    err<-sapply(res,function(x)x$err)
-    nIter<-sapply(res,function(x)x$resC$nIter)
+	
+	pkgName<-utils::packageName()
+	if(is.null(pkgName)) {
+		pkgName<-utils::packageName(environment(optParC))
+		cat("Package name set by a trick!\n")
+	}
+	
+	if(useParLapply) {
+       if(is.null(cl)) cl<-makeCluster(nCores)
+       clusterSetRNGStream(cl)
+       nC<-nCores
+       #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
+       #clusterExport(cl, varlist = "kmBlock")
+       clusterExport(cl, varlist = "pkgName", envir=environment())	   
+       clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
+       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+       if(stopcl) stopCluster(cl)
+       res<-lapply(res,function(x)x[[1]])
+       err<-sapply(res,function(x)x$err)
+	   nIter<-sapply(res,function(x)x$resC$nIter)
+    } else {
+		requireNamespace("doParallel")
+		requireNamespace("doRNG")
+		requireNamespace("foreach")
+		`%dorng%`<-doRNG::`%dorng%`
+		`%dopar%`<-foreach::`%dopar%`
+		if(!foreach::getDoParRegistered()){
+			doParallel::registerDoParallel(nCores)
+		}
+		nC<-foreach::getDoParWorkers()
+
+		pkgName<-utils::packageName()
+		res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+		err<-sapply(res,function(x)x$err)
+		nIter<-sapply(res,function(x)x$resC$nIter)
+	}
   }
 }
 
@@ -311,6 +335,7 @@ unlistPar<-function(part){
   }
   part
 }
+
 
 parArr2VecC<-function(parArr,nUnitsClu=NULL){
   if(is.null(nUnitsClu)){
@@ -324,7 +349,6 @@ parArr2VecC<-function(parArr,nUnitsClu=NULL){
   resC<-.C("parArr2Vec",n=as.integer(n), nClus = nClus, nUnitsClu=as.integer(nUnitsClu),parArr=parArr, parVec=integer(n), NAOK=TRUE)
   return(resC$parVec)
 }
-
 
 
 parVec2ArrC<-function(parVec){

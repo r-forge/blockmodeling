@@ -2,7 +2,9 @@
 #' 
 #' @description \code{loadnetwork3} - Another version for reading networks.
 #' @import Matrix
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 "loadnetwork3" <-
 function(filename,useSparseMatrix=NULL,minN=50){

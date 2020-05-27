@@ -1,3 +1,7 @@
+#' @rdname rand
+#' 
+#' @export
+
 "crand" <-
 function (tab) #Hubert & Arabie
 {

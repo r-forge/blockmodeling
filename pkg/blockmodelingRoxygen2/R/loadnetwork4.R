@@ -4,7 +4,9 @@
 #'
 #' @param fill If \code{TRUE}, then in case the rows have unequal length, blank fields are added.
 #' @import Matrix
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 "loadnetwork4" <-
 function(filename,useSparseMatrix=NULL,minN=50,fill=FALSE){

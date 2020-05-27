@@ -3,8 +3,6 @@
 #' Rand Index and Rand Index corrected/adjusted for chance for comparing partitions (Hubert & Arabie, 1985).
 #' The names of the clusters do not matter.
 #' 
-#' @aliases crand crand2 rand rand2
-#' 
 # #' @usage
 # #' rand(tab)
 # #' rand2(clu1, clu2)
@@ -21,6 +19,7 @@
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' @keywords cluster
 #' 
+#' @export 
 
 "rand" <-
 function (tab) #Hubert & Arabie

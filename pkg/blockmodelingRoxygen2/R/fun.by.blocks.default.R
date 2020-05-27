@@ -1,4 +1,6 @@
-"fun.by.blocks.default" <-
+#' @rdname funByBlocks
+#' @export
+"funByBlocks.default" <-
 function(x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
 {
     M<-as.array(M)

@@ -28,6 +28,8 @@
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' @seealso \code{\link{matmult}}
 #' @keywords array algebra
+#' 
+#' @export
 
 genMatrixMult<-function(A,B,FUNelement="*", FUNsummary=sum){
 	if(dim(A)[2]!=dim(B)[1]) stop("incompatible dimmensions")

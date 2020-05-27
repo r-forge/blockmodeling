@@ -2,7 +2,9 @@
 #' 
 #' @description \code{loadmatrix} - Loads a Pajek ".mat" filename as a matrix.
 #'
-#' importFrom utils read.table
+#' @importFrom utils read.table
+#' 
+#' @export
 
 "loadmatrix" <-
 structure(function(filename){

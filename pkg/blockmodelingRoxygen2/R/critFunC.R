@@ -7,7 +7,7 @@
 #' 
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselves). If the network is not two-mode, the matrix must be square.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, \code{clu} should be the list containing one vector for each set.
-#' @param approaches One of the approaches (for each relation in multi-relational netowrks in a vector) described in Å½iberna (2007). Possible values are:\cr
+#' @param approaches One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2007). Possible values are:\cr
 #' "bin" - binary blockmodeling,\cr
 #' "val" - valued blockmodeling,\cr
 #' "hom" - homogeneity blockmodeling,\cr
@@ -78,11 +78,11 @@
 #' 
 #' @references Doreian, P., Batagelj, V., & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+#' \enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+#' \enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 #' 
-#' \enc{Å½iberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
+#' \enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 #'
 #' @examples
 #' # Generating a simple network corresponding to the simple Sum of squares
@@ -101,7 +101,6 @@
 #' # Computation of criterion function with the correct partition
 #' res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = "com")
 #' res$err # The error is relatively small
-#' res$BM  # The block means are around 0 or 4
 #' plot(res)
 #'
 #' # Computation of criterion function with the correct partition and correct pre-specified blockmodel
@@ -135,7 +134,6 @@
 #' res.rnd <- critFunC(M = net, clu = clu.rnd, approaches = "hom",
 #' homFun = "ss", blocks = "com")
 #' res.rnd$err # The error is larger
-#' res.rnd$BM  # Random block means
 #' plot(res.rnd)
 #'
 #' # Adapt network for Valued blockmodeling with the same model
@@ -158,10 +156,23 @@
 #' res.rnd$IM # All blocks are probably nul
 #' plot(res.rnd)
 #' 
-#' @author \enc{AleÅ¡ Å½iberna}{Ales Ziberna}
-#' @seealso \code{\link{optRandomParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.crit.fun}}
+#' # We select a random partition and then optimize it
+#' all.par <- nkpartitions(n = n, k = length(tclu))
+#' # Forming the partitions
+#' all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])
+#'
+#' # Optimizing one partition
+#' res <- optParC(M = net,
+#'    clu = all.par[[sample(1:length(all.par), size = 1)]],
+#'    approaches = "hom", homFun = "ss", blocks = "com")
+#' plot(res) # Hopefully we get the original partition
+#'
+#' @author \enc{Aleš¡ Žiberna}{Ales Ziberna}
+#' @seealso \code{\link{optRandomParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.critFun}}
 #' @keywords cluster graphs
 #' @import methods
+#' 
+#' @export
 
 ########## warning -- this functions needs to be corrected to be more similar to optParC and optRandParC
 
@@ -342,7 +353,7 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
   
   
   res<-c(list(M=M), resC[c("err","EM","Earr")], list(IM=IMaddNames(resC$IM)), list(clu=orgClu), initial.param, list(call=match.call()), if(returnEnv)list(env= environment()) else NULL)
-  class(res)<-"crit.fun"
+  class(res)<-"critFun"
   return(res)
 }
 
@@ -358,6 +369,8 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
 #' @param maxUnitsRowCluster Maximum number of units in row cluster.
 #' @param maxUnitsColCluster Maximum number of units in col cluster.
 #' @param exchageClusters A matrix of dimensions "number of clusters" x "number of clusters" indicating to which clusters can units from a specific cluster be moved. Useful for multilevel blockmodeling or/in some other cases where some units cannot mix.
+#' 
+#' @export
 
 
 optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=TRUE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){

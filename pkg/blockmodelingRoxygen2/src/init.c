@@ -56,7 +56,7 @@ static const R_FortranMethodDef FortranEntries[] = {
     {NULL, NULL, 0}
 };
 
-void R_init_blockmodeling(DllInfo *dll)
+void R_init_blockmodelingRoxygen2(DllInfo *dll)
 {
     R_registerRoutines(dll, CEntries, NULL, FortranEntries, NULL);
     R_useDynamicSymbols(dll, FALSE);

@@ -1,3 +1,7 @@
+#' @rdname REGE
+#' 
+#' @export
+
 "REGE.ow" <-
 function(M,E=1,iter=3,until.change=TRUE,use.diag=TRUE){
 	n<-dim(M)[1]

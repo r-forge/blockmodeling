@@ -63,6 +63,8 @@
 #'
 #'  
 #' @keywords manip
+#' 
+#' @export
 
 "clu" <-
 function(res,which=1,...){
@@ -72,11 +74,17 @@ function(res,which=1,...){
 }
 
 #' @rdname clu
+#' 
+#' @export
+
 "partitions" <- 
 function(res)lapply(res$best,function(x)x$clu)
 
 
 #' @rdname clu
+#' 
+#' @export
+
 "err" <-
 function(res,...){
   if(is.null(res[["best"]])){
@@ -85,9 +93,12 @@ function(res,...){
 }
 
 #' @rdname clu
+#' 
+#' @export
+
 "IM" <-
 function(res,which=1, drop=TRUE, ...){
-  if(class(res)=="opt.more.par"){
+  if(class(res)=="optMorePar"){
     IM<-res$best[[which]]$IM
   } else IM<-res$IM
   if(drop)IM<-drop(IM)
@@ -95,9 +106,12 @@ function(res,which=1, drop=TRUE, ...){
 }
 
 #' @rdname clu
+#'
+#' @export
+
 "EM" <-
 function(res,which=1, drop=TRUE,...){
-    if(class(res)=="opt.more.par"){
+    if(class(res)=="optMorePar"){
       EM<-res$best[[which]]$EM
     } else EM<-res$EM
     if(drop)EM<-drop(EM)

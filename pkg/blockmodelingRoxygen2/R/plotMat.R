@@ -4,8 +4,6 @@
 #' If the matrix is partitioned, the rows and columns of the matrix are rearranged according to the partitions.
 #' Other functions are only wrappers for \code{plot.mat} or \code{plotMat} for convenience when plotting the results of the corresponding functions.
 #' The \code{plotMatNm} plots two matrices based on M, normalized by rows and columns, next to each other. The \code{plot.array} or \code{plotArray} plots an array. \code{plot.mat.nm} has been replaced by \code{plotMatNm}.
-#'          
-#' @aliases plotMat plotMatNm plot.array plotArray plot.crit.fun plot.opt.par plot.opt.par.mode plot.opt.more.par plot.opt.more.par.mode
 #'
 #' @param x A result from a corresponding function or a matrix or similar object representing a network.
 #' @param M A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.
@@ -107,9 +105,10 @@
 #' @import Matrix
 #' @import methods
 #' @importFrom grDevices gray
-#' importFrom graphics mtext par plot.default rect segments text title
- 
-"plot.mat" <- plotMat <- 
+#' @importFrom graphics mtext par plot.default rect segments text title
+#' 
+#' @export
+ plotMat <- 
 function(
     x=M, #x should be a matrix or similar object
     M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
@@ -528,13 +527,13 @@ function(
 }
 
 
-#' @rdname plot.mat
+#' @rdname plotMat
 #'
 #' @param main.title Main title in \code{plot.array} version.
 #' @param main.title.line The line in which main title is printed in \code{plot.array} version.
 #' @param mfrow \code{mfrow} Argument to \code{par} - number of row and column plots to be plotted on one figure.
-
-
+#' 
+#' @export
 "plot.array" <- plotArray <- 
 function(
     x=M, #x should be a matrix or similar object
@@ -578,5 +577,10 @@ function(
     title(main=main.title,outer=TRUE,line=main.title.line)
     par(par.def)
 }
+
+#' @rdname plotMat
+#' @export plot.mat
+#' @export
+plot.mat <- plotMat
 
 

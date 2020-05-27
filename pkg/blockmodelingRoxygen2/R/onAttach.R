@@ -1,4 +1,4 @@
-#' importFrom utils citation
+#' @importFrom utils citation
 
 .onAttach<-function(libname, pkgname){
     requireNamespace("utils")

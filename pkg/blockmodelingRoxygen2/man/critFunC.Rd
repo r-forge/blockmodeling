@@ -68,7 +68,7 @@ optParC(
 
 \item{clu}{A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, \code{clu} should be the list containing one vector for each set.}
 
-\item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Å½iberna (2007). Possible values are:\cr
+\item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2007). Possible values are:\cr
 "bin" - binary blockmodeling,\cr
 "val" - valued blockmodeling,\cr
 "hom" - homogeneity blockmodeling,\cr
@@ -195,7 +195,6 @@ net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 # Computation of criterion function with the correct partition
 res <- critFunC(M = net, clu = clu, approaches = "hom", homFun = "ss", blocks = "com")
 res$err # The error is relatively small
-res$BM  # The block means are around 0 or 4
 plot(res)
 
 # Computation of criterion function with the correct partition and correct pre-specified blockmodel
@@ -229,7 +228,6 @@ clu.rnd <- sample(1:2, size = n, replace = TRUE)
 res.rnd <- critFunC(M = net, clu = clu.rnd, approaches = "hom",
 homFun = "ss", blocks = "com")
 res.rnd$err # The error is larger
-res.rnd$BM  # Random block means
 plot(res.rnd)
 
 # Adapt network for Valued blockmodeling with the same model
@@ -252,21 +250,32 @@ res.rnd$err # The error is larger
 res.rnd$IM # All blocks are probably nul
 plot(res.rnd)
 
+# We select a random partition and then optimize it
+all.par <- nkpartitions(n = n, k = length(tclu))
+# Forming the partitions
+all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])
+
+# Optimizing one partition
+res <- optParC(M = net,
+   clu = all.par[[sample(1:length(all.par), size = 1)]],
+   approaches = "hom", homFun = "ss", blocks = "com")
+plot(res) # Hopefully we get the original partition
+
 }
 \references{
 Doreian, P., Batagelj, V., & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+\enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+\enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
+\enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 }
 \seealso{
-\code{\link{optRandomParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.crit.fun}}
+\code{\link{optRandomParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.critFun}}
 }
 \author{
-\enc{AleÅ¡ Å½iberna}{Ales Ziberna}
+\enc{Aleš¡ Žiberna}{Ales Ziberna}
 }
 \keyword{cluster}
 \keyword{graphs}

@@ -1,10 +1,14 @@
+#' @rdname find.m
+#' 
+#' @export
+
 "find.cut" <-
 function(
 	M,	#matrix of a network
 	clu,	#partition
 	alt.blocks="reg", #alternative block to null block
 	cuts="all", #maximumvnumber of evaluations at different cuts
-  ... #other parameters to crit.fun
+  ... #other parameters to critFun
 ){
   if(cuts=="all"){
     allvals<-sort(unique(M))

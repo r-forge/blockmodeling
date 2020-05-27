@@ -1,6 +1,15 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+2020
+May 27, 2020
+Version 0.3.6
+Moved to Roxygen2 for generating NAMESPACE and help files. Moved to parLapplyLB {parallel} as primary way of parallel execution.
+
+January 28, 2020
+Version 0.3.6
+Changed DESCRIPTION and NAMESPACE as packages doRng, doParallel and foreach were moved to suggests (from Depends). To comply with CRAN rules as doRng was oprhaned.
+
 2019
 March 27, 2019
 Version 0.3.5
@@ -9,9 +18,6 @@ Changed the default value of the paramter justChange in optPar(C) to TRUE. This 
 2018
 December 24, 2018
 Added two arguments into optRandomParC (approaches and blocks). Also the description of these arguments was added into optRandomParC.Rd file
-
-November 29, 2018
-A bug fixed in kmBlockORP that produced new cluster to be generated each time kmBlockORP was called in multicore mode. 
 
 November 9, 2018
 Version 0.3.4

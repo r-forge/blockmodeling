@@ -20,6 +20,8 @@
 #' @author Ales Ziberna
 #' @seealso \code{\link{critFunC}}, \code{\link{plot.mat}}, \code{\link{clu}}, \code{\link{IM}}, \code{\link{err}}
 #' @keywords manip
+#' 
+#' @export
 
 reorderImage<-function(IM,oldClu,newClu){
 if(crand2(oldClu,newClu)!=1)stop("Old and new clu's are not compatibale (crand index is not 1)!\n")

@@ -16,6 +16,22 @@ gplot1(
   rel.thresh = 0.05,
   ...
 )
+
+gplot2(
+  M,
+  uselen = TRUE,
+  usecurve = TRUE,
+  edge.len = 0.001,
+  diag = TRUE,
+  displaylabels = TRUE,
+  boxed.labels = FALSE,
+  loop.cex = 4,
+  arrowhead.cex = 2.5,
+  edge.lwd = 1,
+  edge.col = "default",
+  rel.thresh = 0.05,
+  ...
+)
 }
 \arguments{
 \item{M}{A matrix (array) of a graph or set thereof.  This data may be valued.}
@@ -40,13 +56,13 @@ Only ties of value \code{thresh} are displayed.  By default, \code{thresh = 0}.}
 \item{\dots}{Additional arguments to \code{\link{plot}} or \code{gplot} from package \code{sna}:\cr\cr
 \bold{\code{mode}}:  the vertex placement algorithm; this must correspond to a \code{gplot.layout} function from package \code{sna}.}
 
-\item{arrowhead.cex}{An expansion factor for edge arrowheads.}
-
-\item{edge.len}{If \code{uselen == TRUE}, curved edge lengths are scaled by \code{edge.len}.}
-
 \item{uselen}{Boolean; should we use \code{edge.len} to rescale edge lengths.}
 
 \item{usecurve}{Boolean; should we use \code{edge.curve}.}
+
+\item{edge.len}{If \code{uselen == TRUE}, curved edge lengths are scaled by \code{edge.len}.}
+
+\item{arrowhead.cex}{An expansion factor for edge arrowheads.}
 }
 \value{
 Plots a graph.

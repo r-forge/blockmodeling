@@ -1,3 +1,7 @@
+#' @rdname REGE
+#' 
+#' @export
+
 REGE.for<-function(
     M, #netowrk in form of a matrix or array (in case of several relations)
    iter = 3,
@@ -28,6 +32,9 @@ REGE.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGD.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)
@@ -60,6 +67,9 @@ REGD.for<-function(
 }
 
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ow.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)
@@ -89,6 +99,10 @@ REGE.ow.for<-function(
   dimnames(Eall)<-list(dimnames(M)[[1]],dimnames(M)[[2]],c("initial","final"))
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
+
+#' @rdname REGE
+#' 
+#' @export
 
 REGD.ow.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)
@@ -121,8 +135,9 @@ REGD.ow.for<-function(
 }
 
 
-
-
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ownm.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -169,7 +184,9 @@ REGE.ownm.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
-
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ownm.diag.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -218,7 +235,9 @@ REGE.ownm.diag.for<-function(
 
 
 
-
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.nm.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -265,6 +284,9 @@ REGE.nm.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.nm.diag.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -314,7 +336,9 @@ REGE.nm.diag.for<-function(
 
 
 
-
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ne.for<-function(
     M, #netowrk in form of a matrix or array (in case of several relations)
@@ -346,6 +370,9 @@ REGE.ne.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ow.ne.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)
@@ -376,6 +403,9 @@ REGE.ow.ne.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.ownm.ne.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -424,7 +454,9 @@ REGE.ownm.ne.for<-function(
 
 
 
-
+#' @rdname REGE
+#' 
+#' @export
 
 REGE.nm.ne.for<-function(
    M, #netowrk in form of a matrix or array (in case of two relations)
@@ -471,6 +503,9 @@ REGE.nm.ne.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
+#' @rdname REGE
+#' 
+#' @export
 
 REGD.ne.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)
@@ -502,7 +537,7 @@ REGD.ne.for<-function(
   return(list(E=Eall[,,"final"],Eall=Eall,M=M,iter=iter))
 }
 
-
+#' @rdname REGE
 
 REGD.ow.ne.for<-function(
    M, #netowrk in form of a matrix or array (in case of several relations)

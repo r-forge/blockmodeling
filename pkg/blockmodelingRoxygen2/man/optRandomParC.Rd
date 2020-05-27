@@ -30,6 +30,9 @@ optRandomParC(
   printRep = ifelse(rep <= 10, 1, round(rep/10)),
   n = NULL,
   nCores = 1,
+  useParLapply = TRUE,
+  cl = NULL,
+  stopcl = is.null(cl),
   ...
 )
 }
@@ -38,7 +41,7 @@ optRandomParC(
 
 \item{k}{The number of clusters used in the generation of partitions.}
 
-\item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Å½iberna (2007). Possible values are:\cr
+\item{approaches}{One of the approaches (for each relation in multi-relational netowrks in a vector) described in Žiberna (2007). Possible values are:\cr
 "bin" - binary blockmodeling,\cr
 "val" - valued blockmodeling,\cr
 "hom" - homogeneity blockmodeling,\cr
@@ -106,6 +109,12 @@ An array with dimensions four dimensions (see example below). The third and the 
 
 \item{nCores}{Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.}
 
+\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.}
+
+\item{cl}{The cluster to use (if formed beforehand). Defaults to \code{NULL}.}
+
+\item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
+
 \item{\dots}{Arguments passed to other functions, see \code{\link{critFunC}}.}
 
 \item{genPajekPar}{Should the partitions be generated as in Pajek.}
@@ -115,7 +124,7 @@ An array with dimensions four dimensions (see example below). The third and the 
 \value{
 \item{M}{The matrix of the network analyzed.}
   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
-  \item{best}{A list of results from \code{crit.fun.tmp} with the same elements as the result of \code{crit.fun}, only without \code{M}.}
+  \item{best}{A list of results from \code{optParC}, only without \code{M}.}
   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies of the empirical  network with the ideal network for a given blockmodel (model,approach,...) and parititions.}
   \item{nIter}{The vector of the number of iterations used - one value for each starting partition that was optimized. It can show that \code{maxiter} is too low if a lot of these values have the value of \code{maxiter}.}
   \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
@@ -123,7 +132,7 @@ An array with dimensions four dimensions (see example below). The third and the 
   \item{initial.param}{If selected - The initial parameters are used.}
 }
 \description{
-The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Å½iberna, 2007) based on other parameters (see below).
+The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2007) based on other parameters (see below).
 The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}
 }
@@ -145,17 +154,6 @@ net[clu == 1, clu == 2] <- rnorm(n = tclu[1] * tclu[2], mean = 4, sd = 1)
 net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
-# We select a random partition and then optimize it
-all.par <- nkpartitions(n = n, k = length(tclu))
-# Forming the partitions
-all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])
-
-# Optimizing one partition
-res <- optParC(M = net,
-   clu = all.par[[sample(1:length(all.par), size = 1)]],
-   approaches = "hom", homFun = "ss", blocks = "com")
-plot(res) # Hopefully we get the original partition
-
 # Optimizing 10 random chosen partitions with optRandomParC
 res <- optRandomParC(M = net, k = 2, rep = 10,
 approaches = "hom", homFun = "ss", blocks = "com")
@@ -167,17 +165,17 @@ Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.f
 
 Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
+\enc{Žiberna, A.}{Ziberna, A.} (2007). Generalized Blockmodeling of Valued Networks. Social Networks, 29(1), 105-126. doi: 10.1016/j.socnet.2006.04.002
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
+\enc{Žiberna, A.}{Ziberna, A.} (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology, 32(1), 57-84. doi: 10.1080/00222500701790207
 
-\enc{Å½iberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
+\enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 }
 \seealso{
 \code{\link{critFunC}}
 }
 \author{
-\enc{AleÅ¡ Å½iberna}{Ales Ziberna}
+\enc{Aleš¡ Žiberna}{Ales Ziberna}
 }
 \keyword{cluster}
 \keyword{graphs}
