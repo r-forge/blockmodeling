@@ -1,4 +1,13 @@
+# to do - here and in C-functions --> put functional blocks before regular !!!
 
+cStatus<-list(
+    blockTypes=c("nul", "com", "cfn", "rfn", "reg", "cre", "rre", "avg", "dnc"), #add before average 
+    regFuns=c("max","sum","mean"), 
+    homFuns=c("ss", "ad"), 
+    implementedApproaches=c("hom", "bin","val")
+#   ,maxBlockTypes=as.integer(10)
+)
+# zgornje spremenljivke morajo biti enake kot v C-ju (blockmodeling.c)
 
 allInDimEqual<-function(arr,d)all(apply(arr,d,function(x){x<-as.vector(x);all(x==x[1])}))
 
