@@ -1,5 +1,7 @@
-#' Functions for Generalized blockmodeling for valued networks
+#' @encoding UTF-8
+#' @title Functions for Generalized blockmodeling for valued networks
 #' 
+#' @description
 #' Functions for implementation of Generalized blockmodeling for valued
 #' networks where the values of the ties are assumed to be measured on at least interval
 #' scale. \code{critFunC} calculates the criterion function, based on the network, partition and blockmodel/equivalece.
@@ -130,6 +132,7 @@
 #' plot(res)
 #'
 #' # Computation of criterion function with random partition
+#' set.seed(1)
 #' clu.rnd <- sample(1:2, size = n, replace = TRUE)
 #' res.rnd <- critFunC(M = net, clu = clu.rnd, approaches = "hom",
 #' homFun = "ss", blocks = "com")
@@ -149,25 +152,12 @@
 #' # The network
 #' plot(res)
 #'
-#' # Computation of criterion function with random partition
-#' res.rnd <- critFunC(M = net, clu = clu.rnd, approaches = "val",
-#' blocks = c("nul", "com"), preSpecM = 4)
-#' res.rnd$err # The error is larger
-#' res.rnd$IM # All blocks are probably nul
-#' plot(res.rnd)
-#' 
-#' # We select a random partition and then optimize it
-#' all.par <- nkpartitions(n = n, k = length(tclu))
-#' # Forming the partitions
-#' all.par <- lapply(apply(all.par, 1, list), function(x)x[[1]])
-#'
 #' # Optimizing one partition
-#' res <- optParC(M = net,
-#'    clu = all.par[[sample(1:length(all.par), size = 1)]],
+#' res <- optParC(M = net, clu = clu.rnd,
 #'    approaches = "hom", homFun = "ss", blocks = "com")
 #' plot(res) # Hopefully we get the original partition
 #'
-#' @author \enc{Aleš¡ Žiberna}{Ales Ziberna}
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
 #' @seealso \code{\link{optRandomParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.critFun}}
 #' @keywords cluster graphs
 #' @import methods

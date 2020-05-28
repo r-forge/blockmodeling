@@ -1,5 +1,7 @@
-#' An R package for Generalized and classical blockmodeling of valued networks
+#' @encoding UTF-8
+#' @title An R package for Generalized and classical blockmodeling of valued networks
 #' 
+#' @description
 #' This package is primarily meant as an implementation of Generalized blockmodeling. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided.
 #' 
 #' 
@@ -12,7 +14,7 @@
 #' \enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 #'
 #' @examples
-#' Generating a simple network corresponding to the simple Sum of squares
+#' #Generating a simple network corresponding to the simple Sum of squares
 #' # Structural equivalence with blockmodel:
 #' # nul com
 #' # nul nul

@@ -1,5 +1,7 @@
-#' Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling
+#' @encoding UTF-8
+#' @title Function for extraction of some elements for objects, returend by functions for Generalized blockmodeling
 #' 
+#' @description
 #' Functions for extraction of partition (\code{clu}), all best partitions (\code{partitions}),
 #' image or blockmodel (\code{IM})) and  total error or inconsistency (\code{err}) for objects,
 #' returned by functions \code{\link{critFunC}} or \code{\link{optRandomParC}}.

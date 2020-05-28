@@ -1,5 +1,7 @@
-#' REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece
+#' @encoding UTF-8
+#' @title REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece
 #' 
+#' @description
 #' REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece (White & Reitz, 1983). 
 #' \code{REGE, REGE.for} - Classical REGE or REGGE, as also implemented in Ucinet. Similarities in terms of regular equivalence are computed.  The \code{REGE.for} is a wrapper for calling the FORTRAN subrutine written by White (1985a), modified to be called by R. The \code{REGE} does the same, however it is written in R. The functions with and without ".for" differ only in whether they are implemented  in R of FORTRAN. Needless to say, the functions implemented in FORTRAN are much faster.
 #' \code{REGE.ow, REGE.ow.for} - The above function, modified so that a best match is searched for each arc separately (and not for both arcs, if they exist, together). 
@@ -30,11 +32,11 @@
 #' 
 #' White, D. R., & Reitz, K. P. (1983). Graph and semigroup homomorphisms on networks of relations. Social Networks, 5(2), 193-234.
 #'
-#' White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR}
+#' White, D. R.(1985a). DOUG WHITE'S REGULAR EQUIVALENCE PROGRAM. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/REGGE.FOR
 #'
-#' White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR}
+#' White, D. R. (1985b). DOUG WHITE'S REGULAR DISTANCES PROGRAM. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/REGDI.FOR
 #'
-#' White, D. R. (2005). REGGE. Retrieved from \url{http://eclectic.ss.uci.edu/~drwhite/REGGE/}
+#' White, D. R. (2005). REGGE. Retrieved from http://eclectic.ss.uci.edu/~drwhite/REGGE/
 #' 
 #'  #' @author \enc{Aleš Žiberna}{Ales Ziberna} based on Douglas R. White's original REGE and REGD
 #' @seealso \code{\link{sedist}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{plot.mat}}

@@ -1,5 +1,7 @@
-#' Computes distances in terms of Structural equivalence (Lorrain & White, 1971)
+#' @encoding UTF-8
+#' @title Computes distances in terms of Structural equivalence (Lorrain & White, 1971)
 #' 
+#' @description
 #' The functions compute the distances in terms of Structural equivalence (Lorrain and White, 1971) between the units of a one-mode network.
 #' Several options for treating the diagonal values are supported.
 #' 

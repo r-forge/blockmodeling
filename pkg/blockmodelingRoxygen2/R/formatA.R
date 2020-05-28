@@ -1,5 +1,7 @@
-#' A formating function for numbers
+#' @encoding UTF-8
+#' @title A formating function for numbers
 #' 
+#' @description
 #' Formats a vector or matrix of numbers so that all have equal length (digits). This is especially suitable for printing tables.
 #'
 # #' @usage formatA(x, digits = 2, FUN = round, ...)

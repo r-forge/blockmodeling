@@ -1,5 +1,7 @@
-#' Two-mode network conversions
+#' @encoding UTF-8
+#' @title Two-mode network conversions
 #' 
+#' @description
 #' Converting  two mode networks from two to one mode matrix representation and vice versa.
 #' If a two-mode matrix is converted into a one-mode matrix, the original two-mode matrix lies in the upper right corner of the one-mode matrix.
 #' 

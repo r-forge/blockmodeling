@@ -1,5 +1,7 @@
-#' Sum of Squared deviations from the mean and sum of Absolute Deviations from the median
+#' @encoding UTF-8
+#' @title Sum of Squared deviations from the mean and sum of Absolute Deviations from the median
 #' 
+#' @description
 #' Functions to compute Sum of Squared deviations from the mean and sum of Absolute Deviations from the median.
 #'
 #' @param x A numeric vector.

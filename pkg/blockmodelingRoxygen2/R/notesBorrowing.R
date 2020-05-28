@@ -1,8 +1,10 @@
-#' The notes borrowing network between social-informatics students
+#' @encoding UTF-8
+#' @title The notes borrowing network between social-informatics students
 #'
+#' @description
 #' The data come from a survey conducted in May 1993 on 13 social-informatics students (Hlebec, 1996).
-#' The network was constructed from answers to the question, âHow often did you borrow notes from this person?â for each of the fellow students.
-#' The respondents indicated the frequency of borrowing by choosing (on a computer) a line of length 1â20, where 1 meant no borrowing. 1 was deducted from all answers, so that 0 now means no borrowing.
+#' The network was constructed from answers to the question, "How often did you borrow notes from this person?" for each of the fellow students.
+#' The respondents indicated the frequency of borrowing by choosing (on a computer) a line of length 1-20, where 1 meant no borrowing. 1 was deducted from all answers, so that 0 now means no borrowing.
 #' The data was first used for blockmodeling in Žiberna (2007).
 #' 
 #' @format The data set is a valued matrix with 13 rows and columns.
@@ -18,9 +20,9 @@
 #' 
 #' @keywords datasets
 #' 
-#' @references Hlebec, V., (1996). \emph{Metodološ¡ke znaÄilnosti anketnega zbiranja podatkov v analizi omreš¾ji: Magistersko delo}. FDV, Ljubljana.
+#' @references Hlebec, V., (1996). \emph{Metodološke značilnosti anketnega zbiranja podatkov v analizi omrežji: Magistersko delo}. FDV, Ljubljana.
 #' 
-#' Žiberna, A. (2007). Generalized blockmodeling of valued networks. \emph{Social Networks}, 29, 105â126. https://doi.org/10.1016/j.socnet.2006.04.002
+#' Žiberna, A. (2007). Generalized blockmodeling of valued networks. \emph{Social Networks}, 29, 105-126. https://doi.org/10.1016/j.socnet.2006.04.002
 #'
 #' @docType data
 #' @name notesBorrowing

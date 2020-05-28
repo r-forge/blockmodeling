@@ -1,5 +1,7 @@
-#' Functions for plotting a partitioned matrix (representing the network)
+#' @encoding UTF-8
+#' @title Functions for plotting a partitioned matrix (representing the network)
 #' 
+#' @description
 #' The main function \code{plot.mat} or \code{plotMat} plots a (optionally partitioned) matrix.
 #' If the matrix is partitioned, the rows and columns of the matrix are rearranged according to the partitions.
 #' Other functions are only wrappers for \code{plot.mat} or \code{plotMat} for convenience when plotting the results of the corresponding functions.
@@ -96,7 +98,7 @@
 #' net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 #' 
 #' # Ploting the network
-#' PlotMat(M = net, clu = clu, print.digits.cells = 3)
+#' plotMat(M = net, clu = clu, print.digits.cells = 3)
 #' class(net) <- "mat"
 #' plot(net, clu = clu)
 #' # See corresponding functions for examples for other ploting

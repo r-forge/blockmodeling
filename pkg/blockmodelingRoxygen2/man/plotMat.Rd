@@ -2,10 +2,10 @@
 % Please edit documentation in R/plot.crit.fun.R, R/plot.mat.nm.R,
 %   R/plot.opt.more.par.R, R/plot.opt.more.par.mode.R, R/plot.opt.par.R,
 %   R/plot.opt.par.mode.R, R/plotMat.R
+\encoding{UTF-8}
 \name{plot.critFun}
 \alias{plot.critFun}
 \alias{plotMatNm}
-\alias{plot.mat.nm}
 \alias{plot.optMorePar}
 \alias{plot.optMoreParMode}
 \alias{plot.optPar}
@@ -18,17 +18,6 @@
 \method{plot}{critFun}(x, main = NULL, ...)
 
 plotMatNm(
-  x = M,
-  M = x,
-  ...,
-  main.title = NULL,
-  title.row = "Row normalized",
-  title.col = "Column normalized",
-  main.title.line = -2,
-  par.set = list(mfrow = c(1, 2))
-)
-
-\method{plot}{mat.nm}(
   x = M,
   M = x,
   ...,
@@ -326,8 +315,6 @@ The R default for ordinary  plots is \code{c(5, 4, 4, 2) + 0.1}, while this func
 This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.}
 
 \item{mfrow}{\code{mfrow} Argument to \code{par} - number of row and column plots to be plotted on one figure.}
-
-\item{title.column}{Title for column normalized version in \code{plot.mat.nm} and \code{plotMatNm}.}
 }
 \value{
 The functions are used for their side effect - plotting.
@@ -350,7 +337,7 @@ net[clu == 2, clu == 1] <- rnorm(n = tclu[2] * tclu[1], mean = 0, sd = 1)
 net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 
 # Ploting the network
-PlotMat(M = net, clu = clu, print.digits.cells = 3)
+plotMat(M = net, clu = clu, print.digits.cells = 3)
 class(net) <- "mat"
 plot(net, clu = clu)
 # See corresponding functions for examples for other ploting

@@ -1,5 +1,7 @@
-#' Comparing partitions
+#' @encoding UTF-8
+#' @title Comparing partitions
 #' 
+#' @description
 #' Rand Index and Rand Index corrected/adjusted for chance for comparing partitions (Hubert & Arabie, 1985).
 #' The names of the clusters do not matter.
 #' 

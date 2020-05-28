@@ -1,5 +1,7 @@
-#' Reordering an image matrix of the blockmodel (or an error matrix based on new and old partition
-#' 
+#' @encoding UTF-8
+#' @title Reordering an image matrix of the blockmodel (or an error matrix based on new and old partition
+#'
+#' @description 
 #' Reorders an image matrix of the blockmodel (or an error matrix based on new and old partition.
 #' The partitions should be the same, except that classes can have different labels.
 #' It is useful when we want to have a different order of classes in figures and then also in image matrices. Currently it is only suitable for one-mode blockmodels.

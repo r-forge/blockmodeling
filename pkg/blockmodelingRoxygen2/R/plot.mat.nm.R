@@ -1,12 +1,12 @@
 #' @importFrom graphics mtext par plot.default rect segments text title
 #' @rdname plotMat
 #'
-#' @param main.title Main title in \code{plot.array}, \code{plot.mat.nm} and \code{plotMatNm} version.
-#' @param title.row Title for row normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
-#' @param title.column Title for column normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
-#' @param title.column Title for column normalized version in \code{plot.mat.nm} and \code{plotMatNm}.
-#' @param main.title.line Used instead of \code{title.line} in \code{plot.mat.nm} and \code{plotMatNm}.
-#' @param par.set Used instead of \code{title.line} in \code{plot.mat.nm} and \code{plotMatNm}.
+#' @param main.title Main title in \code{plot.array} and \code{plotMatNm} version.
+#' @param title.row Title for row normalized version in \code{plotMatNm}.
+#' @param title.col Title for column normalized version in \code{plotMatNm}.
+#' @param title.col Title for column normalized version in \code{plotMatNm}.
+#' @param main.title.line Used instead of \code{title.line} in \code{plotMatNm}.
+#' @param par.set Used instead of \code{title.line} in \code{plotMatNm}.
 #' 
 #' @export
 plotMatNm <- 
@@ -29,7 +29,3 @@ function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Colum
 	title(main=main.title,outer=TRUE,line=main.title.line)
 	if(!is.null(par.set))par(par.def)
 }
-
-#' @rdname plotMat
-#' @export plot.mat.nm
-plot.mat.nm <- plotMatNm

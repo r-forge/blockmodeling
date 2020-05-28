@@ -1,5 +1,7 @@
-#' Recode
+#' @encoding UTF-8
+#' @title Recode
 #' 
+#' @description
 #' Recodes values in a vector.
 #' 
 # #' @usage recode(x, oldcode = sort(unique(x)), newcode)

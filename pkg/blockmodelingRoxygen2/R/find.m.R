@@ -1,5 +1,7 @@
-#' Computing the threshold
+#' @encoding UTF-8
+#' @title Computing the threshold
 #' 
+#' @description
 #' The functions compute the maximum  value of \code{m/cut} where a certain  block is still classified as \code{alt.blocks} and not "null".
 #' The difference between \code{find.m} and \code{find.m2} it that \code{find.m} uses an optimization  approach and is faster and more precise
 #' than \code{find.m2}. However, \code{find.m} only supports regular ("reg") and complete ("com") as \code{alt.blocks}, while \code{find.m2} supports all block types.
