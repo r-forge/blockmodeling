@@ -15,3 +15,8 @@ function(
 	plot.mat(x$M,clu=clu(x,which=which),IM=x$best[[which]]$IM,main=main,...)
 }
 
+
+#' @rdname plotMat
+#' @method plot opt.more.par
+#' @export
+plot.opt.more.par<-plot.optMorePar

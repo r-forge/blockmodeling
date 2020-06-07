@@ -100,7 +100,7 @@ function(res,...){
 
 "IM" <-
 function(res,which=1, drop=TRUE, ...){
-  if(class(res)=="optMorePar"){
+  if(class(res)%in%c("optMorePar","opt.more.par")){
     IM<-res$best[[which]]$IM
   } else IM<-res$IM
   if(drop)IM<-drop(IM)
@@ -113,7 +113,7 @@ function(res,which=1, drop=TRUE, ...){
 
 "EM" <-
 function(res,which=1, drop=TRUE,...){
-    if(class(res)=="optMorePar"){
+    if(class(res)%in%c("optMorePar","opt.more.par")){
       EM<-res$best[[which]]$EM
     } else EM<-res$EM
     if(drop)EM<-drop(EM)

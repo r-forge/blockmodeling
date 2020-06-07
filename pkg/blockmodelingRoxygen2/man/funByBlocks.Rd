@@ -4,6 +4,7 @@
 \name{funByBlocks.default}
 \alias{funByBlocks.default}
 \alias{funByBlocks.optMorePar}
+\alias{funByBlocks.opt.more.par}
 \alias{funByBlocks}
 \alias{fun.by.blocks}
 \title{Computation of function values by blocks}
@@ -19,6 +20,8 @@
 )
 
 \method{funByBlocks}{optMorePar}(x, which = 1, ...)
+
+\method{funByBlocks}{opt.more.par}(x, which = 1, ...)
 
 funByBlocks(x, ...)
 

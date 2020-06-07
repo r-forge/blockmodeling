@@ -5,17 +5,24 @@
 \encoding{UTF-8}
 \name{plot.critFun}
 \alias{plot.critFun}
+\alias{plot.crit.fun}
 \alias{plotMatNm}
 \alias{plot.optMorePar}
+\alias{plot.opt.more.par}
 \alias{plot.optMoreParMode}
+\alias{plot.opt.more.par.mode}
 \alias{plot.optPar}
+\alias{plot.opt.par}
 \alias{plot.optParMode}
+\alias{plot.opt.par.mode}
 \alias{plotMat}
 \alias{plot.array}
 \alias{plot.mat}
 \title{Functions for plotting a partitioned matrix (representing the network)}
 \usage{
 \method{plot}{critFun}(x, main = NULL, ...)
+
+\method{plot}{crit.fun}(x, main = NULL, ...)
 
 plotMatNm(
   x = M,
@@ -30,13 +37,19 @@ plotMatNm(
 
 \method{plot}{optMorePar}(x, main = NULL, which = 1, ...)
 
+\method{plot}{opt.more.par}(x, main = NULL, which = 1, ...)
+
 \method{plot}{optMoreParMode}(x, main = NULL, which = 1, ...)
 
-\method{plot}{optPar}(x, main = NULL, ...)
+\method{plot}{opt.more.par.mode}(x, main = NULL, which = 1, ...)
 
-\method{plot}{optPar}(x, main = NULL, ...)
+\method{plot}{optPar}(x, main = NULL, which = 1, ...)
+
+\method{plot}{opt.par}(x, main = NULL, which = 1, ...)
 
 \method{plot}{optParMode}(x, main = NULL, which = 1, ...)
+
+\method{plot}{opt.par.mode}(x, main = NULL, which = 1, ...)
 
 plotMat(
   x = M,

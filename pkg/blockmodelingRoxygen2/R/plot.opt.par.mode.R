@@ -1,5 +1,5 @@
 #' @rdname plotMat
-
+#' @export
 "plot.optParMode" <-
 function(
 	x,#an "optParMode" class object
@@ -15,3 +15,7 @@ function(
 	plot.mat(x$M,clu=x$best[[which]]$clu,IM=x$best[[which]]$IM,main=main,...)
 }
 
+#' @rdname plotMat
+#' @method plot opt.par.mode
+#' @export
+plot.opt.par.mode<-plot.optParMode

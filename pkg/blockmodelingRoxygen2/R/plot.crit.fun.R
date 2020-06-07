@@ -10,3 +10,8 @@ function(
 	plot.mat(x$M,clu=x$clu,IM=x$IM,main=main,...)
 }
 
+
+#' @rdname plotMat
+#' @method plot crit.fun
+#' @export
+plot.crit.fun<-plot.critFun

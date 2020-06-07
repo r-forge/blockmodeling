@@ -13,3 +13,7 @@ function(
 	funByBlocks(M=x$M, clu=clu(x,which=which),...)
 }
 
+#' @rdname funByBlocks
+#' @method funByBlocks opt.more.par
+#' @export
+funByBlocks.opt.more.par<-funByBlocks.optMorePar
