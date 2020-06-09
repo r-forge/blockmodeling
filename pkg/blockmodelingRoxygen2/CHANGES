@@ -2,6 +2,14 @@ Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 2020
+June 9, 2020
+Version 0.3.8
+Added helpfile for baker data in an R package (see R/data.r).
+
+June 7, 2020
+Version 0.3.7
+Added baker data in an R package (see data  folder).
+
 May 27, 2020
 Version 0.3.6
 Moved to Roxygen2 for generating NAMESPACE and help files. Moved to parLapplyLB {parallel} as primary way of parallel execution.
