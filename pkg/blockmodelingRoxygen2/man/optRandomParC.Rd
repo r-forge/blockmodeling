@@ -9,37 +9,16 @@ The function optimizes a set of partitions based on the value of a criterion fun
 The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
 A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}}
 \usage{
-optRandomParC(
-  M,
-  k,
-  approaches,
-  blocks,
-  rep,
-  save.initial.param = TRUE,
-  save.initial.param.opt = FALSE,
-  deleteMs = TRUE,
-  max.iden = 10,
-  switch.names = NULL,
-  return.all = FALSE,
-  return.err = TRUE,
-  seed = NULL,
-  RandomSeed = NULL,
-  parGenFun = genRandomPar,
-  mingr = NULL,
-  maxgr = NULL,
-  addParam = list(genPajekPar = TRUE, probGenMech = NULL),
-  maxTriesToFindNewPar = rep * 10,
-  skip.par = NULL,
-  useOptParMultiC = FALSE,
-  useMulti = useOptParMultiC,
-  printRep = ifelse(rep <= 10, 1, round(rep/10)),
-  n = NULL,
-  nCores = 1,
-  useParLapply = TRUE,
-  cl = NULL,
-  stopcl = is.null(cl),
-  ...
-)
+optRandomParC(M, k, approaches, blocks, rep, save.initial.param = TRUE,
+  save.initial.param.opt = FALSE, deleteMs = TRUE, max.iden = 10,
+  switch.names = NULL, return.all = FALSE, return.err = TRUE,
+  seed = NULL, RandomSeed = NULL, parGenFun = genRandomPar,
+  mingr = NULL, maxgr = NULL, addParam = list(genPajekPar = TRUE,
+  probGenMech = NULL), maxTriesToFindNewPar = rep * 10,
+  skip.par = NULL, useOptParMultiC = FALSE,
+  useMulti = useOptParMultiC, printRep = ifelse(rep <= 10, 1,
+  round(rep/10)), n = NULL, nCores = 1, useParLapply = TRUE,
+  cl = NULL, stopcl = is.null(cl), ...)
 }
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation. The network can have one or more modes (diferent kinds of units with no ties among themselves). If the network is not two-mode, the matrix must be square.}

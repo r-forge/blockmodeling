@@ -9,15 +9,8 @@
 \alias{fun.by.blocks}
 \title{Computation of function values by blocks}
 \usage{
-\method{funByBlocks}{default}(
-  x = M,
-  M = x,
-  clu,
-  ignore.diag = "default",
-  sortNames = TRUE,
-  FUN = "mean",
-  ...
-)
+\method{funByBlocks}{default}(x = M, M = x, clu,
+  ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
 
 \method{funByBlocks}{optMorePar}(x, which = 1, ...)
 

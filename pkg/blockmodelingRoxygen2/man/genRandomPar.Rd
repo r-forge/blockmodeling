@@ -4,14 +4,8 @@
 \alias{genRandomPar}
 \title{The function for generating random partitions}
 \usage{
-genRandomPar(
-  k,
-  n,
-  seed = NULL,
-  mingr = 1,
-  maxgr = Inf,
-  addParam = list(genPajekPar = TRUE, probGenMech = NULL)
-)
+genRandomPar(k, n, seed = NULL, mingr = 1, maxgr = Inf,
+  addParam = list(genPajekPar = TRUE, probGenMech = NULL))
 }
 \arguments{
 \item{k}{Number of clusters (by modes).}

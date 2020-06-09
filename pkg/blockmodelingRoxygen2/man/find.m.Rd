@@ -9,17 +9,11 @@
 \usage{
 find.cut(M, clu, alt.blocks = "reg", cuts = "all", ...)
 
-find.m(
-  M,
-  clu,
-  alt.blocks = "reg",
-  diag = !is.list(clu),
-  cormet = "none",
-  half = TRUE,
-  FUN = "max"
-)
+find.m(M, clu, alt.blocks = "reg", diag = !is.list(clu),
+  cormet = "none", half = TRUE, FUN = "max")
 
-find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE, ms = NULL, ...)
+find.m2(M, clu, alt.blocks = "reg", neval = 100, half = TRUE,
+  ms = NULL, ...)
 }
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported.
