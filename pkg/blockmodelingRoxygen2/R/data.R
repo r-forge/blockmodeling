@@ -1,4 +1,4 @@
-#' Prices of 50,000 round cut diamonds.
+#' Citation data between social work journals for the 1985-86 period
 #'
 #' This example consists of the citation data between social 
 #' work journals for the 1985-86 period, collected and analyzed 
@@ -11,14 +11,26 @@
 #' has been used as an example to demonstrate core-periphery
 #' heuristics (Borgatti & Everett, 2000), 2-mode generalized
 #' blockmodeling (Doreian, Batagelj, & Ferligoj, 2005, p. 267ff),
-#' and the direct and indirect deviational blockmodeling approach (Nordlund, 2016),
-#'  latter studies that exclude the diagonal values.
+#' and the direct and indirect deviational 
+#' blockmodeling approach (Nordlund, 2016),
+#' latter studies that exclude the diagonal values.
 #'
-#' @format A data frame with 20 rows and 20 variables:
-#' \describe{
-#'   \item{}{}
-#'   \item{}{}
-#'   ...
-#' }
-#' @source \url{}
+#' @docType data
+#'
+#' @usage data(baker)
+#'
+#' @format An object of class \code{"cross"}; see \code{\link[qtl]{read.cross}}.
+#'
+#' @keywords datasets
+#'
+#' @references 
+#' \enc{Baker, D. R.}{Baker, D. R.} (1992). A Structural Analysis of Social Work Journal Network: 1985-1986. Journal of Social Service Research, 15(3-4), 153-168. doi: 10.1300/J079v15n03_09
+#'
+#'
+#' @examples
+#' data(baker)
+#' Transforming it to matrix format
+#' baker <- as.matrix(baker)
+#' putting zeros on the diagonal
+#' diag(baker) <- 0 
 "baker"
