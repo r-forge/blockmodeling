@@ -1,8 +1,8 @@
 Package: blockmodelingRoxygen2
 Type: Package
 Title: Generalized and Classical Blockmodeling of Valued Networks
-Version: 0.3.7
-Date: 2020-5-27
+Version: 0.3.8
+Date: 2020-6-9
 Imports: stats, methods, Matrix, parallel
 Suggests: sna, doRNG, doParallel, foreach
 Author: Aleš Žiberna [aut, cre]
