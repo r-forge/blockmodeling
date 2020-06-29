@@ -285,7 +285,7 @@
       return(list(tres))
     }  
      
-	if(!requireNamespace("doParallel")|!requireNamespace("foreach")|!requireNamespace("doRNG")) useParLapply<-TRUE 
+	if(useParLapply||!requireNamespace("doParallel")||!requireNamespace("foreach")||!requireNamespace("doRNG")) useParLapply<-TRUE 
     if(nCores==0){
        nCores<-detectCores()-1                    
     }
