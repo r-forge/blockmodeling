@@ -5,6 +5,7 @@ Version: 1.0.0
 Date: 2020-7-1
 Imports: stats, methods, Matrix, parallel
 Suggests: sna, doRNG, doParallel, foreach
+Depends: R (>= 2.10)
 Author: Aleš Žiberna [aut, cre]
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@gmail.com", 
                   role = c("aut", "cre"))
