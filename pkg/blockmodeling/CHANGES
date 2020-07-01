@@ -1,7 +1,13 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+
+
 2020
+July 1, 2020
+Version 1.0.0
+Modified optRandomParC so that packages doRng, doParallel and foreach are not loaded unless explicitly requested.
+
 June 9, 2020
 Version 0.3.8
 Added helpfile for baker data in an R package (see R/data.r).

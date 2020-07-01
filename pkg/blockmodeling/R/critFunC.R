@@ -620,4 +620,4 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
   return(res)
 }
 
-#' @useDynLib blockmodelingRoxygen2, .registration = TRUE
+#' @useDynLib blockmodeling, .registration = TRUE

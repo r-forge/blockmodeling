@@ -92,6 +92,6 @@
 #' @seealso \code{\link{optRandomParC}}, \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plotMat}}
 #' @keywords cluster graphs package
 #' @docType package
-#' @name blockmodelingRoxygen2
-#' @useDynLib blockmodelingRoxygen2, .registration = TRUE
+#' @name blockmodeling
+#' @useDynLib blockmodeling, .registration = TRUE
 NULL
