@@ -24,9 +24,16 @@
 
 \method{plot}{crit.fun}(x, main = NULL, ...)
 
-plotMatNm(x = M, M = x, ..., main.title = NULL,
-  title.row = "Row normalized", title.col = "Column normalized",
-  main.title.line = -2, par.set = list(mfrow = c(1, 2)))
+plotMatNm(
+  x = M,
+  M = x,
+  ...,
+  main.title = NULL,
+  title.row = "Row normalized",
+  title.col = "Column normalized",
+  main.title.line = -2,
+  par.set = list(mfrow = c(1, 2))
+)
 
 \method{plot}{optMorePar}(x, main = NULL, which = 1, ...)
 
@@ -44,56 +51,143 @@ plotMatNm(x = M, M = x, ..., main.title = NULL,
 
 \method{plot}{opt.par.mode}(x, main = NULL, which = 1, ...)
 
-plotMat(x = M, M = x, clu = NULL, ylab = "", xlab = "",
-  main = NULL, print.val = !length(table(M)) <= 2, print.0 = FALSE,
+plotMat(
+  x = M,
+  M = x,
+  clu = NULL,
+  ylab = "",
+  xlab = "",
+  main = NULL,
+  print.val = !length(table(M)) <= 2,
+  print.0 = FALSE,
   plot.legend = !print.val && !length(table(M)) <= 2,
-  print.legend.val = "out", print.digits.legend = 2,
-  print.digits.cells = 2, print.cells.mf = NULL, outer.title = FALSE,
-  title.line = ifelse(outer.title, -1.5, 7), mar = c(0.5, 7, 8.5, 0) +
-  0.1, cex.val = "default", val.y.coor.cor = 0, val.x.coor.cor = 0,
-  cex.legend = 1, legend.title = "Legend", cex.axes = "default",
-  print.axes.val = NULL, print.x.axis.val = !is.null(colnames(M)),
-  print.y.axis.val = !is.null(rownames(M)), x.axis.val.pos = 1.01,
-  y.axis.val.pos = -0.01, cex.main = par()$cex.main,
-  cex.lab = par()$cex.lab, yaxis.line = -1.5, xaxis.line = -1,
-  legend.left = 0.4, legend.up = 0.03, legend.size = 1/min(dim(M)),
-  legend.text.hor.pos = 0.5, par.line.width = 3,
-  par.line.col = "blue", IM.dens = NULL, IM = NULL, wnet = NULL,
-  wIM = NULL, use.IM = length(dim(IM)) == length(dim(M)) |
-  !is.null(wIM), dens.leg = c(null = 100, nul = 100), blackdens = 70,
-  plotLines = FALSE, frameMatrix = TRUE, x0ParLine = -0.1,
-  x1ParLine = 1, y0ParLine = 0, y1ParLine = 1.1, colByUnits = NULL,
-  colByRow = NULL, colByCol = NULL, mulCol = 2,
-  joinColOperator = "+", colTies = FALSE, maxValPlot = NULL,
-  printMultipliedMessage = TRUE, replaceNAdiagWith0 = TRUE,
-  colLabels = FALSE, ...)
+  print.legend.val = "out",
+  print.digits.legend = 2,
+  print.digits.cells = 2,
+  print.cells.mf = NULL,
+  outer.title = FALSE,
+  title.line = ifelse(outer.title, -1.5, 7),
+  mar = c(0.5, 7, 8.5, 0) + 0.1,
+  cex.val = "default",
+  val.y.coor.cor = 0,
+  val.x.coor.cor = 0,
+  cex.legend = 1,
+  legend.title = "Legend",
+  cex.axes = "default",
+  print.axes.val = NULL,
+  print.x.axis.val = !is.null(colnames(M)),
+  print.y.axis.val = !is.null(rownames(M)),
+  x.axis.val.pos = 1.01,
+  y.axis.val.pos = -0.01,
+  cex.main = par()$cex.main,
+  cex.lab = par()$cex.lab,
+  yaxis.line = -1.5,
+  xaxis.line = -1,
+  legend.left = 0.4,
+  legend.up = 0.03,
+  legend.size = 1/min(dim(M)),
+  legend.text.hor.pos = 0.5,
+  par.line.width = 3,
+  par.line.col = "blue",
+  IM.dens = NULL,
+  IM = NULL,
+  wnet = NULL,
+  wIM = NULL,
+  use.IM = length(dim(IM)) == length(dim(M)) | !is.null(wIM),
+  dens.leg = c(null = 100, nul = 100),
+  blackdens = 70,
+  plotLines = FALSE,
+  frameMatrix = TRUE,
+  x0ParLine = -0.1,
+  x1ParLine = 1,
+  y0ParLine = 0,
+  y1ParLine = 1.1,
+  colByUnits = NULL,
+  colByRow = NULL,
+  colByCol = NULL,
+  mulCol = 2,
+  joinColOperator = "+",
+  colTies = FALSE,
+  maxValPlot = NULL,
+  printMultipliedMessage = TRUE,
+  replaceNAdiagWith0 = TRUE,
+  colLabels = FALSE,
+  ...
+)
 
-\method{plot}{array}(x = M, M = x, IM = NULL, ...,
-  main.title = NULL, main.title.line = -2, mfrow = NULL)
+\method{plot}{array}(
+  x = M,
+  M = x,
+  IM = NULL,
+  ...,
+  main.title = NULL,
+  main.title.line = -2,
+  mfrow = NULL
+)
 
-\method{plot}{mat}(x = M, M = x, clu = NULL, ylab = "",
-  xlab = "", main = NULL, print.val = !length(table(M)) <= 2,
-  print.0 = FALSE, plot.legend = !print.val && !length(table(M)) <= 2,
-  print.legend.val = "out", print.digits.legend = 2,
-  print.digits.cells = 2, print.cells.mf = NULL, outer.title = FALSE,
-  title.line = ifelse(outer.title, -1.5, 7), mar = c(0.5, 7, 8.5, 0) +
-  0.1, cex.val = "default", val.y.coor.cor = 0, val.x.coor.cor = 0,
-  cex.legend = 1, legend.title = "Legend", cex.axes = "default",
-  print.axes.val = NULL, print.x.axis.val = !is.null(colnames(M)),
-  print.y.axis.val = !is.null(rownames(M)), x.axis.val.pos = 1.01,
-  y.axis.val.pos = -0.01, cex.main = par()$cex.main,
-  cex.lab = par()$cex.lab, yaxis.line = -1.5, xaxis.line = -1,
-  legend.left = 0.4, legend.up = 0.03, legend.size = 1/min(dim(M)),
-  legend.text.hor.pos = 0.5, par.line.width = 3,
-  par.line.col = "blue", IM.dens = NULL, IM = NULL, wnet = NULL,
-  wIM = NULL, use.IM = length(dim(IM)) == length(dim(M)) |
-  !is.null(wIM), dens.leg = c(null = 100, nul = 100), blackdens = 70,
-  plotLines = FALSE, frameMatrix = TRUE, x0ParLine = -0.1,
-  x1ParLine = 1, y0ParLine = 0, y1ParLine = 1.1, colByUnits = NULL,
-  colByRow = NULL, colByCol = NULL, mulCol = 2,
-  joinColOperator = "+", colTies = FALSE, maxValPlot = NULL,
-  printMultipliedMessage = TRUE, replaceNAdiagWith0 = TRUE,
-  colLabels = FALSE, ...)
+\method{plot}{mat}(
+  x = M,
+  M = x,
+  clu = NULL,
+  ylab = "",
+  xlab = "",
+  main = NULL,
+  print.val = !length(table(M)) <= 2,
+  print.0 = FALSE,
+  plot.legend = !print.val && !length(table(M)) <= 2,
+  print.legend.val = "out",
+  print.digits.legend = 2,
+  print.digits.cells = 2,
+  print.cells.mf = NULL,
+  outer.title = FALSE,
+  title.line = ifelse(outer.title, -1.5, 7),
+  mar = c(0.5, 7, 8.5, 0) + 0.1,
+  cex.val = "default",
+  val.y.coor.cor = 0,
+  val.x.coor.cor = 0,
+  cex.legend = 1,
+  legend.title = "Legend",
+  cex.axes = "default",
+  print.axes.val = NULL,
+  print.x.axis.val = !is.null(colnames(M)),
+  print.y.axis.val = !is.null(rownames(M)),
+  x.axis.val.pos = 1.01,
+  y.axis.val.pos = -0.01,
+  cex.main = par()$cex.main,
+  cex.lab = par()$cex.lab,
+  yaxis.line = -1.5,
+  xaxis.line = -1,
+  legend.left = 0.4,
+  legend.up = 0.03,
+  legend.size = 1/min(dim(M)),
+  legend.text.hor.pos = 0.5,
+  par.line.width = 3,
+  par.line.col = "blue",
+  IM.dens = NULL,
+  IM = NULL,
+  wnet = NULL,
+  wIM = NULL,
+  use.IM = length(dim(IM)) == length(dim(M)) | !is.null(wIM),
+  dens.leg = c(null = 100, nul = 100),
+  blackdens = 70,
+  plotLines = FALSE,
+  frameMatrix = TRUE,
+  x0ParLine = -0.1,
+  x1ParLine = 1,
+  y0ParLine = 0,
+  y1ParLine = 1.1,
+  colByUnits = NULL,
+  colByRow = NULL,
+  colByCol = NULL,
+  mulCol = 2,
+  joinColOperator = "+",
+  colTies = FALSE,
+  maxValPlot = NULL,
+  printMultipliedMessage = TRUE,
+  replaceNAdiagWith0 = TRUE,
+  colLabels = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{A result from a corresponding function or a matrix or similar object representing a network.}
@@ -104,15 +198,15 @@ plotMat(x = M, M = x, clu = NULL, ylab = "", xlab = "",
 
 \item{M}{A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.}
 
-\item{main.title}{Main title in \code{plot.array} and \code{plotMatNm} version.}
+\item{main.title}{Main title in \code{plot.array} version.}
 
-\item{title.row}{Title for row normalized version in \code{plotMatNm}.}
+\item{title.row}{Title for the row-normalized matrix in nm version}
 
-\item{title.col}{Title for column normalized version in \code{plotMatNm}.}
+\item{title.col}{Title for the column-normalized matrix in nm version}
 
-\item{main.title.line}{Used instead of \code{title.line} in \code{plotMatNm}.}
+\item{main.title.line}{The line in which main title is printed in \code{plot.array} version.}
 
-\item{par.set}{Used instead of \code{title.line} in \code{plotMatNm}.}
+\item{par.set}{A list of possible plotting parameters (to \code{par}) to be used in nm version}
 
 \item{which}{Which (if there are more than one) of optimal solutions to plot.}
 
@@ -234,18 +328,6 @@ The R default for ordinary  plots is \code{c(5, 4, 4, 2) + 0.1}, while this func
 This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.}
 
 \item{mfrow}{\code{mfrow} Argument to \code{par} - number of row and column plots to be plotted on one figure.}
-
-\item{title.col}{Title for column normalized version in \code{plotMatNm}.}
-
-\item{title.row}{Title for the row-normalized matrix in nm version}
-
-\item{title.col}{Title for the column-normalized matrix in nm version}
-
-\item{par.set}{A list of possible plotting parameters (to \code{par}) to be used in nm version}
-
-\item{main.title}{Main title in \code{plot.array} version.}
-
-\item{main.title.line}{The line in which main title is printed in \code{plot.array} version.}
 }
 \value{
 The functions are used for their side effect - plotting.

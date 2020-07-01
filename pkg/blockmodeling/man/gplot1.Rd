@@ -5,14 +5,33 @@
 \alias{gplot2}
 \title{A wrapper for function  gplot - Two-Dimensional Visualization of Graphs}
 \usage{
-gplot1(M, diag = TRUE, displaylabels = TRUE, boxed.labels = FALSE,
-  loop.cex = 4, edge.lwd = 1, edge.col = "default",
-  rel.thresh = 0.05, ...)
+gplot1(
+  M,
+  diag = TRUE,
+  displaylabels = TRUE,
+  boxed.labels = FALSE,
+  loop.cex = 4,
+  edge.lwd = 1,
+  edge.col = "default",
+  rel.thresh = 0.05,
+  ...
+)
 
-gplot2(M, uselen = TRUE, usecurve = TRUE, edge.len = 0.001,
-  diag = TRUE, displaylabels = TRUE, boxed.labels = FALSE,
-  loop.cex = 4, arrowhead.cex = 2.5, edge.lwd = 1,
-  edge.col = "default", rel.thresh = 0.05, ...)
+gplot2(
+  M,
+  uselen = TRUE,
+  usecurve = TRUE,
+  edge.len = 0.001,
+  diag = TRUE,
+  displaylabels = TRUE,
+  boxed.labels = FALSE,
+  loop.cex = 4,
+  arrowhead.cex = 2.5,
+  edge.lwd = 1,
+  edge.col = "default",
+  rel.thresh = 0.05,
+  ...
+)
 }
 \arguments{
 \item{M}{A matrix (array) of a graph or set thereof.  This data may be valued.}

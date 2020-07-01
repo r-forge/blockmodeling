@@ -5,7 +5,9 @@
 \name{notesBorrowing}
 \alias{notesBorrowing}
 \title{The notes borrowing network between social-informatics students}
-\format{The data set is a valued matrix with 13 rows and columns.}
+\format{
+The data set is a valued matrix with 13 rows and columns.
+}
 \usage{
 data("notesBorrowing")
 }

@@ -5,9 +5,15 @@
 \alias{sedist}
 \title{Computes distances in terms of Structural equivalence (Lorrain & White, 1971)}
 \usage{
-sedist(M, method = "default", fun = "default",
-  fun.on.rows = "default", handle.interaction = "switch",
-  use = "pairwise.complete.obs", ...)
+sedist(
+  M,
+  method = "default",
+  fun = "default",
+  fun.on.rows = "default",
+  handle.interaction = "switch",
+  use = "pairwise.complete.obs",
+  ...
+)
 }
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For now, only one-relational networks are supported. The network must be one-mode.}

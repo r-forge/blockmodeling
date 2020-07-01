@@ -23,11 +23,23 @@
 \alias{REGD.ow.ne.for}
 \title{REGE - Algorithms for compiting (dis)similarities in terms of regular equivalnece}
 \usage{
-REGE.FC(M, E = 1, iter = 3, until.change = TRUE, use.diag = TRUE,
-  normE = FALSE)
+REGE.FC(
+  M,
+  E = 1,
+  iter = 3,
+  until.change = TRUE,
+  use.diag = TRUE,
+  normE = FALSE
+)
 
-REGE.FC.ow(M, E = 1, iter = 3, until.change = TRUE,
-  use.diag = TRUE, normE = FALSE)
+REGE.FC.ow(
+  M,
+  E = 1,
+  iter = 3,
+  until.change = TRUE,
+  use.diag = TRUE,
+  normE = FALSE
+)
 
 REGE(M, E = 1, iter = 3, until.change = TRUE, use.diag = TRUE)
 

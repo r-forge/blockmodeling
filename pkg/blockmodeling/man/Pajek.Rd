@@ -22,13 +22,17 @@ loadmatrix(filename)
 
 loadnetwork(filename, useSparseMatrix = NULL, minN = 50)
 
-loadnetwork2(filename, useSparseMatrix = NULL, minN = 50,
-  safe = TRUE, closeFile = TRUE)
+loadnetwork2(
+  filename,
+  useSparseMatrix = NULL,
+  minN = 50,
+  safe = TRUE,
+  closeFile = TRUE
+)
 
 loadnetwork3(filename, useSparseMatrix = NULL, minN = 50)
 
-loadnetwork4(filename, useSparseMatrix = NULL, minN = 50,
-  fill = FALSE)
+loadnetwork4(filename, useSparseMatrix = NULL, minN = 50, fill = FALSE)
 
 loadpajek(filename)
 
