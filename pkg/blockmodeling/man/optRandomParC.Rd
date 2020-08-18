@@ -3,11 +3,7 @@
 \encoding{UTF-8}
 \name{optRandomParC}
 \alias{optRandomParC}
-\title{Optimizing a set of partitions based on the value of a criterion function
-
-The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2007) based on other parameters (see below).
-The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
-A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}}
+\title{Optimizing a set of partitions based on the value of a criterion function}
 \usage{
 optRandomParC(
   M,
@@ -137,11 +133,9 @@ An array with dimensions four dimensions (see example below). The third and the 
   \item{initial.param}{If selected - The initial parameters are used.}
 }
 \description{
-Optimizing a set of partitions based on the value of a criterion function
-
 The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2007) based on other parameters (see below).
 The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
-A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}
+A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}).
 }
 \section{Warning}{
 

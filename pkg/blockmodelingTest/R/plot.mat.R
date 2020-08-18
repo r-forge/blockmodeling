@@ -63,7 +63,7 @@ function(
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
-    if(length(dim(IM))>length(dim(IM))&use.IM){
+    if(length(dim(IM))>length(dim(M))&use.IM){
         if(is.null(wIM))wIM<-wnet
         if(is.null(wIM)) wIM<-1
         if(length(dim(IM))==3) {

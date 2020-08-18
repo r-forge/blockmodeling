@@ -12,7 +12,7 @@ function(
 		warning("The selected (",which,") best solution does not exist!\nOnly ", length(x$best)," best solution(s) exist(s).\nThe first best solution will be ploted.\n")
 		which<-1
 	}
-	plot.mat(x$M,clu=clu(x,which=which),IM=x$best[[which]]$IM,main=main,...)
+	plot.mat(x$M,clu=clu(x,which=which),IM=IM(x,which=which),main=main,...)
 }
 
 
