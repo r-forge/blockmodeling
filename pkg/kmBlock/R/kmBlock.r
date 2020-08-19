@@ -249,7 +249,7 @@ kmBlockORPC<-function(M, #a square matrix
                          printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
                          n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
                          nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object,
-                         useParLapply=FALSE, #should ply be used instead of foreach
+                         useParLapply=TRUE, #should ply be used instead of foreach
                          cl = NULL, #the cluster to use (if formed beforehand)
                          stopcl = is.null(cl), # should the cluster be stoped
                          ... #paramters to kmBlockC
@@ -409,7 +409,7 @@ kmBlockORPC<-function(M, #a square matrix
        return(list(tres))
      }
      
-     if(!require(doParallel)|!require(doRNG)) useParLapply<-TRUE
+     if(!useParLapply) if(!require(doParallel)|!require(doRNG)) useParLapply<-TRUE
      
      if(nCores==0){
        nCores<-detectCores()-1                    
