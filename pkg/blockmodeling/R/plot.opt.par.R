@@ -8,7 +8,9 @@ function(
 	...	#aditional parameters to "plot.mat"
 ){
 	if(is.null(main)) main <- deparse(substitute(x))
-	if(which>length(x$best)){
+	l<-length(x$best)
+	if(l==0)l<-1
+	if(which>l){
 		warning("The selected (",which,") best solution does not exist!\nOnly ", length(x$best)," best solution(s) exist(s).\nThe first best solution will be ploted.\n")
 		which<-1
 	}

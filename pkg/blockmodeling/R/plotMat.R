@@ -175,16 +175,8 @@ function(
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
-    if(length(dim(IM))>length(dim(M))&use.IM){
-        if(is.null(wIM))wIM<-wnet
-        if(is.null(wIM)) wIM<-1
-        if(length(dim(IM))==3) {
-          IM<-IM[wIM,,]
-        } else{
-          warning("IM will not be used for plotting. Cannot be sure how to extract the appropirate part!")
-          use.IM<-FALSE
-        }
-    }
+    
+    if(min(dim(M))==1 & is.null(wnet)) wnet<-1
     tempClu<-clu
 	
 
@@ -197,6 +189,17 @@ function(
             }else if(relDim==3){
                     M<-M[,,wnet]
             }else stop("More than 2 dimensions where relation dimension can not be determined")
+            
+            if(length(dim(IM))>length(dim(M))&use.IM){
+              if(is.null(wIM))wIM<-wnet
+              if(is.null(wIM)) wIM<-1
+              if(length(dim(IM))==3) {
+                IM<-IM[wIM,,]
+              } else{
+                warning("IM will not be used for plotting. Cannot be sure how to extract the appropirate part!")
+                use.IM<-FALSE
+              }
+            }
         }else{
             plot.array(M = M,
                 clu=tempClu,    #partition
