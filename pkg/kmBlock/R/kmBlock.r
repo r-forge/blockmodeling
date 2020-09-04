@@ -409,21 +409,24 @@ kmBlockORPC<-function(M, #a square matrix
        return(list(tres))
      }
      
-     if(!useParLapply) if(!require(doParallel)|!require(doRNG)) useParLapply<-TRUE
+     if(!useParLapply) {
+		if(!require(doParallel)|!require(doRNG)) useParLapply<-TRUE
+	 }
      
      if(nCores==0){
        nCores<-detectCores()-1                    
      }
      
- 	pkgName<-utils::packageName()
- 	if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
-     if(useParLapply) {
+ 	 pkgName<-utils::packageName()
+ 	 if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
+    
+	 if(useParLapply) {
        if(is.null(cl)) cl<-makeCluster(nCores)
        clusterSetRNGStream(cl)
        nC<-nCores
        #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
        #clusterExport(cl, varlist = "kmBlock")
-  	   clusterExport(cl, varlist = "pkgName")	   
+  	   clusterExport(cl, varlist = "pkgName", envir=environment()) 
        clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
        res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
        if(stopcl) stopCluster(cl)
