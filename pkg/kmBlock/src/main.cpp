@@ -133,7 +133,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 //    IVector newClu = setGroups( M, clu, weights, meanBlocks, K );
     IVector newClu = Rcpp::clone( clu );
     setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
-    IVector bestClu;
+#    IVector bestClu;
 
 //    Rcpp::stop( "DEBUG" );
 
@@ -142,7 +142,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     double bestCf = DBL_MAX;
 
     while( newCf < bestCf ) {
-        bestClu = newClu;
+		IVector bestClu = Rcpp::clone( newClu );
         bestCf = newCf;
         setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
         meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );

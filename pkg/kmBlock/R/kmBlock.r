@@ -389,8 +389,10 @@ kmBlockORPC<-function(M, #a square matrix
        res[[i]]$best<-NULL
  
        err[i]<-res[[i]]$err
-       if(printRep==1) cat("Final sum of square deviations:",err[i],"\n")
-       if(printRep==1) cat("Final partition:   ",blockmodeling:::unlistPar(res[[i]]$clu),"\n")
+       if(printRep==1){
+         cat("Final sum of square deviations:",err[i],"\n")
+         cat("Final partition:   ",blockmodeling:::unlistPar(res[[i]]$clu),"\n")
+       } 
      }
    } else {
      oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,...){
