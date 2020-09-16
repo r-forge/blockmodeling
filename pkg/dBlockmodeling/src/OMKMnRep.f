@@ -1,10 +1,11 @@
       SUBROUTINE omkmnrepf(RO,RC,IDIAG,REP,A,RBEST,ZBEST,VAF,NREPS)
       IMPLICIT INTEGER(A-Z)
       DOUBLE PRECISION A(RO,RO),V(100,100),VAF,
-     1                 C(5000,100),ZMIN,ZBEST,Z,DMIN,DCOM,
+     1                 C(5000,100),ZMIN,ZBEST,Z,DMIN,DCOM, 
+     1                 DMINVEC(5000), DMINMAX, 
      1                 CMIN,ASUM,ASSE,CENTR(100,5000),CENTC(100,5000)
       DOUBLE PRECISION S1
-      INTEGER NR(100),RMEM(5000),RBEST(RO)
+      INTEGER NR(100),RMEM(5000),RBEST(RO), MAXI
 C
 C  MULTISTART ONE-MODE KL-MEANS (WCSS CRITERION) BLOCK PLACEMENTS **UNKNOWN**
       NREPS = 0
@@ -72,6 +73,7 @@ C
           RMEM(I) = KSEL
           NR(KSEL) = NR(KSEL) + 1
  300    CONTINUE
+
 C
                               ! COMPUTE CENTROIDS
         Z = 0.0D0
@@ -89,6 +91,8 @@ C
                 V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(L))
               ELSEIF(NR(K).GT.1) THEN
                 V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(K)-NR(K))
+			  ELSE 
+			    V(K,L) = ASUM
               END IF  
             END IF
           END DO
@@ -126,9 +130,29 @@ C
             END IF
  464      CONTINUE
           RMEM(I) = KSEL
+		  DMINVEC(I) = CMIN
           NR(KSEL) = NR(KSEL) + 1
  463    CONTINUE
 C
+C             ! Make sure that the clusters are not empty
+		DO K = 1, RC
+		  IF (NR(K).EQ.0) THEN
+			DMINMAX = -1.0
+ 		    DO I = 1, RO
+			 L = RMEM(I)
+			 IF(DMINMAX.LT.DMINVEC(I).AND.L.NE.K.AND.NR(L).GT.1) THEN
+			   DMINMAX= DMINVEC(I)
+			   MAXI = I
+			 END IF
+		    END DO
+			NR(RMEM(MAXI))=NR(RMEM(MAXI))-1
+			NR(K)= 1
+			RMEM(MAXI)=K
+			DMINVEC(I)=-1.0
+		  END IF
+		END DO
+
+
         DO K = 1,RC
           DO L = 1,RC
             V(K,L) = 0.0D0
@@ -149,6 +173,8 @@ C
                 V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(L))
               ELSEIF(NR(K).GT.1) THEN
                 V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(K)-NR(K))
+			  ELSE 
+			    V(K,L) = ASUM				
               END IF  
             END IF
           END DO
