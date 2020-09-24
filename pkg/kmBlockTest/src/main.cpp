@@ -143,14 +143,14 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
     IVector newClu = Rcpp::clone( clu );
     setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
-#    IVector bestClu;
+    IVector bestClu;
 
     meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
     double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;
 
     while( newCf < bestCf ) {
-		IVector bestClu = Rcpp::clone( newClu );
+		bestClu = Rcpp::clone( newClu );
         bestCf = newCf;
         setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
         meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
