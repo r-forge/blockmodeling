@@ -89,7 +89,7 @@ function(res)lapply(res$best,function(x)x$clu)
 
 "err" <-
 function(res,...){
-  if(is.null(res$best[[1]]$err])){
+  if(is.null(res$best[[1]]$err)){
     min(res$err)
   }else res$best[[1]]$err
 }
