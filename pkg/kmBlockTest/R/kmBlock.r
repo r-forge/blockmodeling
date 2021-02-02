@@ -73,8 +73,10 @@ kmBlockC<-function(M,
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
   	    stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
   	  } else{
-  	    bordersMatLower <- limits[,,,1] 
+  	    bordersMatLower <- limits[,,,1]
+  	    dim(bordersMatLower)<-dim(limits)[1:3]
   	    bordersMatUpper <- limits[,,,2]
+  	    dim(bordersMatUpper)<-dim(limits)[1:3]
   	  }
   	} else {
   	  if(is.list(limits) & length(limits)==2){
