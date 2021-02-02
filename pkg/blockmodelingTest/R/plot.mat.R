@@ -86,7 +86,7 @@ function(
                     M<-M[,,wnet]
             }else stop("More than 2 dimensions where relation dimension can not be determined")
         }else{
-            plot.array(M = M,
+            plotArray(M = M,
                 clu=tempClu,    #partition
                 ylab=ylab,
                 xlab=xlab,
@@ -420,7 +420,7 @@ function(
 }
 
 
-"plot.array" <- plotArray <- 
+plotArray <- 
 function(
     x=M, #x should be a matrix or similar object
     M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
