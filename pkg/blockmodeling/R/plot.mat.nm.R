@@ -1,7 +1,7 @@
 #' @importFrom graphics mtext par plot.default rect segments text title
 #' @rdname plotMat
 #'
-#' @param main.title Main title in \code{plot.array} and \code{plotMatNm} version.
+#' @param main.title Main title in \code{plotMatNm} version.
 #' @param title.row Title for row normalized version in \code{plotMatNm}.
 #' @param title.col Title for column normalized version in \code{plotMatNm}.
 #' @param title.col Title for column normalized version in \code{plotMatNm}.

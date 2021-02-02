@@ -1,6 +1,11 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+2021
+February 1, 2020
+plot.array removed - only goes by name plotArray.
+Minor bug fixes.
+
 2020
 August 1, 2020
 Version 1.0.1

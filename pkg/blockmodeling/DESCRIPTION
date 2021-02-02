@@ -17,4 +17,4 @@ Description: This is primarily meant as an implementation of generalized blockmo
  Žiberna (2014)<doi:10.1016/j.socnet.2014.04.002>.
 License: GPL (>=2)
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

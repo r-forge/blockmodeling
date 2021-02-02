@@ -5,7 +5,7 @@
 \alias{baker}
 \title{Citation data between social work journals for the 1985-86 period}
 \format{
-An object of class \code{matrix} with 20 rows and 20 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 20 rows and 20 columns.
 }
 \usage{
 data(baker)
