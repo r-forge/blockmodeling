@@ -19,7 +19,7 @@ export(critFunC, optParC, optRandomParC) #basic front end functions for interfac
 #export(parArr2VecC, parVec2ArrC) #experimental front end functions for interface with C
 #export(check.these.par, crit.fun, opt.par, opt.random.par, opt.these.par) #basic front end functions
 export(genRandomPar) 
-export(plot.mat, plot.array, plotMat, plotMatNm, plotArray) #,plot.mat.nm
+export(plot.mat, plotMat, plotMatNm, plotArray) #,plot.mat.nm
 #export(plot.check.these.par, plot.crit.fun, plot.opt.more.par, plot.opt.more.par.mode, plot.opt.par, plot.opt.par.mode)
 export(sedist)
 export(rand, rand2, crand, crand2) 
@@ -40,7 +40,6 @@ export(RF)
 
 S3method(plot,crit.fun)
 S3method(plot,mat)
-S3method(plot,array)
 S3method(plot,opt.more.par)
 S3method(plot,opt.more.par.mode)
 S3method(plot,opt.par)
