@@ -37,6 +37,7 @@ export(loadnetwork, loadnetwork2, loadnetwork3, loadnetwork4, loadmatrix, loadve
 export(REGD.for, REGD.ow.for, REGE, REGE.for, REGE.nm.for, REGE.nm.diag.for, REGE.ow.for, REGE.ownm.for, REGE.ownm.diag.for, REGE.ow, REGE.FC, REGE.FC.ow, REGD.ne.for, REGD.ow.ne.for,REGE.ne.for, REGE.nm.ne.for, REGE.ow.ne.for, REGE.ownm.ne.for) #REGE - some White's
 export(errByPartsMlSS, expandMat, kmBlock, kmBlockORP, kMeansAndSSMlevOR, loadObj, nanRep, optErrByPartsMlSS, relInv, relInv2, saveObj, ssModel, ssNa, weightsMlSS)
 export(RF)
+export(unlistCluInt)
 
 S3method(plot,crit.fun)
 S3method(plot,mat)

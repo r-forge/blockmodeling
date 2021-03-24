@@ -35,39 +35,32 @@
 The package <CODE>blockmodeling</CODE> is primarily meant as an implementation of Generalized blockmodeling for valued networks. It aslo supports multirelational and multilevel blockmodeling. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided. 
 <p />
 If you find any bugs, please report to:
-email: ales{dot}ziberna{at}gmail{dot}com <br/>
+email: ales{dot}ziberna{at}fdv{dot}uni-lj{dot}si<br/>
 <p /><br />
-
-<span class="podpodnaslov">Warning</span>
-<p />
-The version of the package available on CRAN is very old and is not really useful for generalzed blockmodeling (it is OK for indirect approaches). In this version, some functions are extremely slow. They are practically unusable for networks with more than 30 units and 4 groups (AMD Athlon 1600 XP-M). These are: <CODE>opt.these.par</CODE>,<CODE> opt.random.par</CODE>, <CODE>check.these.par</CODE> (if there is a very large number of partitions). However, sum of squares homogeneity blockmodeling is relatively fast (also when used with above functions) when used with complete blocks only (structural equivalence). Networks with more than 100 units (in each more for two-mode data) can be analyzed in reasonable time (few hours).
-<p />
-The latest version (only available on Rforge) however supports parallel computing and includes functions written in C (mainly <CODE>optParC</CODE>, <CODE>optParMultiC</CODE> and <CODE>optRandomParC</CODE>) which are therefore much faster. Using them analysis of networks with approximately 200 units is feasible (more if you are patient). However, as these have no help-files yet available, they are not included in the CRAN version. Please e-mail me if you need help using them.
-<p /><br />
-
 
 <span class="podpodnaslov">Downloads</span>
 <p />
-The lates version (which does includes the latest upgrades and bug fixes) is available on <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> repository. The package here is build during the night. There the package is available in 2 formats: Package source (.tar.gz) and Windows binary (.zip).
+The lates version (which does includes the latest upgrades and bug fixes) is available on <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> repository. The package there is build during the night. There the package is available in 2 formats: Package source (.tar.gz) and Windows binary (.zip).
 <br />To install the package from <a href="https://r-forge.r-project.org/R/?group_id=203"> R-Forge</a> directly within R type:
 <br /><b><CODE>install.packages("blockmodeling",repos="http://R-Forge.R-project.org")</CODE></b>
 <p />
 
-Version 0.1.8 is available on <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a>. However, this version is very old and does not include  patches, upgrades or bug fixes. This version of the <CODE>blockmodeling</CODE> package can be therefore instaled using <CODE>install.packages</CODE> using the <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a> repository by typing within R:
+Fairly recent version 1.0.0 is available on <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a>. However, this version does not include  all patches, upgrades or bug fixes. This version of the <CODE>blockmodeling</CODE> package can be therefore instaled using <CODE>install.packages</CODE> using the <a href="http://cran.r-project.org/web/packages/blockmodeling/index.html">CRAN</a> repository by typing within R:
 <br /><b><CODE>install.packages("blockmodeling")</CODE></b>
 <p />
-Some old versions are also available <a href="http://www2.arnes.si/~aziber4/blockmodeling/pkgs/">here</a>, however mostly only as Package source and Windows binary.
-<p /><br />
 
-<span class="podpodnaslov">Author</span>
+<a href="https://r-forge.r-project.org/R/?group_id=203">blockmodeling R-Forge</a> repository hosts aslo old and testing versions of this package. The testing versions might have serious bugs (use only if advised). It also hosts some related pacakges.
+<p />
+
+<span class="podpodnaslov">Maintainer and main author</span>
 <p />
 
 Aleš Žiberna<br />
-assistant professor<br />
+associate professor<br />
 Faculty of Social Sciences<br />
 University of Ljubljana<br />
-email: ales{dot}ziberna{at}gmail{dot}com <br/>
-<a href="http://old.fdv.uni-lj.si/English/Teacher/teacher.asp?id=252">Web page at Faculty of Social Sciences</a>
+email: ales{dot}ziberna{at}fdv{dot}uni-lj{dot}si<br/>
+<a href="https://www.fdv.uni-lj.si/en/news-and-information/contacts/teachers/info/ales-ziberna">Web page at Faculty of Social Sciences</a>
 <p /><br />
 
 <span class="podpodnaslov">References</span>
