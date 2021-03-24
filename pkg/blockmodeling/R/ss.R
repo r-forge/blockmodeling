@@ -2,7 +2,7 @@
 #' @title Sum of Squared deviations from the mean and sum of Absolute Deviations from the median
 #' 
 #' @description
-#' Functions to compute Sum of Squared deviations from the mean and sum of Absolute Deviations from the median.
+#' Functions to compute Sum of Squared deviations from the mean and sum of Absolute Deviations from the median. \code{ssNa} removes missing values (\code{NA}s) before calling the \code{ss} function.
 #'
 #' @param x A numeric vector.
 #'
@@ -20,7 +20,11 @@ function(x){sum(x^2)-sum(x)^2/length(x)}
 #' @rdname ss
 #' 
 #' @export
+ssNa<-function(x)ss(na.omit(as.vector(x)))
 
+#' @rdname ss
+#' 
+#' @export
 "ad" <-
 function(x)sum(abs(x-median(x)))
 

@@ -3,10 +3,13 @@
 \encoding{UTF-8}
 \name{ss}
 \alias{ss}
+\alias{ssNa}
 \alias{ad}
 \title{Sum of Squared deviations from the mean and sum of Absolute Deviations from the median}
 \usage{
 ss(x)
+
+ssNa(x)
 
 ad(x)
 }
@@ -17,7 +20,7 @@ ad(x)
 Sum of Squared deviations from the mean or sum of Absolute Deviations from the median.
 }
 \description{
-Functions to compute Sum of Squared deviations from the mean and sum of Absolute Deviations from the median.
+Functions to compute Sum of Squared deviations from the mean and sum of Absolute Deviations from the median. \code{ssNa} removes missing values (\code{NA}s) before calling the \code{ss} function.
 }
 \author{
 \enc{Aleš Žiberna}{Ales Ziberna}
