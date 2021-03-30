@@ -75,7 +75,7 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const IVector & n
 // [[Rcpp::export]]
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const IVector & n, const IVector & nClu, const std::string & diagonal = "ignore", const double weightClusterSize=1.0, 
                     const std::string & sBorders = "none", const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
-                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const int & maxNoImp);
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const int & maxNoImp = 0);
 // [[Rcpp::export]]
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const int dimensions, const IVector & n, const double weightClusterSize = 1, const std::string & diagonal = "ignore",
                      const std::string & sBorders = "none", const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
@@ -287,8 +287,8 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 	// Rcpp::Rcout << "newCf: " << newCf <<"\n";
 	bestClu = Rcpp::clone( newClu );
 	bestCf = newCf;
-	int noImp= -1;
-    while( noImp < maxNoImp) {
+	int noImp= 0;
+    while( noImp <= maxNoImp) {
         setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag, weightClusterSize, cluMode, countGroups, logProbGroups);
         meansByBlocks( M, meanBlocks, newClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
 		// Rcpp::Rcout << "newClu \n" << newClu <<"\n";		
@@ -299,7 +299,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 		if (newCf < bestCf){
 			bestClu = Rcpp::clone( newClu );
 			bestCf = newCf;
-			noImp = -1;
+			noImp = 0;
 		}else{
 			noImp++;
 		}
