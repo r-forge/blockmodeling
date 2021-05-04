@@ -5,8 +5,8 @@ meanByBlocks <- function(M, clu, nClu, n, diagonal = "ignore", sBorders = "none"
     .Call(`_StochBlockTest_meanByBlocks`, M, clu, nClu, n, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper)
 }
 
-kmBlock <- function(M, clu, weights, n, nClu, diagonal = "ignore", weightClusterSize = 1.0, sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL) {
-    .Call(`_StochBlockTest_kmBlock`, M, clu, weights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper)
+kmBlock <- function(M, clu, weights, n, nClu, diagonal = "ignore", weightClusterSize = 1.0, sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL, maxNoImp = 0L) {
+    .Call(`_StochBlockTest_kmBlock`, M, clu, weights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, maxNoImp)
 }
 
 critFunction <- function(M, clu, weights, dimensions, n, weightClusterSize = 1, diagonal = "ignore", sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL) {

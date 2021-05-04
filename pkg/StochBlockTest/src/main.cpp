@@ -697,12 +697,12 @@ double criterialFunction( const Array & M, const IVector & clu, const Array & we
                 else if( p_diagonale == Diagonale::Seperate && i == j ) {
                     double dAvg = p_mSeparate( clu.at( i ), r );                   
 					// dTmp = -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
-					dRet += -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
+					dRet += -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1.0 - M( i, j, r ))*log(1.0 - dAvg));
                 }
                 else {
                     double dAvg = meansMat( clu.at( i ), clu.at( j ), r );
                     // dTmp = -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
-					dRet += -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));;
+					dRet += -weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1.0 - M( i, j, r ))*log(1.0 - dAvg));
                 }
 				// Rcpp::Rcout << "LL(" << i << ", " << j << ", " << r << ") = " << dTmp <<"\n";	
             }
