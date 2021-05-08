@@ -1,8 +1,8 @@
 Package: StochBlockTest
 Type: Package
 Title: Stochastic blockmodeling of one-mode and linked networks
-Version: 0.0.0.9101
-Date: 2021-03-18
+Version: 0.0.1
+Date: 2021-05-08
 Author: Aleš Žiberna
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre"))

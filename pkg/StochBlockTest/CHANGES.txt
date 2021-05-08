@@ -1,0 +1,8 @@
+Version: 0.0.1
+Date: 2021-05-08
+Major bug fixed. The code is probably free of major bugs.
+
+Version: 0.0.0.9101
+Date: 2021-03-18
+StochBlock now returns clu as a list in case of multiple sets of units.
+All printing is commented in the cpp source code.

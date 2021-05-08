@@ -737,33 +737,19 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
             for( unsigned int j = 0; j < static_cast<unsigned int>( clu.size() ); ++j ) {
                 size_t cluJ = static_cast<size_t>( clu.at( j ) );
                 if( i == j ){
-					if( p_diagonale == Diagonale::Ignore) { // ignore diagonal AZ- pogoj je potrebno spremeniti tako, da se se ne "izvede", če je Diagonale:Same
-						// AZ Če je Diagonale:Seperate, potem je tu potrebno narediti pravzaprav spodnjo for zanko, le da namesto meansMat za primerjavo uporabite tisto, kar ste v meansByBlocks izračunali kot mDiagonalRes
+					if( p_diagonale == Diagonale::Ignore) { 
 						continue; 
 					} else if( p_diagonale == Diagonale::Seperate ) {
 						for( unsigned int r = 0; r < M.n_slices; ++r ) {
 							if(weights( i, j, r )<=0) continue;
                             double dAvg = p_mSeparate.at( k, r );
                             eTmp += - weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
-							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
-							
-							
-							// if(std::isnan(eTmp)){
-								// Rcpp::Rcout << "i = " << i << ", j = " << j <<", k = " << k << ", eTmp= " << eTmp <<", weights( j, i, r )= " << weights( j, i, r ) <<", M( i, j, r )= " << M( i, j, r ) <<", dAvg= " << dAvg << "\n";
-							// };						
-							
 						}
 					} else if( p_diagonale == Diagonale::Same ) {
 						for( unsigned int r = 0; r < M.n_slices; ++r ) {
 							if(weights( i, j, r )<=0) continue;
                             double dAvg = meansMat( k, k, r );
                             eTmp += - weights( i, j, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
-							//Pri vrenosti na diagonali je i==j in to vrednost tako kot  vse ostale celice gledamo le enkrat
-							
-							// if(std::isnan(eTmp)){
-								// Rcpp::Rcout << "i = " << i << ", j = " << j <<", k = " << k << ", eTmp= " << eTmp <<", weights( j, i, r )= " << weights( j, i, r ) <<", M( i, j, r )= " << M( i, j, r ) <<", dAvg= " << dAvg << "\n";
-							// };						
-							
 						}
 					}
 				} else {
@@ -771,16 +757,10 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
 						if(weights( i, j, r )>0){
 							double dAvg = meansMat( k, cluJ, r );
 							eTmp += - weights( i, j, r ) *(M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));	
-							// if(std::isnan(eTmp)){	
-								// Rcpp::Rcout << "i = " << i << ", j = " << j <<", k = " << k << ", eTmp= " << eTmp <<", weights( i, j, r )= " << weights( i, j, r ) <<", M( i, j, r )= " << M( i, j, r ) <<", dAvg= " << dAvg << "\n";
-							// }				
 						}
 						if(weights( j, i, r )>0){
 							double dAvg = meansMat( cluJ, k, r );
-							eTmp += -weights( j, i, r ) * (M( i, j, r )* log(dAvg) +  (1 - M( i, j, r ))*log(1 - dAvg));
-							// if(std::isnan(eTmp)){
-								// Rcpp::Rcout << "i = " << i << ", j = " << j <<", k = " << k << ", eTmp= " << eTmp <<", weights( j, i, r )= " << weights( j, i, r ) <<", M( j, i, r )= " << M( j, i, r ) <<", dAvg= " << dAvg << "\n";
-							// }	
+							eTmp += -weights( j, i, r ) * (M( j, i, r )* log(dAvg) +  (1 - M( j, i, r ))*log(1 - dAvg));
 						}
 						
 					
