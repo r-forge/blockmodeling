@@ -109,7 +109,7 @@ kmBlockC<-function(M,
   	}
   }
 	
-  res<-kmBlock(M=M, clu=clu, weights=w, n=n, nClu=tmNclu, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-kmBlock(M=M, clu=clu, weights=w, n=tmN, nClu=tmNclu, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   
 	  
   res<-list(M=M, clu=res$bestClu, IM=res$IM, err=res$bestCf, best=list(list(M=M, clu=res$bestClu, IM=res$IM)))
@@ -147,7 +147,7 @@ critFunKmeans<-function(M,
                    diagonal = c("ignore","seperate","same"),
                    limitType=c("none","inside","outside"),    
                    limits=NULL){
-  n<-dim(M)[1]
+  #n<-dim(M)[1]
   diagonal<-match.arg(diagonal)
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
@@ -227,7 +227,7 @@ critFunKmeans<-function(M,
     }
   }
   
-  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=n, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=tmN, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   return(res)
   
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))

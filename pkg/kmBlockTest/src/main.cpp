@@ -144,7 +144,6 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     IVector newClu = Rcpp::clone( clu );
     setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
     IVector bestClu;
-
     meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
     double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;
@@ -483,7 +482,9 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
     IVector nBorders( Rcpp::cumsum( n ) );
 
 
+	
     int iBegin, iEnd, k;
+
     for( size_t i = 0; i < static_cast<size_t>( nBorders.size() ); ++i ){
         if( !i ) {
             iBegin = 0;
@@ -496,18 +497,23 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const Arr
         iEnd = nBorders.at( i );
         K = borders.at( i );
         for( ; k < K; ++k ) {
-            if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
+            //if( !( std::find( clu.begin() + iBegin, clu.begin() + iEnd, k ) != ( clu.begin() + iEnd ) ) ) {
+			if(countGroups.at(k)==0) {
+		
                 size_t g = std::distance( eVec.begin(), std::max_element( eVec.begin() + iBegin, eVec.begin() + iEnd ) );
 //                ce ma countgroups[i] samo 1 skupino, zberem naslednji max iz drugih skupin - torej ce je k 1 - 3 in ima skupina 1 samo 1 skupino izberem max med skupinama 2 in 3
-                if( countGroups.at( clu.at( g ) ) < 2 ) {
+                if( countGroups.at( clu.at(g ) ) < 2 ) {
                     k--;
                     eVec.at( g ) = -1;
                     continue;
                 }
+				--countGroups.at(clu.at(g));
+				++countGroups.at(k);
                 clu.at( g ) = k;
                 eVec.at( g ) = 0;
-                k = i == 0 ? 0 : borders.size() > 1 ? borders.at( i - 1 ) : 0;
-                --k;
+//                k = i == 0 ? 0 : borders.size() > 1 ? borders.at( i - 1 ) : 0;
+//                --k;
+
             }
         }
     }
