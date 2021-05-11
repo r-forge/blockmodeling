@@ -135,8 +135,6 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     setGroups( M, newClu, weights, meanBlocks, nClu, n, pSeparate, dDiag );
     IVector bestClu;
 
-//    Rcpp::stop( "DEBUG" );
-
     meansByBlocks( M, meanBlocks, newClu, K, pSeparate, MEANS, n, bordersMeanstMat, bordersSeperate, dDiag );
     double newCf = criterialFunction( M, clu, weights, meanBlocks, pSeparate, dDiag );
     double bestCf = DBL_MAX;

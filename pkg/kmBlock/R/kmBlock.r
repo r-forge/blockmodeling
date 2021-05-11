@@ -138,7 +138,7 @@ critFunKmeans<-function(M,
                    weights=NULL, 
                    diagonal = c("ignore","seperate","same"),
                    limits=NULL){
-  n<-dim(M)[1]
+  #n<-dim(M)[1]
   diagonal<-match.arg(diagonal)
   if(is.null(weights)){
     weights<-M
@@ -213,7 +213,7 @@ critFunKmeans<-function(M,
     }
   }
   
-  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=n, diagonal = diagonal, useBorders = !is.null(limits), bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-critFunction(M=M, clu=clu, weights=w, dimensions=tmNclu, n=tmN, diagonal = diagonal, useBorders = !is.null(limits), bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   return(res)
   
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
