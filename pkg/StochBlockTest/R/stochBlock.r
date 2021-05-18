@@ -3,6 +3,7 @@
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
 #' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}. 
+#' @param uWeights The weights for each unin. A vector with the length equal to the number of units (in all sets).
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored 
@@ -21,11 +22,12 @@
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
 stochBlock<-function(M, 
                   clu, 
-                  weights=NULL, 
-        				  diagonal = c("ignore","seperate","same"),
-        				  limitType=c("none","inside","outside"),				  
+                  weights=NULL,
+				  uWeights=NULL,
+				  diagonal = c("ignore","seperate","same"),
+				  limitType=c("none","inside","outside"),				  
                   limits=NULL,
-        				  weightClusterSize = 1){
+				  weightClusterSize = 1){
   n1<-dim(M)[1]
   if(is.list(clu)) {
     n<-sapply(clu, length)
@@ -40,6 +42,10 @@ stochBlock<-function(M,
     weights<-M
     weights[,]<-1
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
+  if(is.null(uWeights)){
+	uWeights<-rep(1.0, n1)
+  }
+  if(length(uWeights)!=n1) stop("uWeights has wrong length!")
   w<-weights
 
   nMode<-ifelse(is.list(clu),length(clu),1)
@@ -61,8 +67,6 @@ stochBlock<-function(M,
   if(length(dim(M))==2) M<-array(M,dim=c(dim(M),1))
   if(length(dim(w))==2) w<-array(w,dim=c(dim(w),1))
   
-  #normalization of weights
-  w[w>0]<-w[w>0]/mean(w[w>0])
     
   if(is.null(limits)){
 	  bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
@@ -121,15 +125,20 @@ stochBlock<-function(M,
   
   if(diagonal == "ignore")for(i in 1:dim(w)[3]){
     diag(w[,,i])<-0
-  }  
+  } 
+
+  #normalization of weights
   w<-w*findEmptySuperbocks(M,n = n)
   w<-w/mean(w[w>0])
+  uWeights<-uWeights/mean(uWeights[uWeights>0])
+
+
   weightClusterSize<-as.double(weightClusterSize)
   
-  res<-kmBlock(M=M, clu=clu, weights=w, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   
 	  
-  res<-list(M=M, clu=splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf)
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf)
   return(res)
   # class(res)<-"opt.par"
   # return(res)
@@ -143,6 +152,7 @@ stochBlock<-function(M,
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
 #' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}. 
+#' @param uWeights The weights for each unin. A vector with the length equal to the number of units (in all sets).
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored 
@@ -160,7 +170,8 @@ stochBlock<-function(M,
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
 llStochBlock<-function(M, 
                    clu, 
-                   weights=NULL, 
+                   weights=NULL,
+				   uWeights=NULL,
                    diagonal = c("ignore","seperate","same"),
                    limitType=c("none","inside","outside"),    
                    limits=NULL,
@@ -180,6 +191,11 @@ llStochBlock<-function(M,
     weights[]<-1
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   w<-weights
+  if(is.null(uWeights)){
+	uWeights<-rep(1.0, n1)
+  }
+  if(length(uWeights)!=n1) stop("uWeights has wrong length!")
+
   
   nMode<-ifelse(is.list(clu),length(clu),1)
   
@@ -257,9 +273,10 @@ llStochBlock<-function(M,
   }
   w<-w*findEmptySuperbocks(M,n = n)
   w<-w/mean(w[w>0])
+  uWeights<-uWeights/mean(uWeights[uWeights>0])
   weightClusterSize<-as.double(weightClusterSize)
   
-  res<-critFunction(M=M, clu=clu, weights=w, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   return(res)
   
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
@@ -283,7 +300,7 @@ stochBlockORP<-function(M, #a square matrix
                          return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
                          seed=NULL,#the seed for random generation of partitions
                          RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
-                         parGenFun = genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
+                         parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
                          mingr=NULL, #minimal alowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
                          maxgr=NULL, #maximal alowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
                          addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for the default function "genRandomPar"
@@ -512,7 +529,3 @@ findEmptySuperbocks<-function(M, n, na.rm=TRUE){
 }
 
 
-splitClu<-function(clu, n){
-  if(length(n)==1) return(clu)
-  split(clu, rep(1:length(n),times=n))
-}

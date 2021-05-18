@@ -1,3 +1,16 @@
+Version: 0.0.1.9020
+Date: 2021-05-18
+Minor bug related to calling functions from package blockmodeling fixed.
+Functions created by Rcpp renamed to start with dot (.) and therefore not too be exported.
+
+Version: 0.0.1.9010
+Date: 2021-05-14
+Added helper function for computing weights for linekd networks (called weightsMlLoglik). Name will be changed in the future.
+
+Version: 0.0.1.9000
+Date: 2021-05-13
+Added support for unit level weights.
+
 Version: 0.0.1
 Date: 2021-05-08
 Major bug fixed. The code is probably free of major bugs.
