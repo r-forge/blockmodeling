@@ -28,7 +28,7 @@
 #' @seealso \code{optRandomParC}
 #' @author Marjan Cugmas and Ales Ziberna
 #' @references Cugmas, M., Žiberna, A., & Ferligoj, A. (2019). Mechanisms Generating Asymmetric Core-Cohesive Blockmodels. Metodološki Zvezki, 16(1), 17-41.
-
+#' @export
 RF <- function(res, m = 10, loops = TRUE){
   errs <- vector(length = m)
   for (i in 1:m){
