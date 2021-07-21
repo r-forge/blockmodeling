@@ -78,7 +78,7 @@ An array with dimensions four dimensions (see example below). The third and the 
 
 \item{max.iden}{Maximum number of results that should be saved (in case there are more than \code{max.iden} results with minimal error, only the first \code{max.iden} will be saved).}
 
-\item{switch.names}{Should partitions that only differ in group names be considered equal.}
+\item{switch.names}{Should partitions that only differ in group names be considered equal. By default it is set to \code{TRUE} if \code{blocks} is either a vector or a list of vectors and to \code{FALSE} otherwise.}
 
 \item{return.all}{If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.}
 

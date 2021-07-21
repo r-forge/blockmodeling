@@ -11,7 +11,7 @@
 #' @param save.initial.param.opt Should the inital parameters(\code{approaches}, ...) of using \code{optParC} be saved. The default value is \code{FALSE}.
 #' @param deleteMs Delete networks/matrices from the results of to save space.
 #' @param max.iden Maximum number of results that should be saved (in case there are more than \code{max.iden} results with minimal error, only the first \code{max.iden} will be saved).
-#' @param switch.names Should partitions that only differ in group names be considered equal.
+#' @param switch.names Should partitions that only differ in group names be considered equal. By default it is set to \code{TRUE} if \code{blocks} is either a vector or a list of vectors and to \code{FALSE} otherwise.
 #' @param return.all If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.
 #' @param return.err Should the error for each optimized partition be returned.
 #' @param seed Optional. The seed for random generation of partitions.
@@ -120,7 +120,9 @@
 ){
   dots<-list(...) #this might not be need - can be removed and all latter occurencies given sufficent testing. Left for now as there is not enought time.
   if(is.null(switch.names)){
-    switch.names<-is.null(blocks)
+    if(is.list(blocks)){
+      switch.names<-all(sapply(blocks,is.vector))
+    } else switch.names<-is.vector(blocks)
   }
   
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
