@@ -3,12 +3,17 @@
 \encoding{UTF-8}
 \name{canClu}
 \alias{canClu}
+\alias{canCluUniqe}
 \title{Create canonical partition and find unique canonical partitions in a list of partitions.}
 \usage{
 canClu(clu)
+
+canCluUniqe(cluList)
 }
 \arguments{
-\item{clu}{A partition - a vector or a list of vectors/partitions).}
+\item{clu}{A partition - a vector or a list of vectors/partitions.}
+
+\item{cluList}{A list of partitions(vectors).}
 }
 \value{
 For function \code{canClu} - a canonical partition or a list of such partitions.

@@ -14,7 +14,8 @@
 #' @details The function randomizes an empirical network to compute the value of the Relative Fit function.
 #' The networks are ranomized in such a way that the values on the links are randomly relocated.
 #' @examples
-#' n <- 8 # If larger, the number of partitions increases dramatically as does if we increase the number of clusters
+#' n <- 8 # If larger, the number of partitions increases 
+#' # dramatically as does if we increase the number of clusters
 #' net <- matrix(NA, ncol = n, nrow = n)
 #' clu <- rep(1:2, times = c(3, 5))
 #' tclu <- table(clu)
@@ -24,7 +25,7 @@
 #' net[clu == 2, clu == 2] <- rnorm(n = tclu[2] * tclu[2], mean = 0, sd = 1)
 #' # Install package blockmodeling and then run the following lines.
 #' res <- optRandomParC(M = net, k = 2, rep = 10, approaches = "hom", homFun = "ss", blocks = "com")
-#' RF(res = res, k = 100, loops = TRUE)
+#' RF(res = res, m = 100, loops = TRUE)
 #' @seealso \code{optRandomParC}
 #' @author Marjan Cugmas and Ales Ziberna
 #' @references Cugmas, M., Žiberna, A., & Ferligoj, A. (2019). Mechanisms Generating Asymmetric Core-Cohesive Blockmodels. Metodološki Zvezki, 16(1), 17-41.
@@ -44,7 +45,7 @@ RF <- function(res, m = 10, loops = TRUE){
       names(par) <- gsub(pattern = "dots.", replacement = "", fixed = TRUE, x = names(par))
       par$dots <- NULL
       par$M[,] <- randomized
-      capture.output(res.rand <- do.call(optRandomParC, args = par))
+      utils::capture.output(res.rand <- do.call(optRandomParC, args = par))
       errs[i] <- err(res.rand)
     }
   }
