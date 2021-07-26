@@ -31,7 +31,7 @@ orderClu(
 \item{scale}{Only used in case of multirelational networks. Should relations be scaled (\code{TRUE} by default) before summation. It can also be a vector of weights by relations.}
 }
 \value{
-An ordered partition.
+An ordered partition. In an attribute ("reorder"). the information on how things were reordered.
 }
 \description{
 Orders the partition so that mean values of \code{fun} applied to columns (if \code{funWay=2}, default), rows (if \code{funWay=1}) or both (if \code{funWay=c(1,2)}) is decreasing by clusters. The function can be used on the results of \code{\link{critFunC}}, \code{\link{optRandomParC}} or similar, or matrix and a partition can be supplied. It should also work on multirelational and lined networks.

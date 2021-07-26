@@ -2,19 +2,14 @@
 #' 
 #' Computes a value of a function over blocks of a matrix, defined by a partition.
 #' 
-# #' @usage
-# #' funByBlocks(x, ...)
-# #' funByBlocks.default (x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
-# #' funByBlocks.optMorePar (x, which = 1, ...)
-#'
 #' @param x An object of suitable class or a matrix representing the (usually valued) network.
 #' For now, only one-relational networks are supported. The network can have one or more modes (different kinds of units with no ties among themselves.
 #' If the network is not two-mode, the matrix must be square.
+#' @param clu A partition. Each unique value represents one cluster.
+#' If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.
 #' @param M A matrix representing the (usually valued) network.
 #' For now, only one-relational networks are supported. The network can have one or more modes (different  kinds of units with no ties among themselves.
 #' If the network is not two-mode, the matrix must be square.
-#' @param clu A partition. Each unique value represents one cluster.
-#' If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.
 #' @param ignore.diag Should the diagonal be ignored.
 #' @param sortNames Should the rows and columns of the matrix be sorted based on their names.
 #' @param FUN The function to be computed over the blocks.

@@ -1,7 +1,7 @@
 #' @rdname funByBlocks
 #' @export
 "funByBlocks.default" <-
-function(x = M, M = x, clu, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
+function(x = M, clu, M = x, ignore.diag = "default", sortNames = TRUE, FUN = "mean", ...)
 {
     M<-as.array(M)
     dM<-dim(M)

@@ -215,7 +215,7 @@ plotArray(
 \item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode,
 then this should be a vector, else a list of vectors, one for each mode.}
 
-\item{orderClu}{Should the partition be ordered. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.}
+\item{orderClu}{Should the partition be ordered before plotting. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.}
 
 \item{ylab}{Label for y axis.}
 

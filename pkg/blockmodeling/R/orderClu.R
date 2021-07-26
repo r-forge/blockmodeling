@@ -11,11 +11,11 @@
 #' @param nn The numbers of untis by sets of units. In principle, the function should determin this automatically.
 #' @param returnList Logical. Should the partition be returned in form of a list (for lined networks only). \code{TRUE} by default.
 #' @param scale Only used in case of multirelational networks. Should relations be scaled (\code{TRUE} by default) before summation. It can also be a vector of weights by relations.
-#' @return An ordered partition.
+#' @return An ordered partition. In an attribute ("reorder"). the information on how things were reordered.
 #' @seealso \code{\link{clu}}
 #' @export
 orderClu<-function(x, clu=NULL,  fun=sum, funWay=2, nn=NULL, returnList=TRUE, scale=TRUE){
-  if(class(x)%in%c("check.these.par", "crit.fun", "critFun", "opt.more.par", "opt.more.par.mode", "opt.par", "opt.par.mode", "optMorePar", "optMoreParMode", "optPar", "optParMode")){
+  if(any(class(x)%in%c("check.these.par", "crit.fun", "critFun", "opt.more.par", "opt.more.par.mode", "opt.par", "opt.par.mode", "optMorePar", "optMoreParMode", "optPar", "optParMode"))){
     tclu<- clu(x)
     M<-x$M
     if(is.null(nn))nn<-x$initial.param$initial.param$n
@@ -25,7 +25,7 @@ orderClu<-function(x, clu=NULL,  fun=sum, funWay=2, nn=NULL, returnList=TRUE, sc
     tclu<-clu
   }
   if(is.null(nn)&is.list(clu))nn<-sapply(clu,length)
-  if(dim(M)>2){
+  if(length(dim(M))>2){
     if(isFALSE(scale)){
       #do nothing
     }else if(isTRUE(scale)){
@@ -37,6 +37,7 @@ orderClu<-function(x, clu=NULL,  fun=sum, funWay=2, nn=NULL, returnList=TRUE, sc
     M<-apply(M,1:2, sum)
   }
   if(!is.null(nn)){
+    rAll<-NULL
     m<-length(nn)
     tclu<- by(tclu, INDICES = rep(1:m, times=nn), FUN=c)
     k<-sapply(tclu,function(x)length(unique(x)))
@@ -49,17 +50,21 @@ orderClu<-function(x, clu=NULL,  fun=sum, funWay=2, nn=NULL, returnList=TRUE, sc
       iM<-M[ids, ids]
       crit<-unclass(by(data = apply(iM,funWay[1],fun, na.rm=TRUE),itclu,FUN = mean))
       if(length(funWay)==2) crit<-crit+unclass(by(data = apply(iM,funWay[2],fun, na.rm=TRUE),itclu,FUN = mean))
-      r<-rank(-crit)
+      r<-rank(-crit)+kCum[i]
       itclu<-r[as.character(itclu)]
-      tcluAll<-c(tcluAll, list(itclu+kCum[i]))
+      attr(itclu,"reorder")<-r
+      rAll<-c(rAll,r)
+      tcluAll<-c(tcluAll, list(itclu))
     } 
     if(!returnList) tcluAll<-unlist(tcluAll)
+    attr(tcluAll,"reorder")<-rAll
     return(tcluAll)    
   }else{
     crit<-unclass(by(data = apply(M,funWay[1],fun, na.rm=TRUE),tclu,FUN = mean))
     if(length(funWay)==2) crit<-crit+unclass(by(data = apply(M,funWay[2],fun, na.rm=TRUE),tclu,FUN = mean))
     r<-rank(-crit)
-    tclu<-r[as.character(tclu)]    
+    tclu<-r[as.character(tclu)]
+    attr(tclu,"reorder")<-r
     return(tclu)
   }
 }

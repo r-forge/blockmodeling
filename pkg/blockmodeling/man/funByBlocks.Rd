@@ -11,17 +11,17 @@
 \usage{
 \method{funByBlocks}{default}(
   x = M,
-  M = x,
   clu,
+  M = x,
   ignore.diag = "default",
   sortNames = TRUE,
   FUN = "mean",
   ...
 )
 
-\method{funByBlocks}{optMorePar}(x, which = 1, ...)
+\method{funByBlocks}{optMorePar}(x, which = 1, orderClu = FALSE, sortNames = NULL, ...)
 
-\method{funByBlocks}{opt.more.par}(x, which = 1, ...)
+\method{funByBlocks}{opt.more.par}(x, which = 1, orderClu = FALSE, sortNames = NULL, ...)
 
 funByBlocks(x, ...)
 
@@ -32,12 +32,12 @@ fun.by.blocks(x, ...)
 For now, only one-relational networks are supported. The network can have one or more modes (different kinds of units with no ties among themselves.
 If the network is not two-mode, the matrix must be square.}
 
+\item{clu}{A partition. Each unique value represents one cluster.
+If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.}
+
 \item{M}{A matrix representing the (usually valued) network.
 For now, only one-relational networks are supported. The network can have one or more modes (different  kinds of units with no ties among themselves.
 If the network is not two-mode, the matrix must be square.}
-
-\item{clu}{A partition. Each unique value represents one cluster.
-If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.}
 
 \item{ignore.diag}{Should the diagonal be ignored.}
 
@@ -48,6 +48,8 @@ If the network is one-mode, then this should be a vector, else a list of vectors
 \item{\dots}{Further arguments to \code{funByBlocks.default}.}
 
 \item{which}{Which (if several) of the "best" solutions should be used.}
+
+\item{orderClu}{Should the partition be ordered before computing. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.  If \code{TRUE}, \code{sortNames} is set to \code{FALSE}.}
 }
 \value{
 A numerical matrix of \code{FUN} values by blocks, induced by a partition \code{clu}.

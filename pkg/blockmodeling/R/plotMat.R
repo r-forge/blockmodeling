@@ -10,7 +10,7 @@
 #' @param x A result from a corresponding function or a matrix or similar object representing a network.
 #' @param clu A partition. Each unique value represents one cluster. If the network is one-mode,
 #' then this should be a vector, else a list of vectors, one for each mode.
-#' @param orderClu Should the partition be ordered. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.
+#' @param orderClu Should the partition be ordered before plotting. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.
 #' @param M A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.
 #' @param ylab Label for y axis.
 #' @param xlab Label for x axis.
@@ -179,9 +179,17 @@ function(
     old.mar<-par("mar")
     
     if(min(dim(M))==1 & is.null(wnet)) wnet<-1
-    if(orderClu) clu<-orderClu(M, clu=clu)
+    if(orderClu) {
+      clu<-orderClu(M, clu=clu)
+      ord<-order(attr(clu,"reorder"))
+      if(!is.null(IM))if(length(dim(IM))==2){
+        IM<-IM[ord,ord]
+      } else if(length(dim(IM))==3){
+        IM<-IM[,ord,ord]
+      } else use.IM<-FALSE
+    }
     tempClu<-clu
-	
+    
 
 	
     if(length(dim(M))>2){

@@ -5,7 +5,7 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 Version: 1.0.5
 Date: 2021-07-26
 Added function for printing of results of optRandomParC.
-Added function for ordering a partition and an option to order a partition before plotting to plotMat.
+Added function for ordering a partition and an option to order a partition before plotting with plotMat or using it in funByBlocks.
 
 Version: 1.0.4
 Date: 2021-07-20
