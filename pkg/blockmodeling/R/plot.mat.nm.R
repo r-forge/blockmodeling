@@ -10,7 +10,7 @@
 #' 
 #' @export
 plotMatNm <- 
-function(x=M,M=x,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
+function(M=x,x=M,...,main.title=NULL,title.row="Row normalized",title.col="Column normalized",main.title.line=-2,par.set=list(mfrow=c(1,2))){
 	if(is.null(main.title)){
 		objName<-deparse(substitute(M))
 		if(objName=="x")objName<-deparse(substitute(x))

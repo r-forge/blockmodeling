@@ -25,8 +25,8 @@
 \method{plot}{crit.fun}(x, main = NULL, ...)
 
 plotMatNm(
-  x = M,
   M = x,
+  x = M,
   ...,
   main.title = NULL,
   title.row = "Row normalized",
@@ -53,8 +53,9 @@ plotMatNm(
 
 plotMat(
   x = M,
-  M = x,
   clu = NULL,
+  orderClu = FALSE,
+  M = x,
   ylab = "",
   xlab = "",
   main = NULL,
@@ -127,8 +128,9 @@ plotArray(
 
 \method{plot}{mat}(
   x = M,
-  M = x,
   clu = NULL,
+  orderClu = FALSE,
+  M = x,
   ylab = "",
   xlab = "",
   main = NULL,
@@ -212,6 +214,8 @@ plotArray(
 
 \item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode,
 then this should be a vector, else a list of vectors, one for each mode.}
+
+\item{orderClu}{Should the partition be ordered. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.}
 
 \item{ylab}{Label for y axis.}
 

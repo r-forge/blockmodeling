@@ -2,6 +2,11 @@ Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 2021
+Version: 1.0.5
+Date: 2021-07-26
+Added function for printing of results of optRandomParC.
+Added function for ordering a partition and an option to order a partition before plotting to plotMat.
+
 Version: 1.0.4
 Date: 2021-07-20
 A bug fixed so that the value of switch.names in optRandomParC should be now set correctly by defaults. This makes sure that in cases where blockmodel is not pre-specified we do not get solutions that differ only in the order of groups.

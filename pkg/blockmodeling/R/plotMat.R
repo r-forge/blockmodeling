@@ -8,9 +8,10 @@
 #' The \code{plotMatNm} plots two matrices based on M, normalized by rows and columns, next to each other. The \code{plotArray} plots an array. \code{plot.mat.nm} has been replaced by \code{plotMatNm}.
 #'
 #' @param x A result from a corresponding function or a matrix or similar object representing a network.
-#' @param M A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.
 #' @param clu A partition. Each unique value represents one cluster. If the network is one-mode,
 #' then this should be a vector, else a list of vectors, one for each mode.
+#' @param orderClu Should the partition be ordered. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.
+#' @param M A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.
 #' @param ylab Label for y axis.
 #' @param xlab Label for x axis.
 #' @param main Main title.
@@ -112,9 +113,10 @@
 #' @export
  plotMat <- 
 function(
-    x=M, #x should be a matrix or similar object
-    M=x, #M should be a matrix or similar object - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
+   x=M, #x should be a matrix or similar object
     clu=NULL,   #partition
+    orderClu=FALSE, #should the partition be ordered
+    M=x, #M should be a matrix or similar object  - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
     ylab="",
     xlab="",
     main=NULL,
@@ -177,6 +179,7 @@ function(
     old.mar<-par("mar")
     
     if(min(dim(M))==1 & is.null(wnet)) wnet<-1
+    if(orderClu) clu<-orderClu(M, clu=clu)
     tempClu<-clu
 	
 

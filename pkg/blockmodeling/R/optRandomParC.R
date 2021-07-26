@@ -4,7 +4,7 @@
 #' @description
 #' The function optimizes a set of partitions based on the value of a criterion function  (see \code{\link{critFunC}} for details on the criterion function) for a given network and blockmodel for Generalized blockmodeling (Žiberna, 2007) based on other parameters (see below).
 #' The optimization is done through local optimization, where the neighborhood of a partition includes all partitions that can be obtained by moving one unit from one cluster to another or by exchanging two units (from different clusters).
-#' A list of paritions can or the number of clusters and a number of partitions to generate can be specified (\code{optParC}).
+#' The number of clusters and a number of partitions to generate can be specified (\code{optParC}).
 #'
 #' @param k The number of clusters used in the generation of partitions.
 #' @param rep The number of repetitions/different starting partitions to check.
@@ -61,7 +61,7 @@
 #' \enc{Žiberna, A.}{Ziberna, A.} (2014). Blockmodeling of multilevel networks. Social Networks, 39(1), 46-61. doi: 10.1016/j.socnet.2014.04.002
 #' 
 #' @author \enc{Aleš, Žiberna}{Ales Ziberna}
-#' @seealso \code{\link{critFunC}}
+#' @seealso \code{\link{critFunC}}, \code{\link{IM}}, \code{\link{clu}}, \code{\link{err}}, \code{\link{plot.optMorePar}}
 #' 
 #' @examples
 #' n <- 8 # If larger, the number of partitions increases dramatically

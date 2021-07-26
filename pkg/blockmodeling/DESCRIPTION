@@ -1,8 +1,8 @@
 Package: blockmodeling
 Type: Package
 Title: Generalized and Classical Blockmodeling of Valued Networks
-Version: 1.0.4
-Date: 2021-07-20
+Version: 1.0.5
+Date: 2021-07-26
 Imports: stats, methods, Matrix, parallel
 Suggests: sna, doRNG, doParallel, foreach
 Depends: R (>= 2.10)
