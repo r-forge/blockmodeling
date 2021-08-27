@@ -16,7 +16,7 @@
 #'
 #' @return A random partition in the format required by \code{\link{optRandomParC}}. If a network has several modes, then a list of partitions, one for each mode.
 #'
-#' @references Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}
+#' @references Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from http://vlado.fmf.uni-lj.si/pub/networks/pajek/
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' @keywords cluster
 #' 

@@ -50,7 +50,7 @@
 #' the number of units and the number of clusters (due to its algorithm). Therefore the analysis
 #' of network with more than 100 units can take a lot of time (from a few hours to a few days).
 #' 
-#' @references Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}
+#' @references Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from http://vlado.fmf.uni-lj.si/pub/networks/pajek/
 #' 
 #' Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 #' 
