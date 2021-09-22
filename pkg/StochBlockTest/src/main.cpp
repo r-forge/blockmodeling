@@ -775,7 +775,7 @@ void setGroups( const Array & M, IVector & clu, const Array & weights, const DVe
                 }
 
             }
-			eTmp= eTmp -uWeights.at(i)*logProbGroups.at(k)*weightClusterSize;
+			eTmp += -uWeights.at(i)*logProbGroups.at(k)*weightClusterSize;
 			// Rcpp::Rcout << "i = " << i <<", k = " << k << ", eTmp= " << eTmp << "\n";
             if ( eTmp < eMin ){
                 kMin = k;
