@@ -27,9 +27,12 @@
 #' @param printRep Should some information about each optimization be printed.
 #' @param n The number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is one mode (both modes are in rows and columns).
 #' @param nCores Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.
-#' @param useParLapply Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.
-#' @param  cl The cluster to use (if formed beforehand). Defaults to \code{NULL}.
+#' @param useParLapply Should \code{parLapplyLB} or \code{parLapply} (see \code{useLB}) be used for parallel execution (on multiple cores). Otherwise \code{mforeach} is used. Defaults to FALSE. If \code{useParLapply = TRUE} and \code{useLB = TRUE}, results are not reproducible.
+#' @param useLB Should be logical if set. Only used if \code{useParLapply = TRUE}. Should load balancing be used (\code{parLapplyLB} instead of \code{parLapply}). Using load balancing usually means faster execution, but results are with not reproducible. Defaults to \code{NULL}, which is changed to \code{TRUE}, but a warning.
+#' @param chunk.size chunk.size used in \code{parLapplyLB} if it is used, otherwise ignored. Defaults to 1.
+#' @param  cl The cluster to use (if formed beforehand). Defaults to \code{NULL}. Ignored if useParLapply=FALSE (default) and foreach::getDoParRegistered is true
 #' @param  stopcl Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.
+#' @param  useRegParrallaBackend Should the function use already registered parallel backend. Defaults to \code{FALSE}. If \code{TRUE}, you must make sure that an appropriate backend is correctly set up and registered. Use only if \code{useParLapply = FALSE} (default) and \code{nCore} is not 1.
 #' @param genPajekPar Should the partitions be generated as in Pajek.
 #' @param probGenMech Should the probabilities for different mechanisms for specifying the partitions be set. If \code{probGenMech} is not set, it is determined based on the parameter \code{genPajekPar}.
 #' @param \dots Arguments passed to other functions, see \code{\link{critFunC}}.
@@ -113,12 +116,15 @@
                            printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
                            n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
                            nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object
-						   useParLapply = TRUE, # Should parLapplyLB be used (otherwise foreach is used)
-							cl = NULL, #the cluster to use (if formed beforehand)
-							stopcl = is.null(cl), # should the cluster be stoped						   
-                           ... #paramters to optParC
+						   useParLapply = FALSE, # Should parLapplyLB be used (otherwise foreach is used)
+						   useLB = NULL, # Should load balancing be used (parLapplyLB instead of parLapply)
+						   chunk.size = 1, #chunk.size used in parLapplyLB if it is used, otherwise ignored.
+							cl = NULL, #the cluster to use (if formed beforehand) 
+							stopcl = is.null(cl), # should the cluster be stopped						   
+							useRegParrallaBackend = FALSE, #should the function use already registered parallel backend. Defaults to FALSE. If TRUE, you must make sure that an appropriate backend is correctly set up and registered.
+							... #parameters to optParC
 ){
-  dots<-list(...) #this might not be need - can be removed and all latter occurencies given sufficent testing. Left for now as there is not enought time.
+  dots<-list(...) #this might not be need - can be removed and all latter occurrences given sufficient testing. Left for now as there is not enough time.
   if(is.null(switch.names)){
     if(is.list(blocks)){
       switch.names<-all(sapply(blocks,is.vector))
@@ -157,7 +163,10 @@
   
   if(!is.null(RandomSeed)){
     .Random.seed <-  RandomSeed
-  } else if(!is.null(seed))set.seed(seed)
+  } else {
+    if(!is.null(seed)) set.seed(seed)
+    if(exists(".Random.seed")) .Random.seed-> RandomSeed
+  }
   
   on.exit({
     res1 <- res[which(err==min(err, na.rm = TRUE))]
@@ -208,11 +217,16 @@
       initial.param<-NULL
     } else initial.param=list(initial.param)
     
-    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, list(Random.seed=.Random.seed))
+    if(exists(".Random.seed")){
+      Random.seed<-.Random.seed
+      if(identical(Random.seed,RandomSeed)) Random.seed<-NULL
+    } else Random.seed<-NULL
+    
+    res<-c(list(M=M),res,best,err,list(nIter=nIter),checked.par,call,initial.param=initial.param, list(Random.seed=Random.seed))
     class(res)<-"optMorePar"
     return(res)
   })
-  
+   if(!is.null(cl)) nCores<-0
    if(nCores==1||!requireNamespace("parallel")){
      if(nCores!=1) {
        oldWarn<-options("warn")
@@ -300,14 +314,28 @@
 	}
 	
 	if(useParLapply) {
-       if(is.null(cl)) cl<-makeCluster(nCores)
+	   if(is.null(cl)) {
+			if(Sys.info()['sysname']=="Windows"){
+			  cl <- makeCluster(nCores)
+			} else {
+			  cl <- makeForkCluster(nCores)
+			}
+	   }
        clusterSetRNGStream(cl)
-       nC<-nCores
        #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
        #clusterExport(cl, varlist = "kmBlock")
        clusterExport(cl, varlist = "pkgName", envir=environment())	   
        clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
-       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+       if(is.null(useLB)) {
+         useLB<-TRUE
+         warning("useLB not set and now set to TRUE. parLapplyLB will be used. Results will not be reproducible.")
+        }
+       if(useLB){
+         res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M, approaches=approaches, blocks=blocks, n=n, k=k, mingr=mingr, maxgr=maxgr, addParam=addParam, rep=rep, chunk.size=chunk.size, ...)
+       } else{
+         res<-parLapply(cl = cl, 1:rep, fun = oneRep, M=M, approaches=approaches, blocks=blocks, n=n, k=k, mingr=mingr, maxgr=maxgr, addParam=addParam, rep=rep,...)
+       }
+       
        if(stopcl) stopCluster(cl)
        res<-lapply(res,function(x)x[[1]])
        err<-sapply(res,function(x)x$err)
@@ -318,15 +346,29 @@
 		requireNamespace("foreach")
 		`%dorng%`<-doRNG::`%dorng%`
 		`%dopar%`<-foreach::`%dopar%`
-		if(!foreach::getDoParRegistered()){
-			doParallel::registerDoParallel(nCores)
+		if(useRegParrallaBackend & (!foreach::getDoParRegistered())) {
+		  useRegParrallaBackend<-FALSE
+		  warning("No parallel backend is registred, seting useRegParrallaBackend to FALSE!")
 		}
-		nC<-foreach::getDoParWorkers()
-
+		  
+		if(!useRegParrallaBackend){
+		  if(is.null(cl)) {
+  			if(Sys.info()['sysname']=="Windows"){
+  			  cl <- makeCluster(nCores)
+  			} else {
+  			  cl <- makeForkCluster(nCores)
+  			}
+	    }
+		  doParallel::registerDoParallel(cl)
+		}
 		pkgName<-utils::packageName()
 		res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,approaches=approaches, blocks=blocks ,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
 		err<-sapply(res,function(x)x$err)
 		nIter<-sapply(res,function(x)x$resC$nIter)
+		if(stopcl) {
+		  stopCluster(cl)
+		  foreach::registerDoSEQ()
+		}
 	}
   }
 }

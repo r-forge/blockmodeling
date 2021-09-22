@@ -2,8 +2,16 @@ Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 2021
+Date: 2021-09-22
+An option added to use load-balancing or ordinary parLapply. A bug fixed that could in some cases (when parLapplyLB was used and no random functions were used on the master) lead to an error that ".Random.seed" is not found. A parameter useRegParrallaBackend was added so that already registered parallel backend is only used if explicitly asked for.
+
+Version: 1.0.6
+Date: 2021-09-17
+Changed default parallel backend to foreach --> default is now useParLapply = FALSE. cl argument is now taken into account also if foreach is used.
+plotMat was given an additional parameter MplotValues, where a character matrix of the same dimensions as x/M can be supplied, which values are then printed in cells instead of the values of M.
+
 Date: 2021-08-27
-A "NOTE" in cran checked fixed - nolonger existing web page.
+A "NOTE" in cran checked fixed - no longer existing web page.
 
 Version: 1.0.5
 Date: 2021-07-26
@@ -33,7 +41,6 @@ August 1, 2020
 Version 1.0.1
 Various bugs fixed.
 
-2020
 July 1, 2020
 Version 1.0.0
 Modified optRandomParC so that packages doRng, doParallel and foreach are not loaded unless explicitly requested.

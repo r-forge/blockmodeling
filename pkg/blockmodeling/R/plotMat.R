@@ -75,7 +75,8 @@
 #' @param which Which (if there are more than one) of optimal solutions to plot.
 #' @param colLabels Should the labels of units be colored. If \code{FALSE}, these are not collored, if \code{TRUE}, they are colored with colors of clusters as defined by palette.
 #' This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
-#' @param \dots Aditional arguments to \code{plot.default} for \code{plotMat} and also to \code{plotMat} for other functions. 
+#' @param MplotValues A matrix to strings to plot in cells. Only to be used if other values than those in the original matrix (\code{x} or \code{M} arguments) should be used. Defaults to \code{NULL}, in which case the valued from original matrix are plotted (if this is not prevented by some other arguments). Overrides all other arguments that deal with cell values (e.g. \code{print.digits.cells}). Sets \code{print.val} to \code{TRUE} and \code{plot.legend} to \code{FALSE}.
+#' @param \dots Additional arguments to \code{plot.default} for \code{plotMat} and also to \code{plotMat} for other functions. 
 #'
 #' @return The functions are used for their side effect - plotting.
 #' 
@@ -174,6 +175,7 @@ function(
 	printMultipliedMessage = TRUE, # shold mutiplication message be printed when values were the printed tie values are multiplied
 	replaceNAdiagWith0=TRUE, #Should the diagonal with only NAs be replace by 0s?
 	colLabels=FALSE, # Should the labels of units be colored. If FALSE, these are not collored, if TRUE, they are colored with colors of clusters as defined by palette. This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
+	MplotValues=NULL, #a matrix of strings to plot into cells.
     ... #aditional arguments to plot.default
 ){
     old.mar<-par("mar")
@@ -469,6 +471,12 @@ function(
     if(print.y.axis.val) text(x=y.axis.val.pos, y = (dm[1]:1)/dm[1]-1/dm[1]/2 +val.y.coor.cor,labels = yaxe,cex=cex.y.axis,adj=1, col=colYlabels)
     if(print.x.axis.val) text(y=x.axis.val.pos, x = (1:dm[2])/dm[2]-1/dm[2]/2 +val.x.coor.cor, srt=90, labels = xaxe, cex=cex.x.axis,adj=0, col=colXlabels)
     title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
+    if(!is.null(MplotValues)){
+      if(dim(MplotValues)==dim(M)&&is.character(MplotValues)){
+        print.val<-FALSE
+        plot.legend<-FALSE
+      } else warning("MplotValues is ignored. It should be the same dimension as the main matrix (x or M) and be a character")
+    }
     if(print.val){  #ploting the values in the cells if selected
         norm.val<-as.vector(M)/max(abs(M))
         aMnorm<-abs(norm.val)
@@ -496,11 +504,12 @@ function(
                 multi<-10^multi
             }
         }else multi <- print.cells.mf
-        M.plot<-round(M*multi)
-
-        text(x=(xleft+xright)/2+val.x.coor.cor,y=(ytop+ybottom)/2+val.y.coor.cor, labels=as.vector(M.plot),col=col.text,cex=ifelse(cex.val=="default",min(10/max(dm),1),cex.val))
+        
+        MplotValues<-round(M*multi)
         if(multi!=1 & printMultipliedMessage) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
     }
+    
+    if(!is.null(MplotValues)) text(x=(xleft+xright)/2+val.x.coor.cor,y=(ytop+ybottom)/2+val.y.coor.cor, labels=as.vector(MplotValues),col=col.text,cex=ifelse(cex.val=="default",min(10/max(dm),1),cex.val))
 
     if(plot.legend){    #ploting the legend if selected
         if(asp>=1){
@@ -534,7 +543,7 @@ function(
                     }
                 }else multi <- print.cells.mf
                 maxM<-round(max(M)*multi)
-            } else maxM<-max(M.plot)
+            } else maxM<-max(MplotValues)
             text(x=(xleft.legend+xright.legend)/2,y=(ytop.legend+ybottom.legend)/2, labels=round(0:4/4*maxM),col=col.text.legend,cex=cex.legend)
         }
     }
