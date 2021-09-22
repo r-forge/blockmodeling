@@ -152,7 +152,7 @@ critFunKmeans<-function(M,
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
     weights<-M
-    weights[,]<-1
+    weights[]<-1
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   w<-weights
   
