@@ -32,9 +32,12 @@ optRandomParC(
   printRep = ifelse(rep <= 10, 1, round(rep/10)),
   n = NULL,
   nCores = 1,
-  useParLapply = TRUE,
+  useParLapply = FALSE,
+  useLB = NULL,
+  chunk.size = 1,
   cl = NULL,
   stopcl = is.null(cl),
+  useRegParrallaBackend = FALSE,
   ...
 )
 
@@ -69,7 +72,7 @@ A vector with names of allowed blocktypes. For multi-relational networks, it can
 \code{"dnc"} - do not care block - the error is always zero\cr
 The ordering is important, since if several block types have identical error, the first on the list is selected.\cr\cr
 A pre-specified blockmodel.\cr
-An array with dimensions four dimensions (see example below). The third and the fourth represent the clusters (for rows and columns). The first is as long as the maximum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values \code{NA}. The second dimension is the number of relations (1 for single-relational networks). The values in the array should be the ones from above. The array can have only three dimensions in case of one-relational networks or if the same pre-specified blockmodel is assumed for all relations. Further, it can have only two dimensions, if in addition only one block type is allowed per block.}
+An array with four dimensions (see example below). The third and the fourth represent the clusters (for rows and columns). The first is as long as the maximum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values \code{NA}. The second dimension is the number of relations (1 for single-relational networks). The values in the array should be the ones from above. The array can have only three dimensions in case of one-relational networks or if the same pre-specified blockmodel is assumed for all relations. Further, it can have only two dimensions, if in addition only one block type is allowed per block.}
 
 \item{rep}{The number of repetitions/different starting partitions to check.}
 
@@ -113,11 +116,17 @@ An array with dimensions four dimensions (see example below). The third and the 
 
 \item{nCores}{Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.}
 
-\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.}
+\item{useParLapply}{Should \code{parLapplyLB} or \code{parLapply} (see \code{useLB}) be used for parallel execution (on multiple cores). Otherwise \code{mforeach} is used. Defaults to FALSE. If \code{useParLapply = TRUE} and \code{useLB = TRUE}, results are not reproducible.}
 
-\item{cl}{The cluster to use (if formed beforehand). Defaults to \code{NULL}.}
+\item{useLB}{Should be logical if set. Only used if \code{useParLapply = TRUE}. Should load balancing be used (\code{parLapplyLB} instead of \code{parLapply}). Using load balancing usually means faster execution, but results are with not reproducible. Defaults to \code{NULL}, which is changed to \code{TRUE}, but a warning.}
+
+\item{chunk.size}{chunk.size used in \code{parLapplyLB} if it is used, otherwise ignored. Defaults to 1.}
+
+\item{cl}{The cluster to use (if formed beforehand). Defaults to \code{NULL}. Ignored if useParLapply=FALSE (default) and foreach::getDoParRegistered is true}
 
 \item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
+
+\item{useRegParrallaBackend}{Should the function use already registered parallel backend. Defaults to \code{FALSE}. If \code{TRUE}, you must make sure that an appropriate backend is correctly set up and registered. Use only if \code{useParLapply = FALSE} (default) and \code{nCore} is not 1.}
 
 \item{\dots}{Arguments passed to other functions, see \code{\link{critFunC}}.}
 
@@ -167,7 +176,7 @@ plot(res) # Hopefully we get the original partition
 
 }
 \references{
-Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}
+Batagelj, V., & Mrvar, A. (2006). Pajek 1.11. Retrieved from http://vlado.fmf.uni-lj.si/pub/networks/pajek/
 
 Doreian, P., Batagelj, V. & Ferligoj, A. (2005). Generalized blockmodeling, (Structural analysis in the social sciences, 25). Cambridge [etc.]: Cambridge University Press.
 

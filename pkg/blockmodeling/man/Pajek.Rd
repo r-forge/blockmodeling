@@ -96,7 +96,7 @@ Functions for reading/loading and writing Pajek files:
 \code{savevector} - Saves a vector into a  Pajek ".clu" filename.
 }
 \references{
-Batagelj, V., & Mrvar. A. (1999). Pajek - Program for Large Network Analysis. Retrieved from \url{http://vlado.fmf.uni-lj.si/pub/networks/pajek/}.
+Batagelj, V., & Mrvar. A. (1999). Pajek - Program for Large Network Analysis. Retrieved from http://vlado.fmf.uni-lj.si/pub/networks/pajek/.
 
 de Nooy, W., Mrvar, A., & Batagelj. V. (2005). Exploratory Social Network Analysis with Pajek. London: SAGE Publications.
 }
