@@ -473,11 +473,10 @@ function(
     title(outer=outer.title,ylab=ylab,xlab=xlab,main=main, line=title.line,cex.main=cex.main)
     if(!is.null(MplotValues)){
       if(dim(MplotValues)==dim(M)&&is.character(MplotValues)){
-        print.val<-FALSE
         plot.legend<-FALSE
       } else warning("MplotValues is ignored. It should be the same dimension as the main matrix (x or M) and be a character")
     }
-    if(print.val){  #ploting the values in the cells if selected
+    if(print.val|(!is.null(MplotValues))){  #ploting the values in the cells if selected
         norm.val<-as.vector(M)/max(abs(M))
         aMnorm<-abs(norm.val)
         col.text<-1-round(aMnorm)
@@ -493,20 +492,22 @@ function(
 
         col.text[col.text=="black"&norm.val<0]<-"red"
         if(!print.0) col.text[as.vector(M)==0]<-"transparent"
-
-        maxM<-formatC(max(M),format="e")
-        if(is.null(print.cells.mf)){
-            if(all(trunc(M)==M)& max(M)<10^print.digits.cells){
-                multi<-1
-            }else{
-                multi<-floor(log10(max(M)))
-                multi<-(multi-(print.digits.cells - 1))*(-1)
-                multi<-10^multi
-            }
-        }else multi <- print.cells.mf
-        
-        MplotValues<-round(M*multi)
-        if(multi!=1 & printMultipliedMessage) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
+		
+		if(is.null(MplotValues)){
+			maxM<-formatC(max(M),format="e")
+			if(is.null(print.cells.mf)){
+				if(all(trunc(M)==M)& max(M)<10^print.digits.cells){
+					multi<-1
+				}else{
+					multi<-floor(log10(max(M)))
+					multi<-(multi-(print.digits.cells - 1))*(-1)
+					multi<-10^multi
+				}
+			}else multi <- print.cells.mf
+			
+			MplotValues<-round(M*multi)
+			if(multi!=1 & printMultipliedMessage) mtext(text=paste("* all values in cells were multiplied by ",multi,sep=""),side=1, line=-0.7,cex=0.70)
+		}
     }
     
     if(!is.null(MplotValues)) text(x=(xleft+xright)/2+val.x.coor.cor,y=(ytop+ybottom)/2+val.y.coor.cor, labels=as.vector(MplotValues),col=col.text,cex=ifelse(cex.val=="default",min(10/max(dm),1),cex.val))
