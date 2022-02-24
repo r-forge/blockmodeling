@@ -6,6 +6,7 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 Version: 1.0.8
 Date: 2022-02-24
 A line added to print.optMorePar to print a line with the number of solutions with the same error.
+A printed message in optRandomParC corrected (the number of solutions with minimal error).
 "tests" directory added with currently only one file. The plan is to add some tests here, possibly also some automatic. 
 
 2021

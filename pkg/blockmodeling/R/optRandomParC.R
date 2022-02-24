@@ -169,7 +169,8 @@
   }
   
   on.exit({
-    res1 <- res[which(err==min(err, na.rm = TRUE))]
+    whichMin<-which(err==min(err, na.rm = TRUE))
+    res1 <- res[whichMin]
     best<-NULL
     best.clu<-NULL
     for(i in 1:length(res1)){
@@ -191,7 +192,7 @@
         }
         
         if(length(best)>=max.iden) {
-          warning("Only the first ",max.iden," solutions out of ",length(na.omit(err))," solutions with minimal error will be saved.\n")
+          warning("Only the first ",max.iden," solutions out of ",length(whichMin)," solutions (some may be duplicated) with minimal error will be saved.\n")
           break
         }
         
