@@ -1,6 +1,13 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+
+2022
+Version: 1.0.8
+Date: 2022-02-24
+A line added to print.optMorePar to print a line with the number of solutions with the same error.
+"tests" directory added with currently only one file. The plan is to add some tests here, possibly also some automatic. 
+
 2021
 Version: 1.0.7
 Date: 2021-10-21
@@ -31,12 +38,11 @@ Version: 1.0.3
 Date: 2021-06-01
 Utility functions added. Relative fit function added.
 
-2021
 Version: 1.0.2
 Date: 2021-03-24
 Utility functions added.
 
-February 1, 2020
+Date: 2021-02-01
 plot.array removed - only goes by name plotArray.
 Minor bug fixes.
 

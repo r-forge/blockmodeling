@@ -1,0 +1,5 @@
+library(blockmodeling)
+data(baker)
+res<-optRandomParC(baker,k=4, approaches = "bin", blocks = c("nul","com"),rep = 100, nCores = 0)
+plot(res)
+print(res)

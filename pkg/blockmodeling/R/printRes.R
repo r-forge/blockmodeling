@@ -54,4 +54,5 @@
     } else print(data.frame(rIM,check.names = FALSE))
   }
   cat("\nError:",min(x$err),"\n")
+  if(length(x$best)>1) cat(length(x$best),"solutions with minimal error exits. Only results for the first one are shown above!\n")
 }

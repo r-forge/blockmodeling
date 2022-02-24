@@ -16,7 +16,7 @@ NULL
 #' @param useSparseMatrix Should a sparse matrix be use instead of the ordinary one? Sparse matrices can only be used if package Matrix is installed. The default \code{NULL} uses sparse matrices  for networks with more that \code{minN} vertices.
 #' @param minN The minimal number of units in the network to use sparse matrices.
 #'
-#' @return NULL, a matrix or a vector (see Description).
+#' @return NULL, a matrix or a vector.
 #'
 #' @references 
 #' Batagelj, V., & Mrvar. A. (1999). Pajek - Program for Large Network Analysis. Retrieved from http://vlado.fmf.uni-lj.si/pub/networks/pajek/.
