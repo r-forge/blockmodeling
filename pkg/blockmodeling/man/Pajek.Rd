@@ -68,7 +68,7 @@ savevector(v, filename)
 \item{v}{A vector.}
 }
 \value{
-NULL, a matrix or a vector (see Description).
+NULL, a matrix or a vector.
 }
 \description{
 \code{loadmatrix} - Loads a Pajek ".mat" filename as a matrix.

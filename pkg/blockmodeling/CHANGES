@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2022
+Version: 1.0.9
+Date: 2022-03-23
+A bug in funByBlocks corrected. The function did not officially support multi-relational netowrks, but actually they were supproted, while it was expected that thay were represented with an array, where the first dimmension represented the relation. No this was changed so that the last/third relation represents the relation as it is implemented in in most other functions, e.g. in critFunC and optRandomParC.
+
 Version: 1.0.8
 Date: 2022-02-24
 A line added to print.optMorePar to print a line with the number of solutions with the same error.

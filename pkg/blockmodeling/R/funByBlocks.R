@@ -2,13 +2,13 @@
 #' 
 #' Computes a value of a function over blocks of a matrix, defined by a partition.
 #' 
-#' @param x An object of suitable class or a matrix representing the (usually valued) network.
-#' For now, only one-relational networks are supported. The network can have one or more modes (different kinds of units with no ties among themselves.
+#' @param x An object of suitable class or a matrix/array representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
+#' The network can have one or more modes (different kinds of units with no ties among themselves.
 #' If the network is not two-mode, the matrix must be square.
 #' @param clu A partition. Each unique value represents one cluster.
 #' If the network is one-mode, then this should be a vector, else a list of vectors, one for each mode.
-#' @param M A matrix representing the (usually valued) network.
-#' For now, only one-relational networks are supported. The network can have one or more modes (different  kinds of units with no ties among themselves.
+#' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
+#' The network can have one or more modes (different  kinds of units with no ties among themselves.
 #' If the network is not two-mode, the matrix must be square.
 #' @param ignore.diag Should the diagonal be ignored.
 #' @param sortNames Should the rows and columns of the matrix be sorted based on their names.

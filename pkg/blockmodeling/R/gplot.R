@@ -28,13 +28,13 @@
 #' @param edge.len If \code{uselen == TRUE}, curved edge lengths are scaled by \code{edge.len}.
 #' @param uselen Boolean; should we use \code{edge.len} to rescale edge lengths.
 #' @param usecurve Boolean; should we use \code{edge.curve}.
-#' @param \dots Additional arguments to \code{\link{plot}} or \code{gplot} from package \code{sna}:\cr\cr
+#' @param \dots Additional arguments to \code{\link{plot}} or \code{link{sna::gplot}}:\cr\cr
 #' \bold{\code{mode}}:  the vertex placement algorithm; this must correspond to a \code{gplot.layout} function from package \code{sna}. 
 #'
 #' @return Plots a graph.
 #'
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
-#' @seealso \code{sna:gplot}
+#' @seealso \code{link{sna::gplot}}
 #' @keywords graphs
 #' @importFrom grDevices gray
 #' 

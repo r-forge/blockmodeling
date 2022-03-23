@@ -5,7 +5,7 @@ function(x = M, clu, M = x, ignore.diag = "default", sortNames = TRUE, FUN = "me
 {
     M<-as.array(M)
     dM<-dim(M)
-    nn<-ifelse(length(dM)==2,1,dM[1])
+    nn<-ifelse(length(dM)==2,1,dM[3])
 
     if(is.list(clu)){
       nmode<-length(clu)
@@ -20,7 +20,7 @@ function(x = M, clu, M = x, ignore.diag = "default", sortNames = TRUE, FUN = "me
     clu<-lapply(clu,factor)
     if(ignore.diag =="default"){
         if(length(dM)==3){
-            ignore.diag <-all(apply(M,1,function(x)identical(ss(diag(x)),0)))&(nmode==1)
+            ignore.diag <-all(apply(M,3,function(x)identical(ss(diag(x)),0)))&(nmode==1)
         } else ignore.diag <-identical(ss(diag(M)),0)&(nmode==1)  
     }   
     
@@ -32,7 +32,7 @@ function(x = M, clu, M = x, ignore.diag = "default", sortNames = TRUE, FUN = "me
     IM.V <- array(NA, dim=c(nn,length(k[[1]]),length(k[[2]])))
     dimnames(IM.V)<-c(list(1:nn),k)
     for(iNet in 1:nn){
-        if(length(dM)==3) iM <- M[iNet,,] else iM<-M
+        if(length(dM)==3) iM <- M[,,iNet] else iM<-M
         for (i in k[[1]]) {
             for (j in k[[2]]) {
                 B<-iM[clu[[1]] == i, clu[[2]] == j, drop = FALSE]

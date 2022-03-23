@@ -53,7 +53,7 @@ May be given as a vector or adjacency matrix, if edges are to have different lin
 \item{rel.thresh}{Real number indicating the lower relative (compared to the highest value) threshold for tie values.
 Only ties of value \code{thresh} are displayed.  By default, \code{thresh = 0}.}
 
-\item{\dots}{Additional arguments to \code{\link{plot}} or \code{gplot} from package \code{sna}:\cr\cr
+\item{\dots}{Additional arguments to \code{\link{plot}} or \code{link{sna::gplot}}:\cr\cr
 \bold{\code{mode}}:  the vertex placement algorithm; this must correspond to a \code{gplot.layout} function from package \code{sna}.}
 
 \item{uselen}{Boolean; should we use \code{edge.len} to rescale edge lengths.}
@@ -71,7 +71,7 @@ Plots a graph.
 The function calls function \code{gplot} from the library \code{sna} with different defaults. Use fun for plotting image graphs.
 }
 \seealso{
-\code{sna:gplot}
+\code{link{sna::gplot}}
 }
 \author{
 \enc{Aleš Žiberna}{Ales Ziberna}
