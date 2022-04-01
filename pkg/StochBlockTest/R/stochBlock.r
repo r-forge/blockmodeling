@@ -19,7 +19,7 @@
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
-#' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' @return A list similar to optParC in package \code{blockmodeling}.
 stochBlock<-function(M, 
                   clu, 
                   weights=NULL,
@@ -31,16 +31,19 @@ stochBlock<-function(M,
   n1<-dim(M)[1]
   if(is.list(clu)) {
     n<-sapply(clu, length)
+    k<-sapply(clu, function(x)length(unique(x)))
   }  else{
     n<-length(clu)
+    k<-length(unique(clu))
   }
+
   if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")  
   
   diagonal<-match.arg(diagonal)
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
     weights<-M
-    weights[,]<-1
+    weights[]<-1
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   if(is.null(uWeights)){
 	uWeights<-rep(1.0, n1)
@@ -138,10 +141,10 @@ stochBlock<-function(M,
   res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   
 	  
-  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf)
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
+  #return(res)
+  class(res)<-"opt.par"
   return(res)
-  # class(res)<-"opt.par"
-  # return(res)
 }
 
 
@@ -166,12 +169,13 @@ stochBlock<-function(M,
 #'   \item number of relations
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
-#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
-#' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
+#' 
+#' @return A list similar to optParC in package \code{blockmodeling}.
 llStochBlock<-function(M, 
                    clu, 
                    weights=NULL,
-				   uWeights=NULL,
+				           uWeights=NULL,
                    diagonal = c("ignore","seperate","same"),
                    limitType=c("none","inside","outside"),    
                    limits=NULL,
@@ -311,14 +315,13 @@ stochBlockORP<-function(M, #a square matrix
                          printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
                          n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
                          nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object,
-                         useParLapply=TRUE, #should parLapply be used instead of foreach
+                         useParLapply=FALSE, #should parLapply be used instead of foreach
                          cl = NULL, #the cluster to use (if formed beforehand)
                          stopcl = is.null(cl), # should the cluster be stoped
                          ... #paramters to stochBlock
  ){
    dots<-list(...)
  
-   
    if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
    
    if(is.null(mingr)){
@@ -404,7 +407,7 @@ stochBlockORP<-function(M, #a square matrix
        initial.param<-NULL
      } else initial.param=list(initial.param)
      
-     res<-c(list(M=M),res,best,err,checked.par,call,initial.param=initial.param, list(Random.seed=.Random.seed, cl=cl))
+     res<-c(list(M=M),list(ICL=best[[1]][[1]]$ICL),res,best,err,checked.par,call,initial.param=initial.param, list(Random.seed=.Random.seed, cl=cl))
      class(res)<-"opt.more.par"
      return(res)
    })
@@ -455,9 +458,8 @@ stochBlockORP<-function(M, #a square matrix
        if(printRep==1) cat("Final partition:   ",blockmodeling:::unlistPar(res[[i]]$clu),"\n")
      }
    } else {
-     oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep,...){
+     oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep, parGenFun,...){
        temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
-       
        #skip.par<-c(skip.par,list(temppar))
        
        tres <- try(stochBlock(M=M, clu=temppar,  ...))
@@ -487,30 +489,30 @@ stochBlockORP<-function(M, #a square matrix
        #clusterExport(cl, varlist = "kmBlock")
        clusterExport(cl, varlist = "pkgName", envir=environment())
        clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
-       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
        if(stopcl) stopCluster(cl)
        res<-lapply(res,function(x)x[[1]])
      } else {
        library(doParallel)
        library(doRNG)
        if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
- 		if(!is.null(cl)) {
- 			#cl<-makeCluster(nCores)
- 			registerDoParallel(cl)
- 		} else registerDoParallel(nCores)
+         if(!is.null(cl)) {
+           #cl<-makeCluster(nCores)
+           registerDoParallel(cl)
+         } else registerDoParallel(nCores)
        }
        nC<-getDoParWorkers()
- 
-       res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
- 	  if(!is.null(cl) & stopcl) {
- 		registerDoSEQ()
- 		stopCluster(cl)
- 	  }
+       
+       res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
+       if(!is.null(cl) & stopcl) {
+         registerDoSEQ()
+         stopCluster(cl)
+       }
      }
-     err<-sapply(res,function(x)x$err)    
+ 	err<-sapply(res,function(x)x$err)    
    }
- }
- 
+}
+
 
 
 findEmptySuperbocks<-function(M, n, na.rm=TRUE){

@@ -24,10 +24,10 @@ weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=
   if(nCores>1 & !getDoParRegistered()){
     registerDoParallel(nCores)
   }
-  if(require(blockmodeling)){
+  if(requireNamespace(blockmodeling)){
     pack<-"blockmodeling"
   }else{
-    library(blockmodelingTest)
+    requireNamespace(blockmodelingTest)
     pack<-"blockmodelingTest"
   }
   pack<-c(pack,"StochBlockTest")
