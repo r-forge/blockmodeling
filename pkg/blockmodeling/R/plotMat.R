@@ -494,7 +494,7 @@ function(
         if(!print.0) col.text[as.vector(M)==0]<-"transparent"
 		
 		if(is.null(MplotValues)){
-			maxM<-formatC(max(M),format="e")
+			maxM<-formatC(max(abs(M)),format="e")
 			if(is.null(print.cells.mf)){
 				if(all(trunc(M)==M)& max(M)<10^print.digits.cells){
 					multi<-1
