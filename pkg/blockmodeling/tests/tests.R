@@ -1,5 +1,6 @@
 library(blockmodeling)
 data(baker)
-res<-optRandomParC(baker,k=4, approaches = "bin", blocks = c("nul","com"),rep = 100, nCores = 0)
+set.seed(2022)
+res<-optRandomParC(baker,k=4, approaches = "bin", blocks = c("nul","com"),rep = 100, nCores = 1)
 plot(res)
 print(res)
