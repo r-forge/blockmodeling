@@ -19,6 +19,8 @@
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
+#' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
+#' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' @return A list similar to optParC in package \code{blockmodeling}.
 stochBlock<-function(M, 
                   clu, 
@@ -27,7 +29,9 @@ stochBlock<-function(M,
 				  diagonal = c("ignore","seperate","same"),
 				  limitType=c("none","inside","outside"),				  
                   limits=NULL,
-				  weightClusterSize = 1){
+				  weightClusterSize = 1,
+				  addOne = TRUE, 
+				  eps = 0.001){
   n1<-dim(M)[1]
   if(is.list(clu)) {
     n<-sapply(clu, length)
@@ -138,7 +142,7 @@ stochBlock<-function(M,
 
   weightClusterSize<-as.double(weightClusterSize)
   
-  res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   
 	  
   res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
@@ -170,6 +174,8 @@ stochBlock<-function(M,
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
+#' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
+#' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' 
 #' @return A list similar to optParC in package \code{blockmodeling}.
 llStochBlock<-function(M, 
@@ -179,7 +185,9 @@ llStochBlock<-function(M,
                    diagonal = c("ignore","seperate","same"),
                    limitType=c("none","inside","outside"),    
                    limits=NULL,
-                   weightClusterSize=1.0){
+                   weightClusterSize=1.0,
+				  addOne = TRUE, 
+				  eps = 0.001){
 
   n1<-dim(M)[1]
   if(is.list(clu)) {
@@ -280,7 +288,7 @@ llStochBlock<-function(M,
   uWeights<-uWeights/mean(uWeights[uWeights>0])
   weightClusterSize<-as.double(weightClusterSize)
   
-  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   return(res)
   
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))

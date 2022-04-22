@@ -7,9 +7,14 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // meanByBlocks
-Rcpp::List meanByBlocks(const Array& M, const IVector& clu, const IVector& nClu, const IVector& n, const std::string diagonal, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper);
-RcppExport SEXP _StochBlockTest_meanByBlocks(SEXP MSEXP, SEXP cluSEXP, SEXP nCluSEXP, SEXP nSEXP, SEXP diagonalSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP) {
+Rcpp::List meanByBlocks(const Array& M, const IVector& clu, const IVector& nClu, const IVector& n, const std::string diagonal, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper, const bool& addOne, const double& eps);
+RcppExport SEXP _StochBlockTest_meanByBlocks(SEXP MSEXP, SEXP cluSEXP, SEXP nCluSEXP, SEXP nSEXP, SEXP diagonalSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP, SEXP addOneSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -23,13 +28,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatUpper(bordersMatUpperSEXP);
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
-    rcpp_result_gen = Rcpp::wrap(meanByBlocks(M, clu, nClu, n, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper));
+    Rcpp::traits::input_parameter< const bool& >::type addOne(addOneSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(meanByBlocks(M, clu, nClu, n, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps));
     return rcpp_result_gen;
 END_RCPP
 }
 // kmBlock
-Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const DVector& uWeights, const IVector& n, const IVector& nClu, const std::string& diagonal, const double weightClusterSize, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper, const int& maxNoImp);
-RcppExport SEXP _StochBlockTest_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP uWeightsSEXP, SEXP nSEXP, SEXP nCluSEXP, SEXP diagonalSEXP, SEXP weightClusterSizeSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP, SEXP maxNoImpSEXP) {
+Rcpp::List kmBlock(const Array& M, const IVector& clu, const Array& weights, const DVector& uWeights, const IVector& n, const IVector& nClu, const std::string& diagonal, const double weightClusterSize, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper, const int& maxNoImp, const bool& addOne, const double& eps);
+RcppExport SEXP _StochBlockTest_kmBlock(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP uWeightsSEXP, SEXP nSEXP, SEXP nCluSEXP, SEXP diagonalSEXP, SEXP weightClusterSizeSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP, SEXP maxNoImpSEXP, SEXP addOneSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,13 +54,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
     Rcpp::traits::input_parameter< const int& >::type maxNoImp(maxNoImpSEXP);
-    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, uWeights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, maxNoImp));
+    Rcpp::traits::input_parameter< const bool& >::type addOne(addOneSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(kmBlock(M, clu, weights, uWeights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, maxNoImp, addOne, eps));
     return rcpp_result_gen;
 END_RCPP
 }
 // critFunction
-double critFunction(const Array& M, const IVector& clu, const Array& weights, const DVector& uWeights, const int dimensions, const IVector& n, const double weightClusterSize, const std::string& diagonal, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper);
-RcppExport SEXP _StochBlockTest_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP uWeightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP weightClusterSizeSEXP, SEXP diagonalSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP) {
+double critFunction(const Array& M, const IVector& clu, const Array& weights, const DVector& uWeights, const int dimensions, const IVector& n, const double weightClusterSize, const std::string& diagonal, const std::string& sBorders, const Rcpp::Nullable<Array>& bordersMatLower, const Rcpp::Nullable<Array>& bordersMatUpper, const Rcpp::Nullable<DMatrix>& bordersSeperateLower, const Rcpp::Nullable<DMatrix>& bordersSeperateUpper, const bool& addOne, const double& eps);
+RcppExport SEXP _StochBlockTest_critFunction(SEXP MSEXP, SEXP cluSEXP, SEXP weightsSEXP, SEXP uWeightsSEXP, SEXP dimensionsSEXP, SEXP nSEXP, SEXP weightClusterSizeSEXP, SEXP diagonalSEXP, SEXP sBordersSEXP, SEXP bordersMatLowerSEXP, SEXP bordersMatUpperSEXP, SEXP bordersSeperateLowerSEXP, SEXP bordersSeperateUpperSEXP, SEXP addOneSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -70,15 +79,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::Nullable<Array>& >::type bordersMatUpper(bordersMatUpperSEXP);
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateLower(bordersSeperateLowerSEXP);
     Rcpp::traits::input_parameter< const Rcpp::Nullable<DMatrix>& >::type bordersSeperateUpper(bordersSeperateUpperSEXP);
-    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, uWeights, dimensions, n, weightClusterSize, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper));
+    Rcpp::traits::input_parameter< const bool& >::type addOne(addOneSEXP);
+    Rcpp::traits::input_parameter< const double& >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(critFunction(M, clu, weights, uWeights, dimensions, n, weightClusterSize, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_StochBlockTest_meanByBlocks", (DL_FUNC) &_StochBlockTest_meanByBlocks, 10},
-    {"_StochBlockTest_kmBlock", (DL_FUNC) &_StochBlockTest_kmBlock, 14},
-    {"_StochBlockTest_critFunction", (DL_FUNC) &_StochBlockTest_critFunction, 13},
+    {"_StochBlockTest_meanByBlocks", (DL_FUNC) &_StochBlockTest_meanByBlocks, 12},
+    {"_StochBlockTest_kmBlock", (DL_FUNC) &_StochBlockTest_kmBlock, 16},
+    {"_StochBlockTest_critFunction", (DL_FUNC) &_StochBlockTest_critFunction, 15},
     {NULL, NULL, 0}
 };
 

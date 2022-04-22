@@ -34,6 +34,8 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
+#' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
+#' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' 
 #' @return The value of ICL
 ICLStochBlock<-function(M, 
@@ -43,7 +45,9 @@ ICLStochBlock<-function(M,
                        diagonal = c("ignore","seperate","same"),
                        limitType=c("none","inside","outside"),    
                        limits=NULL,
-                       weightClusterSize=1.0){
+                       weightClusterSize=1.0,
+					   addOne = TRUE, 
+					   eps = 0.001){
   
   n1<-dim(M)[1]
   if(is.list(clu)) {
@@ -147,7 +151,7 @@ ICLStochBlock<-function(M,
   uWeights<-uWeights/mean(uWeights[uWeights>0])
   weightClusterSize<-as.double(weightClusterSize)
   
-  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
+  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   
   # wByHB<-blockmodeling::funByBlocks(w,clu=rep(1:length(n),times=n),ignore.diag=FALSE, FUN=sum)
   # k<-length(unique(clu))

@@ -72,19 +72,19 @@ double Borders<Array>::getUpperAt( const size_t i, const size_t j, const size_t 
 // [[Rcpp::export(name = ".meanByBlocks")]]
 Rcpp::List meanByBlocks( const Array & M, const IVector & clu, const IVector & nClu, const IVector & n, const std::string diagonal = "ignore",
                          const std::string & sBorders = "none", const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
-                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue );
+                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const bool & addOne = true, const double & eps = 0.001);
 // [[Rcpp::export(name = ".kmBlock")]]
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const DVector & uWeights, const IVector & n, const IVector & nClu, const std::string & diagonal = "ignore", const double weightClusterSize=1.0, 
                     const std::string & sBorders = "none", const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
-                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const int & maxNoImp = 0);
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const int & maxNoImp = 0, const bool & addOne = true, const double & eps = 0.001);
 // [[Rcpp::export(name = ".critFunction")]]
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const DVector & uWeights, const int dimensions, const IVector & n, const double weightClusterSize = 1, const std::string & diagonal = "ignore",
                      const std::string & sBorders = "none", const Rcpp::Nullable<Array> & bordersMatLower = R_NilValue, const Rcpp::Nullable<Array> & bordersMatUpper = R_NilValue,
-                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue );
+                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower = R_NilValue, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper = R_NilValue, const bool & addOne = true, const double & eps = 0.001);
 
 // Functions forward declarations
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const IVector & nClu, DMatrix & p_pSepare, const Array & superBlockMeans, const DMatrix & superBlockDiagMeans, const IVector & n, BorderType p_type,
-                    const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal  = Diagonale::Ignore );					
+                    const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal  = Diagonale::Ignore, const bool & addOne = true, const double & eps = 0.001);
 double criterialFunction( const Array & M, const IVector & clu, const Array & weights, const DVector & uWeights, const Array & meansMat, const DMatrix & p_mSeparate, const Diagonale p_diagonale, const DVector & logProbGroups, const double weightClusterSize);
 
 void setGroups( const Array & M, IVector & clu, const Array & weights, const DVector & uWeights, const Array & meansMat, const IVector & nClu, const IVector & n, const DMatrix & p_mSeparate, const Diagonale p_diagonale, const double weightClusterSize, const IVector & cluMode, IVector & countGroups, DVector & logProbGroups);
@@ -105,10 +105,10 @@ void checkInputBorders( const Diagonale & p_diagonale,
                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper );
 
 std::ostream & operator << ( std::ostream & p_stream, const Diagonale p_diag );
-
+					
 Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights, const DVector & uWeights, const IVector & n, const IVector & nClu, const std::string & diagonal, const double weightClusterSize, 
                     const std::string & sBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
-                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper, const int & maxNoImp)
+                    const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper, const int & maxNoImp, const bool & addOne, const double & eps)
 {
     const Diagonale dDiag = getDiagonale( diagonal );
     const BorderType eBorders = getBorderType( sBorders );
@@ -221,7 +221,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 	
 //    const DMatrix MEANS = relationsMeans( M, n );
 	// Rcpp::Rcout << "OK6\n";	
-    meansByBlocks( M, meanBlocks, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
+    meansByBlocks( M, meanBlocks, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag, addOne, eps);
 	// Rcpp::Rcout << "OK7\n";	
 	
 	// Rcpp::Rcout << "cluMode \n";
@@ -266,7 +266,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 	// Rcpp::Rcout << "newClu \n";
 	// Rcpp::Rcout << newClu <<"\n";	
 
-    meansByBlocks( M, meanBlocks, newClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
+    meansByBlocks( M, meanBlocks, newClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag, addOne, eps);
 	// Rcpp::Rcout << "OK7\n";	
 	// Rcpp::Rcout << "meanBlocks \n";
 	// Rcpp::Rcout << meanBlocks <<"\n";
@@ -291,7 +291,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 	int noImp= 0;
     while( noImp <= maxNoImp) {
         setGroups( M, newClu, weights, uWeights, meanBlocks, nClu, n, pSeparate, dDiag, weightClusterSize, cluMode, countGroups, logProbGroups);
-        meansByBlocks( M, meanBlocks, newClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
+        meansByBlocks( M, meanBlocks, newClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag, addOne, eps);
 		// Rcpp::Rcout << "newClu \n" << newClu <<"\n";		
 		// Rcpp::Rcout << "bestClu \n" << bestClu <<"\n";		
         newCf = criterialFunction( M, newClu, weights, uWeights, meanBlocks, pSeparate, dDiag, logProbGroups, weightClusterSize);
@@ -307,7 +307,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
     }
 	
 	
-	meansByBlocks( M, meanBlocks, bestClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
+	meansByBlocks( M, meanBlocks, bestClu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag, addOne, eps);
 
 	for(int i = 0; i< K;++i){
 		countGroups.at(i)=0;
@@ -334,7 +334,7 @@ Rcpp::List kmBlock( const Array & M, const IVector & clu, const Array & weights,
 
 Rcpp::List meanByBlocks( const Array & M, const IVector & clu,  const IVector & nClu, const IVector & n, const std::string diagonal,
                          const std::string & sBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
-                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
+                         const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper, const bool & addOne, const double & eps)
 {
 	const int dimensions = Rcpp::sum( nClu );
 		
@@ -388,7 +388,7 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu,  const IVector & 
 
 	superblockMeansFun(M, n, dDiag, unitMode, superBlockMeans, superBlockDiagMeans);
 //    const DMatrix MEANS = relationsMeans( M, n );
-    meansByBlocks( M, aRes, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag );
+    meansByBlocks( M, aRes, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiag, addOne, eps);
 
     if( !pSeparate.is_empty() ) {
         return Rcpp::List::create( Rcpp::Named( "meansByBlocs" ) = aRes, Rcpp::Named( "meansByCluDiag" ) = pSeparate );
@@ -399,7 +399,7 @@ Rcpp::List meanByBlocks( const Array & M, const IVector & clu,  const IVector & 
 
 double critFunction( const Array & M, const IVector & clu, const Array & weights, const DVector & uWeights, const int dimensions, const IVector & n, const double weightClusterSize, const std::string & diagonal,
                      const std::string & sBorders, const Rcpp::Nullable<Array> & bordersMatLower, const Rcpp::Nullable<Array> & bordersMatUpper,
-                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper )
+                     const Rcpp::Nullable<DMatrix> & bordersSeperateLower, const Rcpp::Nullable<DMatrix> & bordersSeperateUpper, const bool & addOne, const double & eps)
 {
     Diagonale dDiagonale = getDiagonale( diagonal );
     const BorderType eBorders = getBorderType( sBorders );
@@ -496,7 +496,7 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 	superblockMeansFun(M, n, dDiagonale, unitMode, superBlockMeans, superBlockDiagMeans);
 	// Rcpp::Rcout << "OK3\n";
 	
-    meansByBlocks( M, aRes, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiagonale );
+    meansByBlocks( M, aRes, clu, nClu, pSeparate, superBlockMeans, superBlockDiagMeans, n, eBorders, bordersMeanstMat, bordersSeperate, dDiagonale, addOne, eps);
 	// Rcpp::Rcout << "OK4\n";
 
 	// Rcpp::Rcout << "clu\n" << clu <<"\n";		
@@ -512,10 +512,11 @@ double critFunction( const Array & M, const IVector & clu, const Array & weights
 }
 
 void meansByBlocks( const Array & M, Array & res, const IVector & clu, const IVector & nClu, DMatrix & p_pSepare, const Array & superBlockMeans, const DMatrix & superBlockDiagMeans, const IVector & n, BorderType p_type,
-                    const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal )
+                    const Borders<Array> & p_btBorders, const Borders<DMatrix> & p_btBordersSeperate, const Diagonale sDiagonal, const bool & addOne, const double & eps)
 {
 	// Rcpp::Rcout << "nClu = " << nClu << "\n";
 	const int dimensions = Rcpp::sum(nClu);
+	double dVal;
 	// Rcpp::Rcout << "dimensions = " << dimensions << "\n";
 
     if( res.is_empty() ) {
@@ -606,7 +607,17 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const IVe
             }
             ++sCount1;
             if( sDiagonal == Diagonale::Seperate ) { // save diagonal values into Matrix[ dimensions, r ]
-                double dVal = double( mSseprateDiagonal( i, r ) +  superBlockDiagMeans.at(s1,r)) / (mNseprateDiagonal( i, r ) + 1);
+				if(addOne){
+					dVal = double( mSseprateDiagonal( i, r ) +  superBlockDiagMeans.at(s1,r)) / (mNseprateDiagonal( i, r ) + 1);
+				} else {
+					dVal = double( mSseprateDiagonal( i, r )) / mNseprateDiagonal( i, r );
+					if (dVal < eps){
+						dVal = eps;
+					} else if(dVal > (1-eps)){
+						dVal = 1-eps;
+					}
+				}
+
                 mDiagonalRes( i, r ) = dVal;
             }
 			
@@ -624,7 +635,18 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const IVe
                     res(i, j, r ) = superBlockMeans.at( s1, s1, r );
                 }
                 else {
-                    res( i, j, r ) = (dVal + superBlockMeans(s1,s2,r))/ (N( i, j, r )+1);
+					if(addOne){
+						res( i, j, r ) = (dVal + superBlockMeans(s1,s2,r))/ (N( i, j, r )+1);
+					} else {
+						res( i, j, r ) = dVal/N( i, j, r );
+						if (res( i, j, r ) < eps){
+							res( i, j, r ) = eps;
+						} else if(res( i, j, r ) > (1-eps)){
+							res( i, j, r ) = 1-eps;
+						}
+							
+					}
+
                 }
 				// Rcpp::Rcout << "clu1 = " << i <<", clu2 = " << j << ", set1 = " << s1 << ", set2 = " << s2<< "\n";
             }
