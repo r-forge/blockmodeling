@@ -2,21 +2,21 @@
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}. 
+#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}. 
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored 
 #'   \item seperate - diagonal values are treated seperately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
-#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 #' \itemize{
 #'   \item number of clusters (of all types)
 #'   \item number of clusters (of all types)
 #'   \item number of relations
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
-#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
+#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
 kmBlockC<-function(M, 
                   clu, 
@@ -68,10 +68,10 @@ kmBlockC<-function(M,
   	  dl<-dim(limits)
   	  if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
 	  dl<-dim(limits)
-  	  if(length(dl)!=4) stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	  if(length(dl)!=4) stop("'limits' has wrong dimensions (see help for correct dimensions)")
   	  
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-  	    stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersMatLower <- limits[,,,1]
   	    dim(bordersMatLower)<-dim(limits)[1:3]
@@ -87,9 +87,9 @@ kmBlockC<-function(M,
   	  dl<-dim(limits)
   	  if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
   	  dl<-dim(limits)
-	  if(length(dl)!=4) stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+	  if(length(dl)!=4) stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-  	    stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersMatLower <- limits[,,,1] 
   	    bordersMatUpper <- limits[,,,2]
@@ -99,9 +99,9 @@ kmBlockC<-function(M,
   	  dl<-dim(diagLimits)
   	  if(length(dl)==2 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1],1,dl[2]))
 	  dl<-dim(diagLimits)
-  	  if(length(dl)!=3) stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	  if(length(dl)!=3) stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
-  	    stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersSeperateLower <- diagLimits[,,1] 
   	    bordersSeperateUpper <- diagLimits[,,2]
@@ -112,10 +112,10 @@ kmBlockC<-function(M,
   res<-kmBlock(M=M, clu=clu, weights=w, n=tmN, nClu=tmNclu, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
   
 	  
-  res<-list(M=M, clu=res$bestClu, IM=res$IM, err=res$bestCf, best=list(list(M=M, clu=res$bestClu, IM=res$IM)))
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,tmN), IM=res$IM, err=res$bestCf, best=list(list(M=M, clu=res$bestClu, IM=res$IM)))
+  #return(res)
+  class(res)<-"opt.par"
   return(res)
-  # class(res)<-"opt.par"
-  # return(res)
 }
 
 
@@ -125,21 +125,21 @@ kmBlockC<-function(M,
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}. 
+#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}. 
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored 
 #'   \item seperate - diagonal values are treated seperately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
-#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 #' \itemize{
 #'   \item number of clusters (of all types)
 #'   \item number of clusters (of all types)
 #'   \item number of relations
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
-#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
+#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
 critFunKmeans<-function(M, 
                    clu, 
@@ -190,10 +190,10 @@ critFunKmeans<-function(M,
       if(!is.array(limits)) stop("'limits' must be specified as an array!")
       dl<-dim(limits)
       if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
-      if(dim(limits)!=4) stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(limits)!=4) stop("'limits' has wrong dimensions (see help for correct dimensions)")
       
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-        stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersMatLower <- limits[,,,1] 
         bordersMatUpper <- limits[,,,2]
@@ -206,9 +206,9 @@ critFunKmeans<-function(M,
       if(!is.array(limits)) stop("First element of 'limits' must be specified as an array!")
       dl<-dim(limits)
       if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
-      if(dim(limits)!=4) stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(limits)!=4) stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-        stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersMatLower <- limits[,,,1] 
         bordersMatUpper <- limits[,,,2]
@@ -217,9 +217,9 @@ critFunKmeans<-function(M,
       if(!is.array(diagLimits)) stop("Second element of 'limits' must be specified as an array!")
       dl<-dim(diagLimits)
       if(length(dl)==2 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1],1,dl[2]))
-      if(dim(diagLimits)!=3) stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(diagLimits)!=3) stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
       if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
-        stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersSeperateLower <- diagLimits[,,,1] 
         bordersSeperateUpper <- diagLimits[,,,2]
