@@ -644,9 +644,7 @@ void meansByBlocks( const Array & M, Array & res, const IVector & clu, const IVe
 						} else if(res( i, j, r ) > (1-eps)){
 							res( i, j, r ) = 1-eps;
 						}
-							
 					}
-
                 }
 				// Rcpp::Rcout << "clu1 = " << i <<", clu2 = " << j << ", set1 = " << s1 << ", set2 = " << s2<< "\n";
             }
