@@ -1,6 +1,6 @@
 /*
 
-WARNINGS: rfn and cfn blocks added only to binary and valued blockmodeling - no safety measures are in effect!
+WARNINGS: rdo and cdo blocks added only to binary and valued blockmodeling - these blocks return Inf for homogeneity blockmodeling!
 
 
 
@@ -25,7 +25,7 @@ The implementation must support (when final):
 - pre-specified blockmodeling - for valued blockmodeling this also means possibility to pre-specify the value from the which the deviations are computed (hom) or the value of parameter m by blocks (val)
 
 If possible, also:
-- possibility of different methods for "searching" for the partition - ways of optimising - eg. not only local search, but aslo gentic algorithm, tabu search, etc.
+- possibility of different methods for "searching" for the partition - ways of optimizing - eg. not only local search, but also genetic algorithm, tabu search, etc.
 - possibility to specify what kind of partitions are allowed (minimal/maximal group size, etc.)
 
 
@@ -42,15 +42,15 @@ TODO:
 
 /* Change these when you add new functions */
 #define nRegFun 3
-#define nHomFun 2
-#define nBlockTypes 9
+#define nHomFun 3
+#define nBlockTypes 11
 #define nApproaches 3
 /* #define MaxNumOfDiffBlockTypes 10 */
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #define max(a,b) ((a) > (b) ? (a) : (b))
 
-
+const double eps = 0.001;
 
 double ss(double *px, int n, double preSpecVal);
 double ssP(double *px, int n, double preSpecVal);
@@ -83,6 +83,88 @@ void randomCall(int *n, int *r){
 
 /* Definition of an array of pointers to a function for computing some measure of variance*/
 double (*phom[nHomFun][4])(double *px, int n, double preSpecVal);
+
+
+/* A function for binary log-likelihood with probability equal to density*/
+double bll(double *px, int n, double preSpecVal)
+{
+	double p=0;
+	double res=0;
+	int i;
+
+	for(i=0;i<n;i++){
+		p += px[i];
+	}
+	p = p/n;
+	if(p < eps) {p=eps;}
+	if(p > (1- eps)) {p = 1-eps;}
+	
+	
+	for(i=0;i<n;i++){
+		res += px[i]*log(p)+ (1-px[i])*log(1-p);
+	}
+	return(-res);
+}
+
+
+/* A function for binary log-likelihood with probability equal to preSpecVal */
+double bllP(double *px, int n, double preSpecVal)
+{
+	double p=preSpecVal;
+	double res=0;
+	int i;
+
+	if(p < eps) {p=eps;}
+	if(p > (1- eps)) {p = 1-eps;}
+	
+	
+	for(i=0;i<n;i++){
+		res += px[i]*log(p)+ (1-px[i])*log(1-p);
+	}
+	return(-res);
+}
+
+
+/* A function for binary log-likelihood with probability equal to density*/
+double bllPmin(double *px, int n, double preSpecVal)
+{
+	double p=0;
+	double res=0;
+	int i;
+
+	for(i=0;i<n;i++){
+		p += px[i];
+	}
+	p = p/n;
+	
+	if(preSpecVal > p){
+		p=preSpecVal;
+	}
+	
+	if(p < eps) {p=eps;}
+	if(p > (1- eps)) {p = 1-eps;}
+	
+	
+	for(i=0;i<n;i++){
+		res += px[i]*log(p)+ (1-px[i])*log(1-p);
+	}
+	return(-res);
+}
+
+
+/* A function for binary log-likelihood with probability equal to 0+eps */
+double bll0(double *px, int n, double preSpecVal)
+{
+	double p=eps;
+	double res=0;
+	int i;
+	
+	for(i=0;i<n;i++){
+		res += px[i]*log(p)+ (1-px[i])*log(1-p);
+	}
+	return(-res);
+}
+
 
 /* A function for computing sum of squares deviations from the mean*/
 double ss(double *px, int n, double preSpecVal)
@@ -133,7 +215,7 @@ double ssPmin(double *px, int n, double preSpecVal)
 	return(ssxP);
 }
 
-/* A function for computing sum of squares deviations from preSpecVal given value*/
+/* A function for computing sum of squares deviations from 0 */
 double ss0(double *px, int n, double preSpecVal)
 {
 	double ssx=0;
@@ -144,7 +226,7 @@ double ss0(double *px, int n, double preSpecVal)
 	return(ssx);
 }
 
-/* fucntion for compasion of two dobles "double" - copied form GNU C Library manual */
+/* function for compassion of two doubles "double" - copied form GNU C Library manual */
 int cmp (const void *a, const void *b) {
 	const double *da = (const double *) a;
 	const double *db = (const double *) b;
@@ -263,15 +345,19 @@ double meanv(double *px, int n){
 
 
 
-
 /* a function for computing error of  the dnc (do not care) block for all blockmodeling types -> always returns 0*/
-double doNotCare(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double doNotCare(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	return(0.0);
+}
+
+/* a function for computing error of the block that always returns Inf*/
+double infBlock(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+	return(INFINITY);
 }
 
 
 /* a function for computing error of  the regular block - binary blockmodeling*/
-double binReg(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binReg(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of rows in the whole matrix/network
@@ -306,12 +392,16 @@ double binReg(const double *pM, const int nr, const int nc, const int relN,const
 
 	free(prs);
 	free(pcs);
-	return((nrb-nnr)*ncb + (ncb-nnc)*nnr);
+	if(*pmulReg==1) {
+		return((nrb-nnr)*ncb + (ncb-nnc)*nnr);
+	} else {
+		return((nrb-nnr) + (ncb-nnc));
+	}
 }
 
 
 /* a function for computing error of  the column-regular block - binary blockmodeling*/
-double binCre(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binCre(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -333,12 +423,16 @@ double binCre(const double *pM, const int nr, const int nc, const int relN,const
 		nnc += (pcs>0);
 	}
 	
-	return((ncb-nnc)*nrb);
+	if(*pmulReg==1) {
+		return((ncb-nnc)*nrb);
+	} else {
+		return(ncb-nnc);
+	}
 }
 
 
 /* a function for computing error of  the row-regular block - binary blockmodeling*/
-double binRre(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binRre(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -357,15 +451,210 @@ double binRre(const double *pM, const int nr, const int nc, const int relN,const
 		}
 		nnr += (prs>0);
 	}
-
-	return((nrb-nnr)*ncb);
+	
+	if(*pmulReg==1) {
+		return((nrb-nnr)*ncb);
+	} else {
+		return((nrb-nnr));
+	}
 }
 
 
 
+/* a function for computing error of  the row-dominant block - binary blockmodeling*/
+double binRdo(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrs=0;
+
+	for(int i = 0; i<nrb; i++){
+		prs=0;
+		for(int j = 0; j<ncb; j++){
+			prs += pM[baseInd+nc*pColInd[j]+pRowInd[i]];
+		}
+		if(mrs<prs){mrs = prs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((nrb-mrs)*ncb);
+	} else {
+		return((nrb-mrs));
+	}
+}
+
+
+/* a function for computing error of  the row-dominant - binary blockmodeling - diagonal*/
+double binRdoDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+	
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrs=0;
+	double diagRes=0;
+
+	for(int i = 0; i<nrb; i++){
+		prs=0;
+		diagRes += pM[baseInd+ nc*pColInd[i]+pRowInd[i]];
+		for(int j = 0; j<ncb; j++){
+			prs += pM[baseInd+nc*pColInd[j]+pRowInd[i]];
+		}
+		if(mrs<prs){mrs = prs; }
+	}
+	
+	double res = nrb-mrs;
+	if(diagRes==0) {res = res - 1;}
+	if(*pmulReg==1) {
+		return((res)*ncb);
+	} else {
+		return((res));
+	}
+}
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling - ignore diagonal*/
+double binRdoIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrs=0;
+
+	for(int i = 0; i<nrb; i++){
+		prs=0;
+		for(int j = 0; j<ncb; j++){
+			if(i!=j){
+				prs += pM[baseInd+nc*pColInd[j]+pRowInd[i]];
+			}
+		}
+		if(mrs<prs){mrs = prs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((nrb-mrs-1)*ncb);
+	} else {
+		return((nrb-mrs-1));
+	}
+}
+
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling*/
+double binCdo(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcs=0;
+
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			pcs += pM[ind2d+pRowInd[i]];
+		}
+		if(mcs<pcs){mcs = pcs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((ncb-mcs)*nrb);
+	} else {
+		return((ncb-mcs));
+	}
+}
+
+
+/* a function for computing error of  the row-dominant - binary blockmodeling - diagonal*/
+double binCdoDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+	
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcs=0;
+	double diagRes=0;
+	
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		diagRes += pM[ind2d+pRowInd[j]];
+		for(int i = 0; i<nrb; i++){
+			pcs += pM[ind2d+pRowInd[i]];
+		}
+		if(mcs<pcs){mcs = pcs; }
+	}
+
+	double res = ncb-mcs;
+	if (diagRes==0) {res = res - 1;}
+	
+	if(*pmulReg==1) {
+		return((res)*nrb);
+	} else {
+		return((res));
+	}
+	
+}
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling - ignore diagonal*/
+double binCdoIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcs=0;
+
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			if(i!=j){
+				pcs += pM[ind2d+pRowInd[i]];
+			}
+		}
+		if(mcs<pcs){mcs = pcs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((ncb-mcs-1)*nrb);
+	} else {
+		return((ncb-mcs-1));
+	}
+}
+
 
 /* a function for computing error of  the row-functional block - binary blockmodeling*/
-double binRfn(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binRfn(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -386,11 +675,16 @@ double binRfn(const double *pM, const int nr, const int nc, const int relN,const
 		st += prs;
 	}
 
-	return(st - nnr + (nrb-nnr)*ncb);
+	
+	if(*pmulReg==1) {
+		return(st - nnr + (nrb-nnr)*ncb);
+	} else {
+		return(st - nnr + (nrb-nnr));
+	}
 }
 
 /* a function for computing error of  the column-functional block - binary blockmodeling*/
-double binCfn(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binCfn(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -413,13 +707,17 @@ double binCfn(const double *pM, const int nr, const int nc, const int relN,const
 		nnc += (pcs>0);
 		st += pcs;
 	}
-
-	return(st - nnc + (ncb-nnc)*nrb);
+	
+	if(*pmulReg==1) {
+		return(st - nnc + (ncb-nnc)*nrb);
+	} else {
+		return(st - nnc + (ncb-nnc));
+	}
 }
 
 
 /* a function for computing error of  the complete block - binary blockmodeling*/
-double binCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	int baseInd=relN*nr*nc;
@@ -435,7 +733,7 @@ double binCom(const double *pM, const int nr, const int nc, const int relN,const
 }
 
 /* a function for computing error of  the complete block - binary blockmodeling - diagonal*/
-double binComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	double diagRes=0;
@@ -459,8 +757,8 @@ double binComDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 
-/* a function for computing error of  the complete block - binary blockmodeling - diagonal*/
-double binComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+/* a function for computing error of  the complete block - binary blockmodeling - ignore diagonal*/
+double binComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	int baseInd=relN*nr*nc;
@@ -486,7 +784,7 @@ double binComIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 /* a function for computing error of  the null block - binary blockmodeling*/
 
 
-double binNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0.0;
 	int baseInd=relN*nr*nc;
@@ -506,7 +804,7 @@ double binNul(const double *pM, const int nr, const int nc, const int relN,const
 }
 
 /* a function for computing error of  the null block - binary blockmodeling - diagonal*/
-double binNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	double diagRes=0;
@@ -531,7 +829,7 @@ double binNulDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the null block - binary blockmodeling - diagonal*/
-double binNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double binNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	int baseInd=relN*nr*nc;
@@ -556,7 +854,7 @@ double binNulIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 
 
 /* a function for computing error of  the regular block - homogeneity blockmodeling*/
-double homReg(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homReg(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -599,12 +897,17 @@ double homReg(const double *pM, const int nr, const int nc, const int relN, cons
 	free(prowStats);
 	free(pcolStats);
 
-	return(max(rowErr*ncb,colErr*nrb));
+	
+	if(*pmulReg==1) {
+		return(max(rowErr*ncb,colErr*nrb));
+	} else {
+		return(max(rowErr,colErr));
+	}
 }
 
 
 /* a function for computing error of  the column-regular block - homogeneity blockmodeling*/
-double homCre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homCre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -635,13 +938,18 @@ double homCre(const double *pM, const int nr, const int nc, const int relN, cons
 	colErr=phom[homFun][usePreSpecVal](pcolStats,ncb,preSpecVal);
 	free(pcolStats);
 
-	return(colErr*nrb);
+	
+	if(*pmulReg==1) {
+		return(colErr*nrb);
+	} else {
+		return(colErr);
+	}
 }
 
 
 
 /* a function for computing error of  the row-regular block - homogeneity blockmodeling*/
-double homRre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homRre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -674,12 +982,17 @@ double homRre(const double *pM, const int nr, const int nc, const int relN, cons
 	rowErr=phom[homFun][usePreSpecVal](prowStats,nrb,preSpecVal);
 	free(prowStats);
 
-	return(rowErr*ncb);
+	
+	if(*pmulReg==1) {
+		return(rowErr*ncb);
+	} else {
+		return(rowErr);
+	}
 }
 
 
 /* a function for computing error of  the row-functional block - homogeneity blockmodeling - experimental*/
-double homRfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homRfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -719,13 +1032,18 @@ double homRfn(const double *pM, const int nr, const int nc, const int relN, cons
 	free(prowStats);	
 	free(px);
 	
-	return(rowErr*ncb + nulErr);
+	
+	if(*pmulReg==1) {
+		return(rowErr*ncb + nulErr);
+	} else {
+		return(rowErr + nulErr);
+	}
 }
 
 
 
 /* a function for computing error of  the column-functional block - homogeneity blockmodeling - experimental*/
-double homCfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homCfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 /*
 	nr - number of rows in the whole matrix/network
 	nc - number of columns in the whole matrix/network
@@ -765,7 +1083,12 @@ double homCfn(const double *pM, const int nr, const int nc, const int relN, cons
 	free(pcolStats);
 	free(px);
 
-	return(colErr*nrb + nulErr);
+	
+	if(*pmulReg==1) {
+		return(colErr*nrb + nulErr);
+	} else {
+		return(colErr + nulErr);
+	}
 }
 
 
@@ -773,7 +1096,7 @@ double homCfn(const double *pM, const int nr, const int nc, const int relN, cons
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling*/
-double homCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 /*Rprintf("homCom - start \n");*/
 	double *px;
@@ -798,7 +1121,7 @@ double homCom(const double *pM, const int nr, const int nc, const int relN,const
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling - diagonal*/
-double homComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 /*Rprintf("homComDiag - start \n");*/
 	double *px;
@@ -853,7 +1176,7 @@ double homComDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling - diagonal*/
-double homComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double *px;
 	int baseInd=relN*nr*nc;
@@ -883,7 +1206,7 @@ double homComIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling*/
-double homNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double *px;
 	int baseInd=relN*nr*nc;
@@ -906,7 +1229,7 @@ double homNul(const double *pM, const int nr, const int nc, const int relN,const
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling - diagonal*/
-double homNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double *px;
 	double *pdiag;
@@ -938,7 +1261,7 @@ double homNulDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the complete block - homogeneity blockmodeling - diagonal*/
-double homNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double homNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double *px;
 	int baseInd=relN*nr*nc;
@@ -968,7 +1291,7 @@ double homNulIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 
 
 /* a function for computing error of  the regular block - valued blockmodeling*/
-double valReg(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valReg(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	double res=0;
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -998,20 +1321,255 @@ double valReg(const double *pM, const int nr, const int nc, const int relN, cons
 	}
 	free(prowArr);
 	free(pcolArr);
-
+	
 	for(int j = 0; j<ncb; j++){
 		for(int i = 0; i<nrb; i++){
 			res+= max(preSpecVal - min(pcolStats[j], prowStats[i]),0.0);
 		}
 	}
-	free(prowStats);
-	free(pcolStats);
+	
+	if(*pmulReg==1) {
+		free(prowStats);
+		free(pcolStats);		
+		return(res);
+	} else {
+		double res2=0;
+		for(int j = 0; j<ncb; j++){
+			res2+= max(preSpecVal - pcolStats[j],0.0);
+		}
+		for(int i = 0; i<nrb; i++){
+			res2+= max(preSpecVal - prowStats[i],0.0);
+		}
+		free(prowStats);
+		free(pcolStats);
 
-	return(res);
+		return(min(res,res2));
+
+	}
 }
 
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling*/
+double valRdo(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+	mrd - minimal row deviation
+*/
+
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrd=0;
+	
+
+	for(int i = 0; i<nrb; i++){
+		prs=0;
+		for(int j = 0; j<ncb; j++){
+			prs += max(preSpecVal-pM[baseInd+nc*pColInd[j]+pRowInd[i]],0.0);
+		}
+		if(mrd>prs){mrd = prs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((mrd)*ncb);
+	} else {
+		return((mrd));
+	}
+}
+
+
+/* a function for computing error of  the row-dominant - binary blockmodeling - diagonal*/
+double valRdoDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+	
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrd=0;
+	double resDiag=0.0;
+	double tmp;
+
+	
+	for(int i = 0; i<nrb; i++){
+		resDiag += max(preSpecVal-pM[baseInd+ nc*pColInd[i]+pRowInd[i]],0.0);
+	}
+	for(int i = 0; i<nrb; i++){
+		for(int j = 0; j<ncb; j++){	
+			tmp = max(preSpecVal-pM[baseInd+nc*pColInd[j]+pRowInd[i]],0.0);
+			if((i==j) && (tmp > resDiag)){
+				prs += resDiag;
+			}else{
+				prs +=tmp;
+			}
+			
+		}
+		
+		if(mrd>prs){mrd = prs;}
+	}
+	
+	if(*pmulReg==1) {
+		return((mrd)*ncb);
+	} else {
+		return((mrd));
+	}
+}
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling - ignore diagonal*/
+double valRdoIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+	mrd - minimal row deviation
+*/
+
+	int baseInd=relN*nr*nc;
+	double prs=0;
+	double mrd=0;
+	
+
+	for(int i = 0; i<nrb; i++){
+		prs=0;
+		for(int j = 0; j<ncb; j++){
+			if(i!=j){ 
+				prs += max(preSpecVal-pM[baseInd+nc*pColInd[j]+pRowInd[i]],0.0);
+			}
+		}
+		if(mrd>prs){mrd = prs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((mrd)*ncb);
+	} else {
+		return((mrd));
+	}
+}
+
+
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling*/
+double valCdo(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+	mcd - minimal row deviation
+*/
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcd=0;
+
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			pcs += max(preSpecVal-pM[ind2d+pRowInd[i]],0.0);
+		}
+		if(mcd<pcs){mcd = pcs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((mcd)*nrb);
+	} else {
+		return((mcd));
+	}
+}
+
+
+/* a function for computing error of  the row-dominant - binary blockmodeling - diagonal*/
+double valCdoDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+	
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+*/
+
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcd=0;
+	double resDiag=0.0;
+	double tmp;
+
+	for(int i = 0; i<nrb; i++){
+		resDiag += max(preSpecVal-pM[baseInd+ nc*pColInd[i]+pRowInd[i]],0.0);
+	}
+
+
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			tmp = max(preSpecVal-pM[ind2d+pRowInd[i]],0.0);
+			if((i==j) && (tmp > resDiag)){
+				pcs += resDiag;
+			}else{
+				pcs +=tmp;
+			}
+		}
+		if(mcd<pcs){mcd = pcs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((mcd)*nrb);
+	} else {
+		return((mcd));
+	}
+}
+
+/* a function for computing error of  the row-dominant block - binary blockmodeling - ignore diagonal*/
+double valCdoIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
+
+/*
+	nr - number of rows in the whole matrix/network
+	nc - number of columns in the whole matrix/network
+	nrb - number of rows in the block
+	ncb - number of columns in the block
+	mcd - minimal row deviation
+*/
+
+	int baseInd=relN*nr*nc;
+	int ind2d;
+	double pcs=0;
+	double mcd=0;
+
+	for(int j = 0; j<ncb; j++){
+		pcs=0;
+		ind2d=baseInd+ nc*pColInd[j];
+		for(int i = 0; i<nrb; i++){
+			if(i!=j){ 
+				pcs += max(preSpecVal-pM[ind2d+pRowInd[i]],0.0);
+			}
+		}
+		if(mcd<pcs){mcd = pcs; }
+	}
+	
+	if(*pmulReg==1) {
+		return((mcd)*nrb);
+	} else {
+		return((mcd));
+	}
+
+	
+}
+
+
+
+
 /* a function for computing error of  the column-regular block - valued blockmodeling*/
-double valCre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valCre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	double res=0;
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1028,7 +1586,12 @@ double valCre(const double *pM, const int nr, const int nc, const int relN, cons
 			pcolArr[j*nrb + i] = pM[ind2d+pRowInd[i]];
 		}
 		colStats=pregFuns[regFun]((pcolArr + j*nrb),nrb);
-		res+= max(preSpecVal - colStats,0.0)*nrb;
+		
+		if(*pmulReg==1) {
+			res+= max(preSpecVal - colStats,0.0)*nrb;
+		} else {
+			res+= max(preSpecVal - colStats,0.0);
+		}
 	}
 	free(pcolArr);
 
@@ -1037,8 +1600,15 @@ double valCre(const double *pM, const int nr, const int nc, const int relN, cons
 
 
 
+
+
+
+
+
+
+
 /* a function for computing error of  the row-regular block - valued blockmodeling*/
-double valRre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valRre(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	double res=0;
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1058,7 +1628,13 @@ double valRre(const double *pM, const int nr, const int nc, const int relN, cons
 	}
 	for(int i = 0; i<nrb;i++){
 		rowStats=pregFuns[regFun]((prowArr + i*ncb),ncb);
-		res+= max(preSpecVal -  rowStats,0.0)*ncb;
+		
+		if(*pmulReg==1) {
+			res+= max(preSpecVal -  rowStats,0.0)*ncb;
+		} else {
+			res+= max(preSpecVal -  rowStats,0.0);
+		}
+		
 	}
 	free(prowArr);
 
@@ -1067,7 +1643,7 @@ double valRre(const double *pM, const int nr, const int nc, const int relN, cons
 }
 
 /* a function for computing error of  the column-functional block - valued blockmodeling*/
-double valCfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valCfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	double res=0;
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1087,7 +1663,11 @@ double valCfn(const double *pM, const int nr, const int nc, const int relN, cons
 		}
 		colStats=maxv((pcolArr + j*nrb),nrb);
 		colSums=sumv((pcolArr + j*nrb),nrb);
-		res+= max(preSpecVal - colStats,0.0)*nrb + colSums -colStats;
+		if(*pmulReg==1) {
+			res+= max(preSpecVal - colStats,0.0)*nrb + colSums -colStats;
+		} else {
+			res+= max(preSpecVal - colStats,0.0) + colSums -colStats;
+		}		
 	}
 	free(pcolArr);
 	return(res);
@@ -1098,7 +1678,7 @@ double valCfn(const double *pM, const int nr, const int nc, const int relN, cons
 
 
 /* a function for computing error of  the row-functional block - valued blockmodeling*/
-double valRfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valRfn(const double *pM, const int nr, const int nc, const int relN, const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 	double res=0;
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1121,7 +1701,12 @@ double valRfn(const double *pM, const int nr, const int nc, const int relN, cons
 		rowStats=maxv((prowArr + i*ncb),ncb);
 		rowSums=sumv((prowArr + i*ncb),ncb);
 
-		res+= max(preSpecVal -  rowStats,0.0)*ncb + rowSums-rowStats; 
+		
+		if(*pmulReg==1) {
+			res+= max(preSpecVal -  rowStats,0.0)*ncb + rowSums-rowStats; 
+		} else {
+			res+= max(preSpecVal -  rowStats,0.0) + rowSums-rowStats; 
+		}	
 	}
 	free(prowArr);
 	
@@ -1135,7 +1720,7 @@ double valRfn(const double *pM, const int nr, const int nc, const int relN, cons
 
 
 /* a function for computing error of  the average/density block - values/binary blockmodeling*/
-double valAvg(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valAvg(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0.0;
 	int baseInd=relN*nr*nc;
@@ -1151,7 +1736,7 @@ double valAvg(const double *pM, const int nr, const int nc, const int relN,const
 }
 
 /* a function for computing error of  the average/density block - values/binary blockmodeling - diagonal*/
-double valAvgDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valAvgDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	double diagRes=0;
@@ -1175,7 +1760,7 @@ double valAvgDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the average/density block - values/binary blockmodeling -  diagonal ignore*/
-double valAvgIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valAvgIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	double res=0;
 	int baseInd=relN*nr*nc;
@@ -1197,7 +1782,7 @@ double valAvgIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 
 
 /* a function for computing error of  the complete block - valued blockmodeling*/
-double valCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valCom(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1213,7 +1798,7 @@ double valCom(const double *pM, const int nr, const int nc, const int relN,const
 }
 
 /* a function for computing error of  the complete block - valued blockmodeling - diagonal*/
-double valComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valComDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1238,7 +1823,7 @@ double valComDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the complete block - valued blockmodeling - ignore diagonal*/
-double valComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valComIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1257,7 +1842,7 @@ double valComIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 }
 
 /* a function for computing error of  the null block - valued blockmodeling*/
-double valNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valNul(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1273,7 +1858,7 @@ double valNul(const double *pM, const int nr, const int nc, const int relN,const
 }
 
 /* a function for computing error of  the null block - valued blockmodeling - diagonal*/
-double valNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valNulDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1298,7 +1883,7 @@ double valNulDiag(const double *pM, const int nr, const int nc, const int relN,c
 
 
 /* a function for computing error of  the null block - valued blockmodeling - ignore diagonal*/
-double valNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal){
+double valNulIgnoreDiag(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal, const double preSpecVal, const int *pmulReg){
 
 	int baseInd=relN*nr*nc;
 	int ind2d;
@@ -1317,45 +1902,46 @@ double valNulIgnoreDiag(const double *pM, const int nr, const int nc, const int 
 
 
 /* Definition of an array of pointers to a function for computing block errors*/
-double (*pBlockErr[nApproaches][nBlockTypes][3])(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal);
+double (*pBlockErr[nApproaches][nBlockTypes][3])(const double *pM, const int nr, const int nc, const int relN,const int nrb,const int ncb,const int *pRowInd, const int *pColInd, const int regFun, const int homFun, const int usePreSpecVal,const double preSpecVal, const int *pmulReg);
 
 
 
 
-void critFun(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, const int *pnUnitsRowClu, const int *pnUnitsColClu, const int *prowParArr, const int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, const int *prowCluChange, const int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const double *pcombWeights){
+void critFun(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, const int *pnUnitsRowClu, const int *pnUnitsColClu, const int *prowParArr, const int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, const int *prowCluChange, const int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const double *pcombWeights, const int *pmulReg, const int *pnrInSetByClusters){
 /*
-double *pM - pointer to array or matrix representiing the (multirelational) network
+double *pM - pointer to array or matrix representing the (multirotational) network
 int *pnr - pointer to the number of rows
 int *pnc - pointer to the number of columns
 int *pisTwoMode - pointer to 0 (false) or 1 (true) specifying it the network is two-mode
 int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symetric) (0 - as any other value, 1 - seperately, 2 - ignore)
-int *pdiag - pointer to array of length (nRel - number of relation) 0 (diag the same), 1 (diag special) or 2 (ignore values on diag) specifying how to treat the diagonal elments
+int *pdiag - pointer to array of length (nRel - number of relation) 0 (diag the same), 1 (diag special) or 2 (ignore values on diag) specifying how to treat the diagonal elements
 int *pnRel - pointer to the number of relations
 int *pnColClus - pointer to the number of column clusters
 int *pnRowClus - pointer to the number of column clusters
-int *pnUnitsRowClu - pointer to the array of the nummber of members of each row cluster
-int *pnUnitsColClu - pointer to the array of the nummber of members of each row cluster
+int *pnUnitsRowClu - pointer to the array of the number of members of each row cluster
+int *pnUnitsColClu - pointer to the array of the number of members of each row cluster
 int *prowParArr - pointer to the array of arrays (one for each row cluster) of members of each row cluster
 int *pcolParArr - pointer to the array of arrays (one for each col cluster) of members of each col cluster
-int *papproaches - pointer to the array specifiying approach - one for each realation
+int *papproaches - pointer to the array specifying approach - one for each relation
 int *pmaxBlockTypes - pointer to maximum number of used block types
-int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifiying the number of used allowed block types
-int *pblocks - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifiying allowed block types
-### Not implemetned ### double *pblocks - pointer to error multiplyers by blocks
-int *pIM - pointer to 3d array (Rel, row, col) specifiying the image matrix
-double *pEM - pointer to 3d array (Rel, row, col) specifiying the error for each block
-double *pEarr - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifiying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
-double *perr - pointer to the error retunred by this function
+int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifying the number of used allowed block types
+int *pblocks - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifying allowed block types
+### Not implemetned ### double *pblocks - pointer to error multipliers by blocks
+int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
+double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
+double *pEarr - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+double *perr - pointer to the error returned by this function
 int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
-int *prowCluChange - pointer to an array holding the two row clusters where the change occured
-int *pcolCluChange - pointer to an array holding the col row clusters where the change occured
-int *psameIM - pointer to 0 (false) or 1 (true) specifiying if the image has to be the same for all relations
-int *pregFun - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifiying the "summary" function used in f-regular line blocks
+int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
+int *pcolCluChange - pointer to an array holding the col row clusters where the change occurred
+int *psameIM - pointer to 0 (false) or 1 (true) specifying if the image has to be the same for all relations
+int *pregFun - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifying the "summary" function used in f-regular line blocks
 int *phomFun - pointer to the array (one value for each rel) function used used for computing measure of variability in homogeneity blockmodeling
-int *pusePreSpec - pointer to 4d array (pmaxBlockTypes, Rel, row, col) specifiying weather a the pre-specified value should be used when computing inconsistency
-double *ppreSpecM - pointer to 4d array (pmaxBlockTypes, Rel, row, col) specifiying the pre-specified value to be used when computing inconsistency
-double *pcombWeights - pointer to a array of weights of the same dimmensions as blocks
-
+int *pusePreSpec - pointer to 4d array (pmaxBlockTypes, Rel, row, col) specifying weather a the pre-specified value should be used when computing inconsistency
+double *ppreSpecM - pointer to 4d array (pmaxBlockTypes, Rel, row, col) specifying the pre-specified value to be used when computing inconsistency
+double *pcombWeights - pointer to a array of weights of the same dimensions as blocks
+const int *pmulReg - pointer to 0 (false) or 1 (true) specifying if the errors that apply to rows/columns (and not to cells) should be multiplied by number of rows/columns.
+int *pnrInSetByClusters - pointer to the vector of sizes of sets for row clusters. The length of the vector is equal to the number of row clusters and gives the number of units in a set to which a given row cluster belongs to. Should be set to vector of 0s if ll for group sizes should not be computed. 
 */
 
 /* a lot of arguments not used: *pisSym, *pisTwoMode,.... */
@@ -1371,7 +1957,11 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	int iBlockType=0;
 
 
-
+	// Rprintf("pnrInSetByClusters: ");
+	// for( int i=0;i<*pnRowClus;i++){
+		// Rprintf("%i ", pnrInSetByClusters[i]);
+	// }
+	
 	/* assiginig functions to the array of functions*/
 	/* array of pointers to functions for f-regular (and similar) blocks
 	usage: pregFuns[function]
@@ -1391,7 +1981,7 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	/* array of pointers to functions for computing measure of variability
 	usage: phom[measureOfVariability][prespecifiedValue]
 	measureOfVariability: 	0 - ss (sum of squared deviations from the prespecified value (default mean))
-							1 - ad (abosolute deviations from the prespecified value (default meaidan))
+							1 - ad (absolute deviations from the prespecified value (default median))
 	prespecifiedValue:	0 - default (mean or median, depending on the measureOfVariability)
 						1 - as specified in ppreSpecM
 						2 - 0
@@ -1406,7 +1996,10 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	phom[1][1] = adP;
 	phom[1][2] = ad0;
 	phom[1][3] = adPmin;
-
+	phom[2][0] = bll;
+	phom[2][1] = bllP;
+	phom[2][2] = bll0;
+	phom[2][3] = bllPmin;
 
 /*Rprintf("critFun - 2\n");*/
 
@@ -1418,13 +2011,15 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 							2 - valued blockmodeling
 	blockType:	0 - null
 				1 - complete
-				2 - regular
-				3 - column-regular
-				4 - row-regular
-				5 - average
-				6 - do not care
+				2 - column-functional
+				3 - row-functional
+				4 - regular
+				5 - column-regular
+				6 - row-regular
+				7 - average
+				8 - do not care
 	treatDiagonal:  0 - as any other value
-	                1 - seperatlely
+	                1 - separately
 	                2 - ignore diagonal
 	 */
 
@@ -1436,34 +2031,42 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[0][1][1]=homComDiag;
 	pBlockErr[0][1][2]=homComIgnoreDiag;
 
-	pBlockErr[0][2][0]=homCfn;
-	pBlockErr[0][2][1]=homCfn;
-	pBlockErr[0][2][2]=homCfn;
+	pBlockErr[0][2][0]=infBlock;
+	pBlockErr[0][2][1]=infBlock;
+	pBlockErr[0][2][2]=infBlock;
 
-	pBlockErr[0][3][0]=homRfn;
-	pBlockErr[0][3][1]=homRfn;
-	pBlockErr[0][3][2]=homRfn;
+	pBlockErr[0][3][0]=infBlock;
+	pBlockErr[0][3][1]=infBlock;
+	pBlockErr[0][3][2]=infBlock;
 	
-	pBlockErr[0][4][0]=homReg;
-	pBlockErr[0][4][1]=homReg;
-	pBlockErr[0][4][2]=homReg;
+	pBlockErr[0][4][0]=homCfn;
+	pBlockErr[0][4][1]=homCfn;
+	pBlockErr[0][4][2]=homCfn;
 
-	pBlockErr[0][5][0]=homCre;
-	pBlockErr[0][5][1]=homCre;
-	pBlockErr[0][5][2]=homCre;
+	pBlockErr[0][5][0]=homRfn;
+	pBlockErr[0][5][1]=homRfn;
+	pBlockErr[0][5][2]=homRfn;
+	
+	pBlockErr[0][6][0]=homReg;
+	pBlockErr[0][6][1]=homReg;
+	pBlockErr[0][6][2]=homReg;
 
-	pBlockErr[0][6][0]=homRre;
-	pBlockErr[0][6][1]=homRre;
-	pBlockErr[0][6][2]=homRre;
+	pBlockErr[0][7][0]=homCre;
+	pBlockErr[0][7][1]=homCre;
+	pBlockErr[0][7][2]=homCre;
+
+	pBlockErr[0][8][0]=homRre;
+	pBlockErr[0][8][1]=homRre;
+	pBlockErr[0][8][2]=homRre;
 
 /*There is no difference between complete and "average" block for homogeneity blockmodeling*/	
-	pBlockErr[0][7][0]=homCom;
-	pBlockErr[0][7][1]=homComDiag;
-	pBlockErr[0][7][2]=homComIgnoreDiag;	
+	pBlockErr[0][9][0]=homCom;
+	pBlockErr[0][9][1]=homComDiag;
+	pBlockErr[0][9][2]=homComIgnoreDiag;	
 
-	pBlockErr[0][8][0]=doNotCare;
-	pBlockErr[0][8][1]=doNotCare;
-	pBlockErr[0][8][2]=doNotCare;
+	pBlockErr[0][10][0]=doNotCare;
+	pBlockErr[0][10][1]=doNotCare;
+	pBlockErr[0][10][2]=doNotCare;
 
 	pBlockErr[1][0][0]=binNul;
 	pBlockErr[1][0][1]=binNulDiag;
@@ -1473,35 +2076,44 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[1][1][1]=binComDiag;
 	pBlockErr[1][1][2]=binComIgnoreDiag;
 
-	pBlockErr[1][2][0]=binCfn;
-	pBlockErr[1][2][1]=binCfn;
-	pBlockErr[1][2][2]=binCfn;
+	pBlockErr[1][2][0]=binCdo;
+	pBlockErr[1][2][1]=binCdoDiag;
+	pBlockErr[1][2][2]=binCdoIgnoreDiag;
 
-	pBlockErr[1][3][0]=binRfn;
-	pBlockErr[1][3][1]=binRfn;
-	pBlockErr[1][3][2]=binRfn;
+	pBlockErr[1][3][0]=binRdo;
+	pBlockErr[1][3][1]=binRdoDiag;
+	pBlockErr[1][3][2]=binRdoIgnoreDiag;
 
-	pBlockErr[1][4][0]=binReg;
-	pBlockErr[1][4][1]=binReg;
-	pBlockErr[1][4][2]=binReg;
 
-	pBlockErr[1][5][0]=binCre;
-	pBlockErr[1][5][1]=binCre;
-	pBlockErr[1][5][2]=binCre;
+	pBlockErr[1][4][0]=binCfn;
+	pBlockErr[1][4][1]=binCfn;
+	pBlockErr[1][4][2]=binCfn;
 
-	pBlockErr[1][6][0]=binRre;
-	pBlockErr[1][6][1]=binRre;
-	pBlockErr[1][6][2]=binRre;
+	pBlockErr[1][5][0]=binRfn;
+	pBlockErr[1][5][1]=binRfn;
+	pBlockErr[1][5][2]=binRfn;
+
+	pBlockErr[1][6][0]=binReg;
+	pBlockErr[1][6][1]=binReg;
+	pBlockErr[1][6][2]=binReg;
+
+	pBlockErr[1][7][0]=binCre;
+	pBlockErr[1][7][1]=binCre;
+	pBlockErr[1][7][2]=binCre;
+
+	pBlockErr[1][8][0]=binRre;
+	pBlockErr[1][8][1]=binRre;
+	pBlockErr[1][8][2]=binRre;
 
 	
 /*Functions for density (binary) block and for average valued blocks are the same*/	
-	pBlockErr[1][7][0]=valAvg;
-	pBlockErr[1][7][1]=valAvgDiag;
-	pBlockErr[1][7][2]=valAvgIgnoreDiag;
+	pBlockErr[1][9][0]=valAvg;
+	pBlockErr[1][9][1]=valAvgDiag;
+	pBlockErr[1][9][2]=valAvgIgnoreDiag;
 	
-	pBlockErr[1][8][0]=doNotCare;
-	pBlockErr[1][8][1]=doNotCare;
-	pBlockErr[1][8][2]=doNotCare;
+	pBlockErr[1][10][0]=doNotCare;
+	pBlockErr[1][10][1]=doNotCare;
+	pBlockErr[1][10][2]=doNotCare;
 
 	pBlockErr[2][0][0]=valNul;
 	pBlockErr[2][0][1]=valNulDiag;
@@ -1510,34 +2122,42 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 	pBlockErr[2][1][0]=valCom;
 	pBlockErr[2][1][1]=valComDiag;
 	pBlockErr[2][1][2]=valComIgnoreDiag;
+	
+	pBlockErr[2][2][0]=valCdo;
+	pBlockErr[2][2][1]=valCdoDiag;
+	pBlockErr[2][2][2]=valCdoIgnoreDiag;
 
-	pBlockErr[2][2][0]=valCfn;
-	pBlockErr[2][2][1]=valCfn;
-	pBlockErr[2][2][2]=valCfn;
+	pBlockErr[2][3][0]=valRdo;
+	pBlockErr[2][3][1]=valRdoDiag;
+	pBlockErr[2][3][2]=valRdoIgnoreDiag;	
 
-	pBlockErr[2][3][0]=valRfn;
-	pBlockErr[2][3][1]=valRfn;
-	pBlockErr[2][3][2]=valRfn;
+	pBlockErr[2][4][0]=valCfn;
+	pBlockErr[2][4][1]=valCfn;
+	pBlockErr[2][4][2]=valCfn;
 
-	pBlockErr[2][4][0]=valReg;
-	pBlockErr[2][4][1]=valReg;
-	pBlockErr[2][4][2]=valReg;
+	pBlockErr[2][5][0]=valRfn;
+	pBlockErr[2][5][1]=valRfn;
+	pBlockErr[2][5][2]=valRfn;
 
-	pBlockErr[2][5][0]=valCre;
-	pBlockErr[2][5][1]=valCre;
-	pBlockErr[2][5][2]=valCre;
+	pBlockErr[2][6][0]=valReg;
+	pBlockErr[2][6][1]=valReg;
+	pBlockErr[2][6][2]=valReg;
 
-	pBlockErr[2][6][0]=valRre;
-	pBlockErr[2][6][1]=valRre;
-	pBlockErr[2][6][2]=valRre;
+	pBlockErr[2][7][0]=valCre;
+	pBlockErr[2][7][1]=valCre;
+	pBlockErr[2][7][2]=valCre;
 
-	pBlockErr[2][7][0]=valAvg;
-	pBlockErr[2][7][1]=valAvgDiag;
-	pBlockErr[2][7][2]=valAvgIgnoreDiag;	
+	pBlockErr[2][8][0]=valRre;
+	pBlockErr[2][8][1]=valRre;
+	pBlockErr[2][8][2]=valRre;
 
-	pBlockErr[2][8][0]=doNotCare;
-	pBlockErr[2][8][1]=doNotCare;
-	pBlockErr[2][8][2]=doNotCare;
+	pBlockErr[2][9][0]=valAvg;
+	pBlockErr[2][9][1]=valAvgDiag;
+	pBlockErr[2][9][2]=valAvgIgnoreDiag;	
+
+	pBlockErr[2][10][0]=doNotCare;
+	pBlockErr[2][10][1]=doNotCare;
+	pBlockErr[2][10][2]=doNotCare;
 
 
 
@@ -1550,7 +2170,7 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 /*Rprintf("JustChange=%i\n", *pjustChange);*/
 		/* is it justified to have two options for that */
 		*perr=0.0;
-		for(int iColClu=0;iColClu<*pnColClus;iColClu++){
+		for(int iColClu=0;iColClu<*pnColClus;iColClu++){	
 			int colChange = (iColClu==pcolCluChange[0])|(iColClu==pcolCluChange[1]);
 			for(int iRowClu=0;iRowClu<*pnRowClus;iRowClu++){
 				if(colChange | (iRowClu==prowCluChange[0])|(iRowClu==prowCluChange[1])){
@@ -1564,7 +2184,7 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 						for(iBlockType=0;iBlockType<(pnBlockTypeByBlock[ind3d]);iBlockType++){
 
 							ind4d=ind3d*(*pmaxBlockTypes)+iBlockType;
-							pEarr[ind4d]=pcombWeights[ind4d]*pBlockErr[papproaches[iRel]][pblocks[ind4d]][iDiag](pM,*pnr,*pnc,iRel,pnUnitsRowClu[iRowClu],pnUnitsColClu[iColClu],(prowParArr + iRowClu*(*pnr)),(pcolParArr +iColClu*(*pnc)),pregFun[ind4d],phomFun[iRel],pusePreSpec[ind4d],ppreSpecM[ind4d]);
+							pEarr[ind4d]=pcombWeights[ind4d]*pBlockErr[papproaches[iRel]][pblocks[ind4d]][iDiag](pM,*pnr,*pnc,iRel,pnUnitsRowClu[iRowClu],pnUnitsColClu[iColClu],(prowParArr + iRowClu*(*pnr)),(pcolParArr +iColClu*(*pnc)),pregFun[ind4d],phomFun[iRel],pusePreSpec[ind4d],ppreSpecM[ind4d], pmulReg);
 
 							if((!(*psameIM))&& (pEarr[ind4d]<minBlockErrVal)){
 								minBlockErrVal=pEarr[ind4d];
@@ -1626,7 +2246,7 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 /*Rprintf("approach = %i, blockType = %i, iDiag = %i\n", papproaches[iRel], pblocks[ind4d], iDiag);*/
 /*Rprintf("ind4d = %i\n", ind4d);*/
 						/* double temp */
-						pEarr[ind4d]=pcombWeights[ind4d] * pBlockErr[papproaches[iRel]][pblocks[ind4d]][iDiag](pM,*pnr,*pnc,iRel,pnUnitsRowClu[iRowClu],pnUnitsColClu[iColClu],(prowParArr + iRowClu*(*pnr)),(pcolParArr +iColClu*(*pnc)),pregFun[ind4d],phomFun[iRel],pusePreSpec[ind4d],ppreSpecM[ind4d]);
+						pEarr[ind4d]=pcombWeights[ind4d] * pBlockErr[papproaches[iRel]][pblocks[ind4d]][iDiag](pM,*pnr,*pnc,iRel,pnUnitsRowClu[iRowClu],pnUnitsColClu[iColClu],(prowParArr + iRowClu*(*pnr)),(pcolParArr +iColClu*(*pnc)),pregFun[ind4d],phomFun[iRel],pusePreSpec[ind4d],ppreSpecM[ind4d], pmulReg);
 /*Rprintf("blockErr = %.2f\n", temp);*/
 /*Rprintf("critFun - 4.9\n");*/
 						/* pEarr[ind4d]=temp; */
@@ -1664,6 +2284,28 @@ double *pcombWeights - pointer to a array of weights of the same dimmensions as 
 					}
 				}
 			}
+		}
+	}
+	
+// Rprintf("err = %.3f\n", *perr);
+	// Rprintf("pnrInSetByClusters: ");
+	// for( int i=0;i<*pnRowClus;i++){
+		// Rprintf("%i ", pnrInSetByClusters[i]);
+	// }
+	// Rprintf("\npnUnitsRowClu: ");
+	// for( int i=0;i<*pnRowClus;i++){
+		// Rprintf("%i ", pnUnitsRowClu[i]);
+	// }	
+	// Rprintf("\npnrInSetByClusters[0] = %i\n", pnrInSetByClusters[0]);
+	if(pnrInSetByClusters[0]>0){
+	// Rprintf("True\n");
+		// for(int iColClu=0;iColClu<*pnColClus;iColClu++){
+		for(int iRowClu=0;iRowClu<*pnRowClus;iRowClu++){
+// Rprintf("iRowClu = %i\n", iRowClu);
+// Rprintf("pnUnitsRowClu[iRowClu] = %i\n", pnUnitsRowClu[iRowClu]);
+// Rprintf("pnrInSetByClusters[iRowClu] = %i\n", pnrInSetByClusters[iRowClu]);		
+			*perr += -pnUnitsRowClu[iRowClu]*log(pnUnitsRowClu[iRowClu]*1.0/pnrInSetByClusters[iRowClu]);
+			// Rprintf("err = %.3f\n", *perr);
 		}
 	}
 	free(pEMarrAllRel);
@@ -1705,43 +2347,44 @@ void parVec2Arr(const int *pn, int *pnClus, int *pnUnitsClu, int *pParArr, const
 
 /* for now this function moves to improved partition as soon as it findes one */
 /* however, the "move" is selected randomly, while it is true that "moves" are tried before "exchanges" */
-void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters){
+void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmulReg, const int *pnrInSetByClusters){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
 	int *pnc - pointer to the number of columns
 	int *pisTwoMode - pointer to 0 (false) or 1 (true) specifying it the network is two-mode
 	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symetric) (0 - as any other value, 1 - seperately, 2 - ignore)
-	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elments
+	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elements
 	int *pnRel - pointer to the number of relations
 	int *pnColClus - pointer to the number of column clusters
 	int *pnRowClus - pointer to the number of column clusters
-	int *pnUnitsRowClu - pointer to the array of the nummber of members of each row cluster
-	int *pnUnitsColClu - pointer to the array of the nummber of members of each col cluster
+	int *pnUnitsRowClu - pointer to the array of the number of members of each row cluster
+	int *pnUnitsColClu - pointer to the array of the number of members of each col cluster
 	int *prowParArr - pointer to the array of arrays (one for each row cluster) of members of each row cluster
 	int *pcolParArr - pointer to the array of arrays (one for each col cluster) of members of each col cluster
-	int *papproaches - pointer to the array specifiying approach - one for each realation
+	int *papproaches - pointer to the array specifying approach - one for each relation
 	int *pmaxBlockTypes - pointer to maximum number of used block types
-	int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifiying the number of used allowed block types
-	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifiying allowed block types
-	int *pIM - pointer to 3d array (Rel, row, col) specifiying the image matrix
-	double *pEM - pointer to 3d array (Rel, row, col) specifiying the error for each block
-	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+	int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifying the number of used allowed block types
+	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifying allowed block types
+	int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
+	double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
+	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
 	double *perr - pointer to the total error
 	int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
-	int *prowCluChange - pointer to an array holding the two row clusters where the change occured
-	int *pcolCluChange - pointer to an array holding the col row clusters where the change occured
-	int *psameIM - pointer to 0 (false) or 1 (true) specifiying if the image has to be the same for all relations
-	int *pregFun - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the "summary" function used in f-regular line blocks
+	int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
+	int *pcolCluChange - pointer to an array holding the col row clusters where the change occurred
+	int *psameIM - pointer to 0 (false) or 1 (true) specifying if the image has to be the same for all relations
+	int *pregFun - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the "summary" function used in f-regular line blocks
 	int *phomFun - pointer to the array (one value for each rel) function used used for computing measure of variability in sum of squares blockmodeling
-	int *pusePreSpec - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying weather a the pre-specified value should be used when computing inconsistency
-	double *ppreSpecM - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the pre-specified value to be used when computing inconsistency
+	int *pusePreSpec - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifying weather a the pre-specified value should be used when computing inconsistency
+	double *ppreSpecM - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the pre-specified value to be used when computing inconsistency
 	int *pminUnitsRowCluster - pointer to the minimum number of units in row cluster
 	int *pminUnitsColCluster - pointer to the minimum number of units in col cluster
 	int *pmaxUnitsRowCluster - pointer to the maximum number of units in row cluster
 	int *pmaxUnitsColCluster - pointer to the maximum number of units in col cluster
-	double *pcombWeights - pointer to a array of weights of the same dimmensions as blocks
-	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangable
+	double *pcombWeights - pointer to a array of weights of the same dimensions as blocks
+	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangeable
+	int *pnrInSetByClusters - pointer to the vector of sizes of sets for row clusters. The length of the vector is equal to the number of row clusters and gives the number of units in a set to which a given row cluster belongs to. Should be set to vector of 0s if ll for group sizes should not be computed. 
 	*/
 
 /*Rprintf("OptParC\n");*/
@@ -1763,10 +2406,10 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 		Rprintf("Optimization of two-mode networks is not yet supported\n");
 	} else {
 
-		critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, pnUnitsRowClu, pnUnitsColClu, prowParArr, pcolParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, pIM, pEM, pEarr, perr, &zero, prowCluChange, pcolCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+		critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, pnUnitsRowClu, pnUnitsColClu, prowParArr, pcolParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, pIM, pEM, pEarr, perr, &zero, prowCluChange, pcolCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("Initial error = %.2f\n", *perr);*/
 
-		/* prepare temoprary objects - start*/
+		/* prepare temporary objects - start*/
 
 
 		/* best result  - start*/
@@ -2028,7 +2671,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 }*/
 /*Rprintf("OK2\n");*/
 							/* here the new partition is evaluated*/
-							critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+							critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("Error after move = %.2f\n", *ptemperr);*/
 /*Rprintf("OK3\n");*/
 							if (*ptemperr< (*perr)) {
@@ -2046,7 +2689,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 								ptemprowParArr[iClu*(*pnr)+iUnit]=prowParArr[iClu*(*pnr)+iUnit];
 								ptempnUnitsRowClu[iClu]++; /* this line must be after the above line */
 
-								/* temp values must be set to equal permament to be updated as needed if justChange is used*/
+								/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
 								if(*pjustChange){
 									/* temp result - copy "regular" to temp - start*/
 									/* image matrix */
@@ -2107,7 +2750,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 /*}*/
 
 
-								critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+								critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("OK3-2\n");*/
 /* Rprintf("Error after exchange = %.2f\n", *ptemperr); */
 
@@ -2263,46 +2906,47 @@ void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const
 
 
 
-void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix){
+void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pmulReg, const int *pnrInSetByClusters){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
 	int *pnc - pointer to the number of columns
 	int *pisTwoMode - pointer to 0 (false) or 1 (true) specifying it the network is two-mode
 	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symetric) (0 - as any other value, 1 - seperately, 2 - ignore)
-	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elments
+	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elements
 	int *pnRel - pointer to the number of relations
 	int *pnColClus - pointer to the number of column clusters
 	int *pnRowClus - pointer to the number of column clusters
-	int *pnUnitsRowClu - pointer to the array of the nummber of members of each row cluster
-	int *pnUnitsColClu - pointer to the array of the nummber of members of each col cluster
+	int *pnUnitsRowClu - pointer to the array of the number of members of each row cluster
+	int *pnUnitsColClu - pointer to the array of the number of members of each col cluster
 	int *prowParArr - pointer to the array of arrays (one for each row cluster) of members of each row cluster
 	int *pcolParArr - pointer to the array of arrays (one for each col cluster) of members of each col cluster
-	int *papproaches - pointer to the array specifiying approach - one for each realation
+	int *papproaches - pointer to the array specifying approach - one for each relation
 	int *pmaxBlockTypes - pointer to maximum number of used block types
-	int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifiying the number of used allowed block types
-	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifiying allowed block types
-	int *pIM - pointer to 3d array (Rel, row, col) specifiying the image matrix
-	double *pEM - pointer to 3d array (Rel, row, col) specifiying the error for each block
-	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+	int *pnBlockTypeByBlock - pointer to 3d array (Rel, row, col) specifying the number of used allowed block types
+	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifying allowed block types
+	int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
+	double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
+	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
 	double *perr - pointer to the total error
 	int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
-	int *prowCluChange - pointer to an array holding the two row clusters where the change occured
-	int *pcolCluChange - pointer to an array holding the col row clusters where the change occured
-	int *psameIM - pointer to 0 (false) or 1 (true) specifiying if the image has to be the same for all relations
-	int *pregFun - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the "summary" function used in f-regular line blocks
+	int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
+	int *pcolCluChange - pointer to an array holding the col row clusters where the change occurred
+	int *psameIM - pointer to 0 (false) or 1 (true) specifying if the image has to be the same for all relations
+	int *pregFun - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the "summary" function used in f-regular line blocks
 	int *phomFun - pointer to the array (one value for each rel) function used used for computing measure of variability in sum of squares blockmodeling
-	int *pusePreSpec - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying weather a the pre-specified value should be used when computing inconsistency
-	double *ppreSpecM - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifiying the pre-specified value to be used when computing inconsistency
+	int *pusePreSpec - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifying weather a the pre-specified value should be used when computing inconsistency
+	double *ppreSpecM - pointer to 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the pre-specified value to be used when computing inconsistency
 	int *pminUnitsRowCluster - pointer to the minimum number of units in row cluster
 	int *pminUnitsColCluster - pointer to the minimum number of units in col cluster
 	int *pmaxUnitsRowCluster - pointer to the maximum number of units in row cluster
 	int *pmaxUnitsColCluster - pointer to the maximum number of units in col cluster
-	double *pcombWeights - pointer to a array of weights of the same dimmensions as blocks
-	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangable
+	double *pcombWeights - pointer to a array of weights of the same dimensions as blocks
+	int *pexchageClusters - pointer to a matrix (nRowClust, nColClus) showing which clusters are exchangeable
 	int *pmaxPar - pointer to maximum number of "best" partitions to be saved
 	int *pbestColParMatrix - pointer to maximum od pmaxPar best column partitions in a matrix
 	int *pbestRowParMatrix - pointer to maximum od pmaxPar best row partitions in a matrix
+	int *pnrInSetByClusters - pointer to the vector of sizes of sets for row clusters. The length of the vector is equal to the number of row clusters and gives the number of units in a set to which a given row cluster belongs to. Should be set to vector of 0s if ll for group sizes should not be computed. 	
 	*/
 
 /*Rprintf("OptParC\n");*/
@@ -2326,7 +2970,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 		Rprintf("Optimization of two-mode networks is corrently supported through one-mode networks.\n");
 	} else {
 
-		critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, pnUnitsRowClu, pnUnitsColClu, prowParArr, pcolParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, pIM, pEM, pEarr, perr, &zero, prowCluChange, pcolCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+		critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, pnUnitsRowClu, pnUnitsColClu, prowParArr, pcolParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, pIM, pEM, pEarr, perr, &zero, prowCluChange, pcolCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("Initial error = %.2f\n", *perr);*/
 
 		/* prepare temoprary objects - start*/
@@ -2621,7 +3265,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*}*/
 /*Rprintf("OK2\n");*/
 							/* here the new partition is evaluated*/
-							critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+							critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("Error after move = %.2f\n", *ptemperr);*/
 /*Rprintf("Error array and blocks:\n");*/
 /*int ind2d, ind3d, ind4d;*/
@@ -2783,7 +3427,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*}*/
 
 
-								critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights);
+								critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, ptempnUnitsRowClu, ptempnUnitsRowClu, ptemprowParArr, ptemprowParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, ptempIM, ptempEM, ptempEarr, ptemperr, pjustChange, prowCluChange, prowCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("OK3-2\n");*/
 /* Rprintf("Error after exchange = %.2f\n", *ptemperr);*/
 

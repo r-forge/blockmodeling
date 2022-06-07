@@ -7,9 +7,9 @@
 */
 
 /* .C calls */
-extern void critFun(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-extern void optPar(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
-extern void optParMulti(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void critFun(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void optPar(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void optParMulti(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void parArr2Vec(void *, void *, void *, void *, void *);
 extern void parVec2Arr(void *, void *, void *, void *, void *);
 
@@ -30,9 +30,9 @@ extern void F77_NAME(regeownmdiag)(void *, void *, void *, void *, void *);
 extern void F77_NAME(regeownmne)(void *, void *, void *, void *, void *);
 
 static const R_CMethodDef CEntries[] = {
-    {"critFun",     (DL_FUNC) &critFun,     30},
-    {"optPar",      (DL_FUNC) &optPar,      37},
-    {"optParMulti", (DL_FUNC) &optParMulti, 42},
+    {"critFun",     (DL_FUNC) &critFun,     32},
+    {"optPar",      (DL_FUNC) &optPar,      39},
+    {"optParMulti", (DL_FUNC) &optParMulti, 44},
     {"parArr2Vec",  (DL_FUNC) &parArr2Vec,   5},
     {"parVec2Arr",  (DL_FUNC) &parVec2Arr,   5},
     {NULL, NULL, 0}

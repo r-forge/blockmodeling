@@ -60,7 +60,7 @@ The last two options are "shorthand" for specifying \code{approaches="hom"} and 
 \item{blocks}{A vector, a list of vectors or an array with names of allowed blocy types. \cr
 \cr
 Only listing of allowed block types (blockmodel is not pre-specified).\cr
-A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
+A vector with names of allowed block types. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
 \code{"nul"} - null or empty block\cr
 \code{"com"} - complete block\cr
 \code{"rdo"}, \code{"cdo"} - row and column-dominant blocks (binary and valued approach only)\cr

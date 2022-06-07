@@ -30,7 +30,9 @@ critFunC(
   posWeights = 1,
   blockTypeWeights = 1,
   combWeights = NULL,
-  returnEnv = FALSE
+  returnEnv = FALSE,
+  mulReg = TRUE,
+  addGroupLlErr = TRUE
 )
 
 optParC(
@@ -61,7 +63,9 @@ optParC(
   blockTypeWeights = 1,
   combWeights = NULL,
   exchageClusters = "all",
-  save.initial.param = TRUE
+  save.initial.param = TRUE,
+  mulReg = TRUE,
+  addGroupLlErr = TRUE
 )
 }
 \arguments{
@@ -81,7 +85,7 @@ The last two options are "shorthand" for specifying \code{approaches="hom"} and 
 \item{blocks}{A vector, a list of vectors or an array with names of allowed blocy types. \cr
 \cr
 Only listing of allowed block types (blockmodel is not pre-specified).\cr
-A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
+A vector with names of allowed block types. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
 \code{"nul"} - null or empty block\cr
 \code{"com"} - complete block\cr
 \code{"rdo"}, \code{"cdo"} - row and column-dominant blocks (binary and valued approach only)\cr
@@ -97,9 +101,12 @@ An array with four dimensions (see example below). The third and the fourth repr
 
 \item{isTwoMode}{\code{1} for one-mode networks and \code{2} for two-mode networks. The default value is set to \code{NULL}.}
 
-\item{isSym}{Specifying if the matrix (for each relation) is symetric.}
+\item{isSym}{Specifying if the matrix (for each relation) is symmetric.}
 
-\item{diag}{Should the special stauts of diagonal be acknowladged. The default value is set to \code{1}.}
+\item{diag}{Should the special status of diagonal be acknowledged. A single number or a vector equal to the number of relation. The default value is set to \code{1}. Codes: \cr
+\code{0} - diagonal is treated in the same way as other values \cr
+\code{1} - diagonal is  treated separately, or \cr
+\code{2} - diagonal values are ignored. \cr}
 
 \item{IM}{The obtained image for objects. For debugging purposes only.}
 
@@ -113,16 +120,16 @@ An array with four dimensions (see example below). The third and the fourth repr
 
 \item{colCluChange}{An array holding the col row clusters where the change occured. Used only for debugging purposes by developers.}
 
-\item{sameIM}{Should we damand the same blockmodel image for all relations. The default value is set to \code{FALSE}.}
+\item{sameIM}{Should we demand the same blockmodel image for all relations. The default value is set to \code{FALSE}.}
 
 \item{regFun}{Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings. The default value is set to \code{"max"}.}
 
-\item{homFun}{In case of homogenity blockmodeling two vairability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
+\item{homFun}{In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
 absolute deviations.}
 
-\item{usePreSpecM}{Specifiying weather a pre-specified value should be used when computing inconsistency.}
+\item{usePreSpecM}{Specifying weather a pre-specified value should be used when computing inconsistency.}
 
-\item{preSpecM}{Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values. In case ob binary blockmodeling this argument is a threshold used for binerizing the network. Therefore all values with values lower than \code{preSpecM} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values. In case of pre-specified blockmodeling, it can have the same dimensions as \code{blocks}.}
+\item{preSpecM}{Sufficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values. In case ob binary blockmodeling this argument is a threshold used for binerizing the network. Therefore all values with values lower than \code{preSpecM} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values. In case of pre-specified blockmodeling, it can have the same dimensions as \code{blocks}.}
 
 \item{save.initial.param}{Should the inital parameters (\code{approaches}, ...) be saved. The default value is \code{TRUE}.}
 
@@ -130,11 +137,15 @@ absolute deviations.}
 
 \item{posWeights}{Weigths for positions in the blockmodel (the dimensions must be the same as the error matrix (rows, columns)). For now this is a matix (two-dimensional) even for multi-relational networks.}
 
-\item{blockTypeWeights}{Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor, where the names are one or all allowed block types from \code{blocks}. If only some block types are specified, the other have a default weight of 1. The default value is set to \code{1}.}
+\item{blockTypeWeights}{Weights for each type of block used, if they are to be different across block types (see \code{blocks} above). It must be suplied in form of a named vector, where the names are one or all allowed block types from \code{blocks}. If only some block types are specified, the other have a default weight of 1. The default value is set to \code{1}.}
 
 \item{combWeights}{Weights for all type of block used, The default value is set to \code{NULL}.The dimension must be the same as \code{blocks}, if \code{blocks} would be specified in array format (which is usual in pre-specified case).}
 
 \item{returnEnv}{Should the function also return the environment after its completion.}
+
+\item{mulReg}{Should the errors that apply to rows/columns (and not to cells) should be multiplied by number of rows/columns. Defaults to TRUE.}
+
+\item{addGroupLlErr}{Used only when stochastic generalized blockmodeling is used. Should the total error included the part based on sizes of groups. Defaults to TRUE. Will return wrong results for two-mode networks if critFunC is called directly (should be fine if called via optParC function).}
 
 \item{nMode}{Number of nodes. If \code{NULL}, then determined from \code{clu}.}
 

@@ -1,9 +1,7 @@
-# to do - here and in C-functions --> put functional blocks before regular !!!
-
 cStatus<-list(
-    blockTypes=c("nul", "com", "cfn", "rfn", "reg", "cre", "rre", "avg", "dnc"), #add before average 
+    blockTypes=c("nul", "com", "cdo", "rdo", "cfn", "rfn", "reg", "cre", "rre", "avg", "dnc"), 
     regFuns=c("max","sum","mean"), 
-    homFuns=c("ss", "ad"), 
+    homFuns=c("ss", "ad", "bll"), 
     implementedApproaches=c("hom", "bin","val")
 #   ,maxBlockTypes=as.integer(10)
 )

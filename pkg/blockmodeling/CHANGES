@@ -3,9 +3,27 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2022
+Version: 1.1.0.9004
+Date: 2022-05-20
+Some bugs in binary stochastic (homogeneity) generalized blockmodeling fixed.
+Some updates to documentation.
+
+Version: 1.1.0.9003
+Date: 2022-05-19
+Binary stochastic (homogeneity) generalized blockmodeling should be fully supported (testing needed).
+
+
+Version: 1.1.0.9002
+Date: 2022-05-11
+Added support for row/column-dominant blocks for binary and valued blockmodeling.
+
+Version: 1.1.0.9001
+Date: 2022-05-05
+Started adding support for stochastic (homogeneity) generalized blockmodeling.
+
 Version: 1.0.10
 Date: 2022-04-01
-A bug in plotMat corrected that caused -Inf "labesl"  being plotted insetead of values in some cases.
+A bug in plotMat corrected that caused -Inf "labels"  being plotted instead of values in some cases.
 
 Version: 1.0.9
 Date: 2022-03-23

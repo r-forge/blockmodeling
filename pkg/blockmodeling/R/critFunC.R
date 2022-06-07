@@ -20,7 +20,7 @@
 #' @param blocks A vector, a list of vectors or an array with names of allowed blocy types. \cr
 #'   \cr
 #'   Only listing of allowed block types (blockmodel is not pre-specified).\cr
-#'   A vector with names of allowed blocktypes. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
+#'   A vector with names of allowed block types. For multi-relational networks, it can be a list of such vectors. For \code{approaches = "bin"} or \code{approaches = "val"}, at least two should be selected. Possible values are:\cr
 #'   \code{"nul"} - null or empty block\cr
 #'   \code{"com"} - complete block\cr
 #'   \code{"rdo"}, \code{"cdo"} - row and column-dominant blocks (binary and valued approach only)\cr
@@ -34,26 +34,31 @@
 #'   A pre-specified blockmodel.\cr
 #'   An array with four dimensions (see example below). The third and the fourth represent the clusters (for rows and columns). The first is as long as the maximum number of allows block types for a given block. If some block has less possible block types, the empty slots should have values \code{NA}. The second dimension is the number of relations (1 for single-relational networks). The values in the array should be the ones from above. The array can have only three dimensions in case of one-relational networks or if the same pre-specified blockmodel is assumed for all relations. Further, it can have only two dimensions, if in addition only one block type is allowed per block.
 #' @param isTwoMode \code{1} for one-mode networks and \code{2} for two-mode networks. The default value is set to \code{NULL}.
-#' @param isSym Specifying if the matrix (for each relation) is symetric.
-#' @param diag Should the special stauts of diagonal be acknowladged. The default value is set to \code{1}.
+#' @param isSym Specifying if the matrix (for each relation) is symmetric.
+#' @param diag Should the special status of diagonal be acknowledged. A single number or a vector equal to the number of relation. The default value is set to \code{1}. Codes: \cr
+#'    \code{0} - diagonal is treated in the same way as other values \cr
+#'    \code{1} - diagonal is  treated separately, or \cr
+#'    \code{2} - diagonal values are ignored. \cr
 #' @param IM The obtained image for objects. For debugging purposes only.
 #' @param EM Block errors by blocks. For debugging purposes only.
 #' @param Earr The array of errors for all allowed block types by next dimensions: allowed block types, relations, row clusters and column clusters. The dimensions should match the dimensions of the block argument if specified as an array. For debugging purposes only.
 #' @param justChange Value specifying if only the errors for changed clusters should be computed. Used only for debugging purposes by developers.
 #' @param rowCluChange An array holding the two row clusters where the change occured. Used only for debugging purposes by developers.
 #' @param colCluChange An array holding the col row clusters where the change occured. Used only for debugging purposes by developers.
-#' @param sameIM Should we damand the same blockmodel image for all relations. The default value is set to \code{FALSE}.
+#' @param sameIM Should we demand the same blockmodel image for all relations. The default value is set to \code{FALSE}.
 #' @param regFun Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings. The default value is set to \code{"max"}.
-#' @param homFun In case of homogenity blockmodeling two vairability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
+#' @param homFun In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
 #' absolute deviations.
-#' @param usePreSpecM Specifiying weather a pre-specified value should be used when computing inconsistency.
-#' @param preSpecM Suficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values. In case ob binary blockmodeling this argument is a threshold used for binerizing the network. Therefore all values with values lower than \code{preSpecM} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values. In case of pre-specified blockmodeling, it can have the same dimensions as \code{blocks}.
+#' @param usePreSpecM Specifying weather a pre-specified value should be used when computing inconsistency.
+#' @param preSpecM Sufficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values. In case ob binary blockmodeling this argument is a threshold used for binerizing the network. Therefore all values with values lower than \code{preSpecM} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values. In case of pre-specified blockmodeling, it can have the same dimensions as \code{blocks}.
 #' @param save.initial.param Should the inital parameters (\code{approaches}, ...) be saved. The default value is \code{TRUE}.
 #' @param relWeights Weights for all type of relations in a blockmodel. The default value is set to \code{1}.
 #' @param posWeights Weigths for positions in the blockmodel (the dimensions must be the same as the error matrix (rows, columns)). For now this is a matix (two-dimensional) even for multi-relational networks.
-#' @param blockTypeWeights Weights for each type of block used, if they are to be different accros block types (see \code{blocks} above). It must be suplied in form of a named vetor, where the names are one or all allowed block types from \code{blocks}. If only some block types are specified, the other have a default weight of 1. The default value is set to \code{1}.
+#' @param blockTypeWeights Weights for each type of block used, if they are to be different across block types (see \code{blocks} above). It must be suplied in form of a named vector, where the names are one or all allowed block types from \code{blocks}. If only some block types are specified, the other have a default weight of 1. The default value is set to \code{1}.
 #' @param combWeights Weights for all type of block used, The default value is set to \code{NULL}.The dimension must be the same as \code{blocks}, if \code{blocks} would be specified in array format (which is usual in pre-specified case).
 #' @param returnEnv Should the function also return the environment after its completion.
+#' @param mulReg Should the errors that apply to rows/columns (and not to cells) should be multiplied by number of rows/columns. Defaults to TRUE.
+#' @param addGroupLlErr  Used only when stochastic generalized blockmodeling is used. Should the total error included the part based on sizes of groups. Defaults to TRUE. Will return wrong results for two-mode networks if critFunC is called directly (should be fine if called via optParC function).
 #' 
 #' 
 #'
@@ -171,33 +176,68 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
                    rowCluChange = c(0, 0), colCluChange = c(0, 0), sameIM = FALSE, 
                    regFun = "max", homFun = "ss", usePreSpecM = NULL, preSpecM = NULL, 
                    save.initial.param = TRUE, relWeights = 1, posWeights = 1, 
-                   blockTypeWeights = 1, combWeights = NULL, returnEnv = FALSE){
+                   blockTypeWeights = 1, combWeights = NULL, returnEnv = FALSE, mulReg=TRUE, addGroupLlErr=TRUE){
   if(save.initial.param){
     initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
   }else initial.param<-NULL
   
+  uniqueBlocks<-unique(unlist(unclass(blocks)))
+  if(all(is.na(uniqueBlocks))) stop("No block types are specified!")
+  blocksOk<-uniqueBlocks%in%c(blockmodeling:::cStatus$blockTypes,NA)
+  if(all(blocksOk)==FALSE) {
+	stop("Block types ", paste(uniqueBlocks[!blocksOk], collapse=", ")," are not supported!")
+  }
   
   if(length(dim(M))==2) M<-array(M,dim=c(dim(M),length(approaches)))
   #M[,,approaches=="bin"]<-(M[,,approaches=="bin"]>0)*1
   dM<-dim(M)
-  if(is.null(isTwoMode)) isTwoMode<-is.list(clu)
+  if(is.null(isTwoMode)) {
+	isTwoMode<-is.list(clu)&& (length(clu)==2)&& (sum(sapply(clu, length))==sum(dim(M)[1:2]))
+  }
   
+  if(is.list(clu)){
+   tmNclu<-sapply(clu,function(x)length(unique(x)))
+   tmN<-sapply(clu,length)
+  # for(iMode in 2:nMode){
+  # clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
+  # }
+  
+  # clu<-unlist(clu)    
+  } else {
+    tmNclu<-length(unique(clu))
+	tmN<-length(clu)
+  }  
+  
+  if(!isTwoMode && is.list(clu)){
+	if(sum(sapply(clu, length))==dim(M)[1]) {
+		newClu<-c()
+		tmpMaxClu<-0
+		for(iClu in clu){
+			iClu<- as.integer(as.factor(iClu))+tmpMaxClu
+			tmpMaxClu <- max(iClu)
+			newClu<-c(newClu,iClu)
+		}
+		clu <- newClu
+	} else {
+		stop("Clu does not seem to be compatible with M!")
+	}
+  }
+
   if(!is.list(clu))clu<-list(clu,clu)
   orgClu<-clu
   clu<-lapply(clu,function(x)as.integer(as.factor(x)))
   nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
   nRCclu<-sapply(nUnitsInRCclu,length)
   
-  # if(is.null(nMode)) nMode<-ifelse(is.list(clu),length(clu),1)
-  # if(nMode>1){
-  # tmNclu<-sapply(clu,max)
-  # for(iMode in 2:nMode){
-  # clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
-  # }
+  if(addGroupLlErr && homFun=="bll"&&(!isTwoMode)){
+	nrInSetByClusters<-rep(tmN, tmNclu)
+  } else {
+	nrInSetByClusters <- as.double(rep(0,nRCclu[1]))
+  }
+     
   
-  # clu<-unlist(clu)    
-  # }
-  
+
+ 
   rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
   for(i in 1:nRCclu[[1]]){
     rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==i)-1)
@@ -321,9 +361,9 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
           tmpPreSpecM<-preSpecM[,i,,]
           if(all(is.na(tmpPreSpecM))){
             M[,,i]<-(M[,,i]>0)*1
-          } else if(all(tmpPreSpecM==tmpPreSpecM[1,1,1])){
-            M[,,i]<-(M[,,i]>=tmpPreSpecM[1,1,1])*1
-          } else stop("Relation ",i," is not binary but suplied to binary blockmodeling without suitable value in 'preSpecM'!",sep="")
+          } else if(all(tmpPreSpecM==tmpPreSpecM[1])){
+            M[,,i]<-(M[,,i]>=tmpPreSpecM[1])*1
+          } else stop("Relation ",i," is not binary but supplied to binary blockmodeling without suitable value in 'preSpecM'!",sep="")
         }
       }
     }
@@ -339,7 +379,9 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
   
   M<-apply(M,c(2,3),as.double)
   
-  resC<-.C("critFun", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode=as.integer(isTwoMode), isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=as.integer(rowCluChange), colCluChange=as.integer(colCluChange), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM,combWeights=combWeights,NAOK=TRUE)
+
+  
+  resC<-.C("critFun", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode=as.integer(isTwoMode), isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=as.integer(rowCluChange), colCluChange=as.integer(colCluChange), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM,combWeights=combWeights, mulReg=as.integer(mulReg), nrInSetByClusters= as.integer(nrInSetByClusters), NAOK=TRUE)
   
   
   res<-c(list(M=M), resC[c("err","EM","Earr")], list(IM=IMaddNames(resC$IM)), list(clu=orgClu), initial.param, list(call=match.call()), if(returnEnv)list(env= environment()) else NULL)
@@ -363,12 +405,18 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
 #' @export
 
 
-optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=TRUE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE){
+optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=TRUE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE, mulReg=TRUE, addGroupLlErr=TRUE){
   
   if(save.initial.param){
     initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
   }else initial.param<-NULL
   
+  uniqueBlocks<-unique(unlist(unclass(blocks)))
+  if(all(is.na(uniqueBlocks))) stop("No block types are specified!")
+  blocksOk<-uniqueBlocks%in%c(blockmodeling:::cStatus$blockTypes,NA)
+  if(all(blocksOk)==FALSE) {
+	stop("Block types ", paste(uniqueBlocks[!blocksOk], collapse=", ")," are not supported!")
+  }
   
   if(length(dim(M))==2) M<-array(M,dim=c(dim(M),length(approaches)))
   dM<-dim(M)
@@ -393,7 +441,18 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
       M[1:oldDM[1],((oldDM[1]+1):nUnitsTmp),]<-oldM
       dM<-dim(M)
     }
+  } else {
+	tmN<-length(clu)
+	tmNclu<-length(unique(clu))
   }
+  
+  if(addGroupLlErr && homFun=="bll"){
+	nrInSetByClusters<-rep(tmN, tmNclu)
+  } else {
+	nrInSetByClusters <- as.double(rep(0,nRCclu[1]))
+  }
+  
+  
   
   if(!is.list(clu))clu<-list(clu,clu)
   clu<-lapply(clu,function(x)as.integer(as.factor(x))-as.integer(1))
@@ -543,7 +602,7 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
       regFunArr <- array(as.integer(NA),dim=dB)
       regFunArr[,,,]<-regFun
       regFun<-regFunArr
-    } else stop("'regFun' is a vector of unapropriate length")
+    } else stop("'regFun' is a vector of inappropriate length")
   } else if(is.array(regFun)){
     if(dim(regFun)!=dB){
       stop("'regFun' is an array - dimensions of 'regFun' and 'blocks' do not match")
@@ -560,9 +619,9 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
           tmpPreSpecM<-preSpecM[,i,,]
           if(all(is.na(tmpPreSpecM))){
             M[,,i]<-(M[,,i]>0)*1
-          } else if(all(tmpPreSpecM==tmpPreSpecM[1,1,1])){
-            M[,,i]<-(M[,,i]>=tmpPreSpecM[1,1,1])*1
-          } else stop("Relation ",i," is not binary but suplied to binary blockmodeling without suitable value in 'preSpec'!",sep="")
+          } else if(all(tmpPreSpecM==tmpPreSpecM[1])){
+            M[,,i]<-(M[,,i]>=tmpPreSpecM[1])*1
+          } else stop("Relation ",i," is not binary but supplied to binary blockmodeling without suitable value in 'preSpec'!",sep="")
         }
       }
     }
@@ -582,12 +641,12 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
     bestRowParMatrix <- matrix(as.integer(NA),ncol=maxPar,nrow=dM[1])
     
     resC<-.C("optParMulti", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-             , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix, NAOK=TRUE)
+             , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowPar=clu[[1]], colPar=clu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights, exchageClusters=exchageClusters, maxPar=as.integer(maxPar), bestColParMatrix=bestColParMatrix, bestRowParMatrix=bestRowParMatrix, mulReg=as.integer(mulReg), nrInSetByClusters = as.integer(nrInSetByClusters), NAOK=TRUE)
     clu<- resC$rowPar
     
   } else{	
     resC<-.C("optPar", M=M, nr=dM[1], nc=dM[2], nRel=dM[3], isTwoMode= 0 #as.integer(isTwoMode) - two mode networks are currently implemented through onemode networks
-             , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters, NAOK=TRUE)
+             , isSym=as.integer(isSym), diag=as.integer(diag), nColClus=nRCclu[2], nRowClus=nRCclu[1], nUnitsRowClu=nUnitsInRCclu[[1]], nUnitsColClu=nUnitsInRCclu[[2]], rowParArr=rowParArr, colParArr=colParArr, approaches=approaches, maxBlockTypes=as.integer(maxBlockTypes), nBlockTypeByBlock=array(as.integer(nBlockTypeByBlock),dim=dim(nBlockTypeByBlock)), blocks=blocks, IM=IM, EM=EM, Earr=Earr, err=sum(EM), justChange=as.integer(justChange), rowCluChange=integer(2), colCluChange=integer(2), sameIM=as.integer(sameIM), regFun=regFun, homFun=homFun, usePreSpec=usePreSpecM, preSpecM=preSpecM, minUnitsRowCluster = as.integer(minUnitsRowCluster), minUnitsColCluster = as.integer(minUnitsColCluster), maxUnitsRowCluster = as.integer(maxUnitsRowCluster), maxUnitsColCluster = as.integer(maxUnitsColCluster), sameErr=as.integer(0), nIter=as.integer(0),combWeights=combWeights,exchageClusters=exchageClusters, mulReg=as.integer(mulReg), nrInSetByClusters = as.integer(nrInSetByClusters), NAOK=TRUE)
     
     clu<- parArrOne2clu(nUnitsClu=resC$nUnitsRowClu, parArr=resC$rowParArr, nClus=resC$nRowClus)
   }
@@ -611,7 +670,9 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
     for(iMode in 2:nMode){
       clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
     }
-  } else clu<-as.integer(as.factor(clu))
+  } else {
+	clu<-as.integer(as.factor(clu))
+  }
   
   
   
