@@ -7,8 +7,7 @@
 stochBlockKMint<-function(M, #a square matrix
                         k,#number of clusters/groups
                         nstart = 100, #number of random starting points for the classical k-means algorithm (for each set of units).
-                        iter.max = 1000, #maximum number of iterations for k-means
-                        perm = 0, #number or partitions obtained by randomly permuting the k-means partition - if 0, no permutations are made, only the original partition is analyzed. Defaults to 0 if nCores==1 and to the number of cores used -1 in other cases. 
+                        perm = 0, #number or partitions obtained by randomly permuting the k-means partition - if 0, no permutations are made, only the original partition is analyzed. 
                         sharePerm = 0.20, #the probability that a unit will have their randomly assigned. 
                         save.initial.param=TRUE,  #save the initial parametrs of this call
                         deleteMs=TRUE, #delete networks/matrices from results of optParC or optParMultiC to save space
@@ -32,14 +31,10 @@ stochBlockKMint<-function(M, #a square matrix
   dots<-list(...)
   
   if(save.initial.param)initial.param<-c(tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")),dots=list(...))#saves the inital parameters
-  
-  
-  # if(nCores!=1) {
-  #   warning("Mullticore implementation is not yet supported!")
-  #   nCores<-1
-  # }
-  
-  
+  if(nCores!=1) {
+    warning("Mullticore implementation is not yet supported!")
+    nCores<-1
+  }
   # if(is.null(mingr)){
   #   if(is.null(dots$minUnitsRowCluster)){
   #     mingr<-1
@@ -137,7 +132,7 @@ stochBlockKMint<-function(M, #a square matrix
   for(iMode in 1:nmode){
     iDat<-dat[modeVec==iMode,]
     iDat<-iDat[,colSums(iDat^2)>0]
-    iKmRes<-kmeans(iDat, centers = k[iMode],nstart = nstart,iter.max = iter.max)
+    iKmRes<-kmeans(iDat, centers = k[iMode],nstart = nstart)
     part[[iMode]]<-iKmRes$cluster
   }
   perm <- perm+1
@@ -204,20 +199,8 @@ stochBlockKMint<-function(M, #a square matrix
       if(printRep==1) cat("Final partition:   ",blockmodeling:::unlistPar(res[[i]]$clu),"\n")
     }
   } else {
-    oneRep<-function(i,M,n,k,part,...){
-      temppar<-part
-      if(i>1){
-        for(iPar in 1:length(temppar)){
-          while(TRUE){
-            tPar<-temppar[[iPar]]
-            sel<-rbinom(n[iPar],size=1,prob = sharePerm)
-            tPar[sel]<-sample(1:k[iPar],size=sum(sel),replace = TRUE)
-            if(length(unique(tPar))==k[iPar]) break          
-          }
-          tPar->temppar[[iPar]]
-        }
-      } 
-      if(length(temppar)==1)temppar<-temppar[[1]]
+    oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep, parGenFun,...){
+      temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
       #skip.par<-c(skip.par,list(temppar))
       
       tres <- try(stochBlock(M=M, clu=temppar,  ...))
@@ -236,7 +219,7 @@ stochBlockKMint<-function(M, #a square matrix
     if(nCores==0){
       nCores<-detectCores()-1                    
     }
-    if(perm==1) perm<-nCores
+    
     pkgName<-utils::packageName()
     if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
     if(useParLapply) {
@@ -247,7 +230,7 @@ stochBlockKMint<-function(M, #a square matrix
       #clusterExport(cl, varlist = "kmBlock")
       clusterExport(cl, varlist = "pkgName", envir=environment())
       clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
-      res<-parLapplyLB(cl = cl,1:perm, fun = oneRep, M=M,n=n,k=k,part=part,...)
+      res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
       if(stopcl) stopCluster(cl)
       res<-lapply(res,function(x)x[[1]])
     } else {
@@ -261,7 +244,7 @@ stochBlockKMint<-function(M, #a square matrix
       }
       nC<-getDoParWorkers()
       
-      res<-foreach(i=1:perm,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,part=part,...)
+      res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
       if(!is.null(cl) & stopcl) {
         registerDoSEQ()
         stopCluster(cl)

@@ -522,7 +522,7 @@ stochBlockORP<-function(M, #a square matrix
 }
 
 
-
+## not exported
 findEmptySuperbocks<-function(M, n, na.rm=TRUE){
   if(length(n)==1) return(1)
   if(sum(n)!=dim(M)[1]) stop("Dimensions do not match!")
