@@ -1,5 +1,14 @@
 #' Computes weights for parts of the multilevel network based on random errors using the SS approach with complete blocks only (compatible with k-means)
 #'
+#' @import foreach
+#' @import parallel
+#' @import doParallel
+#' @import doRNG
+#' @import blockmodeling
+#' @importFrom stats na.omit
+#' @importFrom stats sd
+#' @import Rcpp
+#'
 #' @param mlNet A multilevel/linked network - The code assumes only one relation --> a matrix.
 #' @param cluParts A partition spliting the units into different sets
 #' @param k A vecotor of number of clusters for each set of units in the network.
@@ -14,30 +23,44 @@
 #'  \item{"errMatSum"}{\code{errArr} summed over all repretitions.}
 #'  \item{"weightsMat"}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
 weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=0, weightClusterSize=0,paramGenPar=list(genPajekPar = FALSE),...){
-  library(foreach)
-  library(doParallel)
-  library(doRNG)
-  if(length(dim(mlNet))!=2) stop("Currently the function only work if mlNet is (2-dimensional) matrix!")
-  if (nCores == 0) {
-    nCores <- detectCores() - 1
+
+  requireNamespace(foreach)
+  requireNamespace(doParallel)
+  requireNamespace(doRNG)
+
+  if(length(dim(mlNet))!=2){
+    stop("Currently the function only work if mlNet is (2-dimensional) matrix!")
+    }
+  if(nCores == 0){
+    nCores <- detectCores()-1
   }
+
   if(nCores>1 & !getDoParRegistered()){
     registerDoParallel(nCores)
   }
-  if(requireNamespace(blockmodeling)){
+
+  # if(requireNamespace(blockmodeling)){
     pack<-"blockmodeling"
-  }else{
-    requireNamespace(blockmodelingTest)
-    pack<-"blockmodelingTest"
-  }
+  # }else{
+  #   requireNamespace(blockmodelingTest)
+  #   pack<-"blockmodelingTest"
+  # }
+
   pack<-c(pack,"StochBlockTest")
+
   cluParts<-as.numeric(factor(cluParts))
+
   nn<-table(cluParts)
+
   mlOrNet<-apply(mlNet, c(1,2),sum)
-  parts<-fun.by.blocks(mlOrNet, clu = cluParts, ignore.diag = FALSE, FUN = ss)>0
+
+  parts<-fun.by.blocks(mlOrNet, clu = cluParts,
+                       ignore.diag = FALSE, FUN = ss)>0
+
   errArr<-array(NA,dim=c(dim(parts),mWeights))
+
   errUnitsMat<-matrix(NA,ncol=length(k),nrow=mWeights)
-  
+
   for(i1 in 1:dim(parts)[1]){
     for(i2 in 1:dim(parts)[2]){
       if(is.finite(parts[i1,i2])&parts[i1,i2]){
@@ -57,11 +80,13 @@ weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=
           } else {
             errUnits<-NA
             tclu<-genRandomPar(k = k[c(i1,i2)],n = nn[c(i1,i2)],addParam=paramGenPar)
-# the bellow lines are not needed due to improvment in llStochBlock
-#            tclu[[2]]<-tclu[[2]]+k[i1]
-#            tclu<-unlist(tclu)
+
+            # these lines are not needed due to improvements in `llStochBlock`
+            # tclu[[2]]<-tclu[[2]]+k[i1]
+            # tclu<-unlist(tclu)
           }
-          tCF<-llStochBlock(net, clu=tclu, weightClusterSize=weightClusterSize, ...)
+          tCF<-llStochBlock(net, clu=tclu,
+                            weightClusterSize=weightClusterSize, ...)
           c(tCF,errUnits)
         }
         errArr[i1,i2,]<-tmp[,1]

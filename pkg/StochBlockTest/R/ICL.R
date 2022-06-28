@@ -1,4 +1,14 @@
-# not exported
+#' Finds the active model's parameters
+#'
+#' @param M matrix
+#' @param n number of units (equal to number of \code{M}'s rows)
+#' @param k parameters to retrieve
+#' @param na.rm logical, whether to ignore \code{NA} data
+#'
+#' @return An array containing the parameters
+#'
+#' @export
+
 findActiveParam<-function(M, n, k, na.rm=TRUE){
   parByHB<-outer(k,k)
   parByHB<-array(parByHB,dim=c(dim(parByHB),dim(M)[3]))
@@ -19,14 +29,15 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
 #' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}. 
+#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}.
 #' @param uWeights The weights for each unin. A vector with the length equal to the number of units (in all sets).
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
-#'   \item ignore - diagonal values are ignored 
+#'   \item ignore - diagonal values are ignored
 #'   \item seperate - diagonal values are treated seperately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
+#' @param limitType Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.
 #' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
 #' \itemize{
 #'   \item number of clusters (of all types)
@@ -35,26 +46,36 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
-#' 
+#' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
+#' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
+#' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
+#'
 #' @return The value of ICL
-ICLStochBlock<-function(M, 
-                       clu, 
+#'
+#' @export
+ICLStochBlock<-function(M,
+                       clu,
                        weights=NULL,
                        uWeights=NULL,
                        diagonal = c("ignore","seperate","same"),
-                       limitType=c("none","inside","outside"),    
+                       limitType=c("none","inside","outside"),
                        limits=NULL,
-                       weightClusterSize=1.0){
-  
+                       weightClusterSize=1.0,
+					   addOne = TRUE,
+					   eps = 0.001){
+
   n1<-dim(M)[1]
   if(is.list(clu)) {
     n<-sapply(clu, length)
+    k<-sapply(clu, function(x)length(unique(x)))
   }  else{
     n<-length(clu)
+    k<-length(unique(clu))
   }
-  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")  
+
+  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")
   diagonal<-match.arg(diagonal)
-  limitType<-match.arg(limitType)  
+  limitType<-match.arg(limitType)
   if(is.null(weights)){
     weights<-M
     weights[]<-1
@@ -64,10 +85,10 @@ ICLStochBlock<-function(M,
     uWeights<-rep(1.0, n1)
   }
   if(length(uWeights)!=n1) stop("uWeights has wrong length!")
-  
-  
+
+
   nMode<-ifelse(is.list(clu),length(clu),1)
-  
+
   if(nMode>1){
     tmN<-sapply(clu,length)
     clu<-lapply(clu,function(x)as.integer(factor(x)))
@@ -84,13 +105,13 @@ ICLStochBlock<-function(M,
   clu <- clu - 1
   if(length(dim(M))==2) M<-array(M,dim=c(dim(M),1))
   if(length(dim(w))==2) w<-array(w,dim=c(dim(w),1))
-  
+
   if(is.null(limits)){
     bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
     if(limitType!="none"){
       limitType<-"none"
       warning("limitType is set to 'none' as limits are NULL!")
-    }      
+    }
   } else {
     if(diagonal %in% c("ignore","same")){
       bordersSeperateLower <- bordersSeperateUpper
@@ -101,11 +122,11 @@ ICLStochBlock<-function(M,
       dl<-dim(limits)
       if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
       if(dim(limits)!=4) stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
-      
+
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
     } else {
@@ -120,10 +141,10 @@ ICLStochBlock<-function(M,
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
-      
+
       if(!is.array(diagLimits)) stop("Second element of 'limits' must be specified as an array!")
       dl<-dim(diagLimits)
       if(length(dl)==2 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1],1,dl[2]))
@@ -131,12 +152,12 @@ ICLStochBlock<-function(M,
       if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
         stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersSeperateLower <- diagLimits[,,,1] 
+        bordersSeperateLower <- diagLimits[,,,1]
         bordersSeperateUpper <- diagLimits[,,,2]
       }
     }
   }
-  
+
   if(diagonal == "ignore")for(i in 1:dim(w)[3]){
     diag(w[,,i])<-0
   }
@@ -144,29 +165,35 @@ ICLStochBlock<-function(M,
   w<-w/mean(w[w>0])
   uWeights<-uWeights/mean(uWeights[uWeights>0])
   weightClusterSize<-as.double(weightClusterSize)
-  
-  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper)
-  
+
+  res<-.critFunction(M=M, clu=clu, weights=w, uWeights=uWeights, dimensions=sum(tmNclu), n=n, weightClusterSize=weightClusterSize, diagonal = diagonal, sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
+
   # wByHB<-blockmodeling::funByBlocks(w,clu=rep(1:length(n),times=n),ignore.diag=FALSE, FUN=sum)
   # k<-length(unique(clu))
   # parByHB<-findActiveParam(M, n, k, na.rm=TRUE)
   # ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   # ICL<- -res - 1/2*ICLpen
 
-  return(ICL(M = M,clu = clu,weights = w,n = n,err=res))
-  
+  return(ICL(M = M,k = k,weights = w,n = n,err=res))
+
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   # return(res)
 }
 
 
-# not exported
-ICL<-function(M, clu, weights, n, err, ll){
+#| Undeclared function for internal use
+ICL<-function(M, k, weights, n, err, ll){
   if(missing(err)) err<- -ll
   w<-weights
   wByHB<-blockmodeling::funByBlocks(w,clu=rep(1:length(n),times=n),ignore.diag=FALSE, FUN=sum)
-  k<-length(unique(clu))
+  if(length(dim(wByHB))==3){
+    wByHB<-aperm(wByHB,c(2,3,1))
+  }else if(length(dim(wByHB))==2){
+    wByHB<-array(wByHB,dim=c(dim(wByHB),1))
+  } else { wByHB<-array(wByHB,dim=c(1,1,1))}
+  #k<-length(unique(clu))
   parByHB<-findActiveParam(M, n, k, na.rm=TRUE)
+  wByHB[wByHB==0]<-1
   ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   ICL<- -err - 1/2*ICLpen
   return(ICL)
