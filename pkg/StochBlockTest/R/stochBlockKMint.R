@@ -155,7 +155,7 @@ stochBlockKMint<-function(M,
   }
   perm <- perm+1
 
-  if(nCores==1||!requireNamespace(parallel)){
+  if(nCores==1||!requireNamespace('parallel')){
     if(nCores!=1) {
       oldWarn<-options("warn")
       options(warn=1)
@@ -245,7 +245,7 @@ stochBlockKMint<-function(M,
       return(list(tres))
     }
 
-    if(!requireNamespace(doParallel)|!requireNamespace(doRNG)) useParLapply<-TRUE
+    if(!requireNamespace('doParallel')|!requireNamespace('doRNG')) useParLapply<-TRUE
 
     if(nCores==0){
       nCores<-detectCores()-1
@@ -265,8 +265,8 @@ stochBlockKMint<-function(M,
       if(stopcl) stopCluster(cl)
       res<-lapply(res,function(x)x[[1]])
     } else {
-      requireNamespace(doParallel)
-      requireNamespace(doRNG)
+      requireNamespace('doParallel')
+      requireNamespace('doRNG')
       if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
         if(!is.null(cl)) {
           #cl<-makeCluster(nCores)

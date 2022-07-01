@@ -24,9 +24,9 @@
 #'  \item{"weightsMat"}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
 weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=0, weightClusterSize=0,paramGenPar=list(genPajekPar = FALSE),...){
 
-  requireNamespace(foreach)
-  requireNamespace(doParallel)
-  requireNamespace(doRNG)
+  requireNamespace('foreach')
+  requireNamespace('doParallel')
+  requireNamespace('doRNG')
 
   if(length(dim(mlNet))!=2){
     stop("Currently the function only work if mlNet is (2-dimensional) matrix!")
@@ -39,10 +39,10 @@ weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=
     registerDoParallel(nCores)
   }
 
-  # if(requireNamespace(blockmodeling)){
+  # if(requireNamespace('blockmodeling')){
     pack<-"blockmodeling"
   # }else{
-  #   requireNamespace(blockmodelingTest)
+  #   requireNamespace('blockmodelingTest')
   #   pack<-"blockmodelingTest"
   # }
 
