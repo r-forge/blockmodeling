@@ -138,7 +138,7 @@ function(
 		if(fun.on.rows)X<-t(X)
 		res<-do.call(fun,args=c(list(x=X, method=method,...),usearg))
 	}
-	if(class(res)=="dist")attr(res,"Labels")<-rownames(M)
+	if(inherits(res,"dist"))attr(res,"Labels")<-rownames(M)
 	if(is.matrix(res))dimnames(res)<-dimnames(M)
 	return(res)	
 }
@@ -235,7 +235,7 @@ function(
         res<-do.call(fun,args=c(list(x=X, method=method,...),usearg))
         if(fun.on.rows)X<-t(X)
     }
-    if(class(res)=="dist")attr(res,"Labels")<-rownames(X)
+    if(inherits(res,"dist"))attr(res,"Labels")<-rownames(X)
     if(is.matrix(res))colnames(res)<-rownames(res)<-rownames(X)
     return(res)	
 }

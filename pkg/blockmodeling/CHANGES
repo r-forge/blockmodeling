@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2022
+Version: 1.1.0.9005
+Date: 2022-07-01
+Some bugs fixed. Some changes to code made to eliminate NOTEs in Rcheck
+
 Version: 1.1.0.9004
 Date: 2022-05-20
 Some bugs in binary stochastic (homogeneity) generalized blockmodeling fixed.

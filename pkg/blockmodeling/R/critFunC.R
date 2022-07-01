@@ -183,7 +183,7 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
   
   uniqueBlocks<-unique(unlist(unclass(blocks)))
   if(all(is.na(uniqueBlocks))) stop("No block types are specified!")
-  blocksOk<-uniqueBlocks%in%c(blockmodeling:::cStatus$blockTypes,NA)
+  blocksOk<-uniqueBlocks%in%c(cStatus$blockTypes,NA)
   if(all(blocksOk)==FALSE) {
 	stop("Block types ", paste(uniqueBlocks[!blocksOk], collapse=", ")," are not supported!")
   }
@@ -413,7 +413,7 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
   
   uniqueBlocks<-unique(unlist(unclass(blocks)))
   if(all(is.na(uniqueBlocks))) stop("No block types are specified!")
-  blocksOk<-uniqueBlocks%in%c(blockmodeling:::cStatus$blockTypes,NA)
+  blocksOk<-uniqueBlocks%in%c(cStatus$blockTypes,NA)
   if(all(blocksOk)==FALSE) {
 	stop("Block types ", paste(uniqueBlocks[!blocksOk], collapse=", ")," are not supported!")
   }
@@ -446,6 +446,13 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
 	tmNclu<-length(unique(clu))
   }
   
+  
+  if(!is.list(clu))clu<-list(clu,clu)
+  clu<-lapply(clu,function(x)as.integer(as.factor(x))-as.integer(1))
+  nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
+  nRCclu<-sapply(nUnitsInRCclu,length)
+  
+  
   if(addGroupLlErr && homFun=="bll"){
 	nrInSetByClusters<-rep(tmN, tmNclu)
   } else {
@@ -454,10 +461,7 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
   
   
   
-  if(!is.list(clu))clu<-list(clu,clu)
-  clu<-lapply(clu,function(x)as.integer(as.factor(x))-as.integer(1))
-  nUnitsInRCclu<-lapply(clu,function(x)as.integer(table(x)))
-  nRCclu<-sapply(nUnitsInRCclu,length)
+
   rowParArr<-matrix(as.integer(0),nrow=dM[1],ncol=nRCclu[1])
   for(i in 1:nRCclu[1]){
     rowParArr[1:nUnitsInRCclu[[1]][i],i]<-as.integer(which(clu[[1]]==(i-1))-1)

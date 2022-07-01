@@ -18,7 +18,7 @@ structure(function(n,filename,twomode="default",symetric=NULL){
 	rowNames<-rownames(n)
 	colNames<-colnames(n)
 	if(requireNamespace("Matrix")){
-		if(class(n)=="mat") n<-unclass(n)
+		if(inherits(n,"mat")) n<-unclass(n)
 		n <- as(n,"dgTMatrix")
 		useMatrix<-TRUE
 	}else{

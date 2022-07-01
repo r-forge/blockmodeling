@@ -15,7 +15,7 @@
 #' @seealso \code{\link{clu}}
 #' @export
 orderClu<-function(x, clu=NULL,  fun=sum, funWay=2, nn=NULL, returnList=TRUE, scale=TRUE){
-  if(any(class(x)%in%c("check.these.par", "crit.fun", "critFun", "opt.more.par", "opt.more.par.mode", "opt.par", "opt.par.mode", "optMorePar", "optMoreParMode", "optPar", "optParMode"))){
+  if(inherits(x,c("check.these.par", "crit.fun", "critFun", "opt.more.par", "opt.more.par.mode", "opt.par", "opt.par.mode", "optMorePar", "optMoreParMode", "optPar", "optParMode"))){
     tclu<- clu(x)
     M<-x$M
     if(is.null(nn))nn<-x$initial.param$initial.param$n

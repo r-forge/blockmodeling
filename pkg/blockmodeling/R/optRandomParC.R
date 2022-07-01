@@ -291,7 +291,7 @@
       #}else  tres <- try(optParC(M=M, clu=temppar,  save.initial.param= save.initial.param.opt,  ...))
       tres <- try(optParC(M=M, clu=temppar, approaches=approaches, blocks=blocks, useMulti=useMulti, save.initial.param= save.initial.param.opt,  ...))
       
-      if(class(tres)=="try-error"){
+      if(inherits(tres,"try-error")){
         tres<-list("try-error"=tres, err=Inf, nIter=Inf, startPart=temppar)
       }
       if(deleteMs){
