@@ -8,7 +8,6 @@ stochBlockKMint(
   M,
   k,
   nstart = 100,
-  iter.max = 1000,
   perm = 0,
   sharePerm = 0.2,
   save.initial.param = TRUE,
@@ -35,8 +34,6 @@ stochBlockKMint(
 \item{k}{The number of clusters used in the generation of partitions.}
 
 \item{nstart}{number of random starting points for the classical k-means algorithm (for each set of units). Defaults to \code{100}.}
-
-\item{iter.max}{Maximum number of iterations from each random starting point (according to \code{nstart}). Defaults to \code{1000}.}
 
 \item{perm}{Number or partitions obtained by randomly permuting the k-means partition - if 0, no permutations are made, only the original partition is analyzed.}
 
