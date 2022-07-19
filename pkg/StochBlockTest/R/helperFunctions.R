@@ -41,10 +41,10 @@ weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=
 
   # if(requireNamespace('blockmodeling')){
     pack<-"blockmodeling"
-  }else{
+#  }else{
     # requireNamespace("blockmodelingTest")
     # pack<-"blockmodelingTest"
-  }
+#  }
   pack<-c(pack,"StochBlockTest")
   cluParts<-as.numeric(factor(cluParts))
   nn<-table(cluParts)
