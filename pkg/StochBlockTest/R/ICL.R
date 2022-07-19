@@ -52,24 +52,29 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #' @return The value of ICL
 #'
 #' @export
-ICLStochBlock<-function(M, 
-                       clu, 
+ICLStochBlock<-function(M,
+                       clu,
                        weights=NULL,
                        uWeights=NULL,
                        diagonal = c("ignore","seperate","same"),
-                       limitType=c("none","inside","outside"),    
+                       limitType=c("none","inside","outside"),
                        limits=NULL,
-                       weightClusterSize=1.0){
-  
+                       weightClusterSize=1.0,
+					   addOne = TRUE,
+					   eps = 0.001){
+
   n1<-dim(M)[1]
   if(is.list(clu)) {
     n<-sapply(clu, length)
+    k<-sapply(clu, function(x)length(unique(x)))
   }  else{
     n<-length(clu)
+    k<-length(unique(clu))
   }
-  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")  
+
+  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")
   diagonal<-match.arg(diagonal)
-  limitType<-match.arg(limitType)  
+  limitType<-match.arg(limitType)
   if(is.null(weights)){
     weights<-M
     weights[]<-1
@@ -105,7 +110,7 @@ ICLStochBlock<-function(M,
     if(limitType!="none"){
       limitType<-"none"
       warning("limitType is set to 'none' as limits are NULL!")
-    }      
+    }
   } else {
     if(diagonal %in% c("ignore","same")){
       bordersSeperateLower <- bordersSeperateUpper
@@ -120,7 +125,7 @@ ICLStochBlock<-function(M,
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
     } else {
@@ -135,7 +140,7 @@ ICLStochBlock<-function(M,
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
       
@@ -146,7 +151,7 @@ ICLStochBlock<-function(M,
       if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
         stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersSeperateLower <- diagLimits[,,,1] 
+        bordersSeperateLower <- diagLimits[,,,1]
         bordersSeperateUpper <- diagLimits[,,,2]
       }
     }
@@ -168,20 +173,26 @@ ICLStochBlock<-function(M,
   # ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   # ICL<- -res - 1/2*ICLpen
 
-  return(ICL(M = M,clu = clu,weights = w,n = n,err=res))
-  
+  return(ICL(M = M,k = k,weights = w,n = n,err=res))
+
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   # return(res)
 }
 
 
-# Undeclared function for internal use
-ICL<-function(M, clu, weights, n, err, ll){
+#| Undeclared function for internal use
+ICL<-function(M, k, weights, n, err, ll){
   if(missing(err)) err<- -ll
   w<-weights
   wByHB<-blockmodeling::funByBlocks(w,clu=rep(1:length(n),times=n),ignore.diag=FALSE, FUN=sum)
-  k<-length(unique(clu))
+  if(length(dim(wByHB))==3){
+    wByHB<-aperm(wByHB,c(2,3,1))
+  }else if(length(dim(wByHB))==2){
+    wByHB<-array(wByHB,dim=c(dim(wByHB),1))
+  } else { wByHB<-array(wByHB,dim=c(1,1,1))}
+  #k<-length(unique(clu))
   parByHB<-findActiveParam(M, n, k, na.rm=TRUE)
+  wByHB[wByHB==0]<-1
   ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   ICL<- -err - 1/2*ICLpen
   return(ICL)

@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 .meanByBlocks <- function(M, clu, nClu, n, diagonal = "ignore", sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL, addOne = TRUE, eps = 0.001) {
-    .Call('_StochBlockTest_meanByBlocks', PACKAGE = 'StochBlockTest', M, clu, nClu, n, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps)
+    .Call(`_StochBlockTest_meanByBlocks`, M, clu, nClu, n, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps)
 }
 
 .kmBlock <- function(M, clu, weights, uWeights, n, nClu, diagonal = "ignore", weightClusterSize = 1.0, sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL, maxNoImp = 0L, addOne = TRUE, eps = 0.001) {
-    .Call('_StochBlockTest_kmBlock', PACKAGE = 'StochBlockTest', M, clu, weights, uWeights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, maxNoImp, addOne, eps)
+    .Call(`_StochBlockTest_kmBlock`, M, clu, weights, uWeights, n, nClu, diagonal, weightClusterSize, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, maxNoImp, addOne, eps)
 }
 
 .critFunction <- function(M, clu, weights, uWeights, dimensions, n, weightClusterSize = 1, diagonal = "ignore", sBorders = "none", bordersMatLower = NULL, bordersMatUpper = NULL, bordersSeperateLower = NULL, bordersSeperateUpper = NULL, addOne = TRUE, eps = 0.001) {
-    .Call('_StochBlockTest_critFunction', PACKAGE = 'StochBlockTest', M, clu, weights, uWeights, dimensions, n, weightClusterSize, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps)
+    .Call(`_StochBlockTest_critFunction`, M, clu, weights, uWeights, dimensions, n, weightClusterSize, diagonal, sBorders, bordersMatLower, bordersMatUpper, bordersSeperateLower, bordersSeperateUpper, addOne, eps)
 }
 

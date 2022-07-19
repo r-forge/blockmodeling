@@ -41,15 +41,15 @@ unlistPar<-function(part){
 #'
 #' @export
 
-stochBlock<-function(M, 
-                  clu, 
+stochBlock<-function(M,
+                  clu,
                   weights=NULL,
 				  uWeights=NULL,
 				  diagonal = c("ignore","seperate","same"),
-				  limitType=c("none","inside","outside"),				  
+				  limitType=c("none","inside","outside"),
                   limits=NULL,
 				  weightClusterSize = 1,
-				  addOne = TRUE, 
+				  addOne = TRUE,
 				  eps = 0.001){
   n1<-dim(M)[1]
   if(is.list(clu)) {
@@ -63,7 +63,7 @@ stochBlock<-function(M,
   if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")  
   
   diagonal<-match.arg(diagonal)
-  limitType<-match.arg(limitType)  
+  limitType<-match.arg(limitType)
   if(is.null(weights)){
     weights<-M
     weights[]<-1
@@ -98,7 +98,7 @@ stochBlock<-function(M,
 	  bordersMatLower <- bordersMatUpper <- bordersSeperateLower <- bordersSeperateUpper<-NULL
 	  if(limitType!="none"){
 	    limitType<-"none"
-	    warning("limitType is set to 'none' as limits are NULL!")	  
+	    warning("limitType is set to 'none' as limits are NULL!")
 	 }
   } else {
   	if(diagonal %in% c("ignore","same")){
@@ -115,7 +115,7 @@ stochBlock<-function(M,
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
   	    stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
   	  } else{
-  	    bordersMatLower <- limits[,,,1] 
+  	    bordersMatLower <- limits[,,,1]
   	    bordersMatUpper <- limits[,,,2]
   	  }
   	} else {
@@ -131,7 +131,7 @@ stochBlock<-function(M,
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
   	    stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
   	  } else{
-  	    bordersMatLower <- limits[,,,1] 
+  	    bordersMatLower <- limits[,,,1]
   	    bordersMatUpper <- limits[,,,2]
   	  }
   
@@ -143,7 +143,7 @@ stochBlock<-function(M,
   	  if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
   	    stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
   	  } else{
-  	    bordersSeperateLower <- diagLimits[,,1] 
+  	    bordersSeperateLower <- diagLimits[,,1]
   	    bordersSeperateUpper <- diagLimits[,,2]
   	  }
   	}
@@ -202,15 +202,15 @@ stochBlock<-function(M,
 #'
 #' @export
 
-llStochBlock<-function(M, 
-                   clu, 
+llStochBlock<-function(M,
+                   clu,
                    weights=NULL,
 				           uWeights=NULL,
                    diagonal = c("ignore","seperate","same"),
-                   limitType=c("none","inside","outside"),    
+                   limitType=c("none","inside","outside"),
                    limits=NULL,
                    weightClusterSize=1.0,
-				  addOne = TRUE, 
+				  addOne = TRUE,
 				  eps = 0.001){
 
   n1<-dim(M)[1]
@@ -219,9 +219,9 @@ llStochBlock<-function(M,
   }  else{
     n<-length(clu)
   }
-  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")  
+  if(sum(n)!=n1) stop("The length of clu and dimension of M does not match!")
   diagonal<-match.arg(diagonal)
-  limitType<-match.arg(limitType)  
+  limitType<-match.arg(limitType)
   if(is.null(weights)){
     weights<-M
     weights[]<-1
@@ -257,7 +257,7 @@ llStochBlock<-function(M,
     if(limitType!="none"){
       limitType<-"none"
       warning("limitType is set to 'none' as limits are NULL!")
-    }      
+    }
   } else {
     if(diagonal %in% c("ignore","same")){
       bordersSeperateLower <- bordersSeperateUpper
@@ -272,7 +272,7 @@ llStochBlock<-function(M,
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
     } else {
@@ -287,7 +287,7 @@ llStochBlock<-function(M,
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
         stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersMatLower <- limits[,,,1] 
+        bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
       }
       
@@ -298,7 +298,7 @@ llStochBlock<-function(M,
       if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
         stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
       } else{
-        bordersSeperateLower <- diagLimits[,,,1] 
+        bordersSeperateLower <- diagLimits[,,,1]
         bordersSeperateUpper <- diagLimits[,,,2]
       }
     }

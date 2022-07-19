@@ -1,8 +1,8 @@
 Package: StochBlockTest
 Type: Package
 Title: Stochastic blockmodeling of one-mode and linked networks
-Version: 0.0.2.9010
-Date: 2022-04-22
+Version: 0.0.2.9020
+Date: 2022-07-19
 Author: Aleš Žiberna
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre"))
@@ -13,11 +13,5 @@ Encoding: UTF-8
 Imports: Rcpp (>= 1.0.0), blockmodeling, doParallel, doRNG, foreach
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
-Repository: R-Forge
-Repository/R-Forge/Project: blockmodeling
-Repository/R-Forge/Revision: 358
-Repository/R-Forge/DateTimeStamp: 2022-04-22 09:59:51
-Date/Publication: 2022-04-22 09:59:51
-NeedsCompilation: yes
-Packaged: 2022-04-22 10:11:24 UTC; rforge
-RoxygenNote: 7.2.0
+
+
