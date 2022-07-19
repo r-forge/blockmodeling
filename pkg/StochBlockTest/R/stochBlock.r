@@ -164,7 +164,7 @@ stochBlock<-function(M,
   res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   
 	  
-  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, clu = k, weights=w, n=n, err=res$bestCf))
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
   #return(res)
   class(res)<-"opt.par"
   return(res)

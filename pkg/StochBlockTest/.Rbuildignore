@@ -1,4 +1,2 @@
-^.*\.Rproj$         # Automatically added by RStudio,
-^\.Rproj\.user$     # used for temporary files.
-CHANGES.txt         # SVN folder
-Tests
+.*.Rproj$                  # Automatically added by RStudio, 
+^/.Rproj/.user$            # used for temporary files.
