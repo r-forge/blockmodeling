@@ -12,7 +12,9 @@ ICLStochBlock(
   diagonal = c("ignore", "seperate", "same"),
   limitType = c("none", "inside", "outside"),
   limits = NULL,
-  weightClusterSize = 1
+  weightClusterSize = 1,
+  addOne = TRUE,
+  eps = 0.001
 )
 }
 \arguments{

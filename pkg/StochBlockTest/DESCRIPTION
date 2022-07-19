@@ -13,5 +13,4 @@ Encoding: UTF-8
 Imports: Rcpp (>= 1.0.0), blockmodeling, doParallel, doRNG, foreach
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
-
-
+RoxygenNote: 7.1.2

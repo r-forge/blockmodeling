@@ -39,6 +39,7 @@ unlistPar<-function(part){
 #'
 #' @return A list similar to optParC in package \code{blockmodeling}.
 #'
+#' @useDynLib StochBlockTest, .registration = TRUE
 #' @export
 
 stochBlock<-function(M,
@@ -169,6 +170,7 @@ stochBlock<-function(M,
   class(res)<-"opt.par"
   return(res)
 }
+
 
 
 
@@ -596,5 +598,4 @@ findEmptySuperbocks<-function(M, n, na.rm=TRUE){
   }
   return(w)
 }
-
 

@@ -5,7 +5,6 @@
 
 #include "StochBlockTest_types.h"
 
-// added uWeights as arguments, but still need to use them in the functions.
 
 template < typename T >
 class Borders {
