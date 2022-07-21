@@ -1,4 +1,12 @@
 2022
+Version: 0.0.2.9043
+Date: 2022-07-21
+Some NOTEs in R check fixed.
+
+Version: 0.0.2.9042
+Date: 2022-07-21
+Added a fix so ICL works with blockmodeling version < 1.0.9.
+
 Version: 0.0.2.9041
 Date: 2022-07-21
 Added check that the data are binary.

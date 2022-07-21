@@ -179,6 +179,7 @@ ICLStochBlock<-function(M,
   # return(res)
 }
 
+#' @importFrom utils packageVersion
 
 #| Undeclared function for internal use
 ICL<-function(M, k, weights, n, err, ll){
