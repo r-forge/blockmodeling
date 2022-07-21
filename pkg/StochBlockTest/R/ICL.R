@@ -184,7 +184,11 @@ ICLStochBlock<-function(M,
 ICL<-function(M, k, weights, n, err, ll){
   if(missing(err)) err<- -ll
   w<-weights
+  dmW<-dim(w)
+  if((packageVersion("blockmodeling")<"1.0.9") & length(dim(w))==3) w<-aperm(w, c(3,1,2))
   wByHB<-blockmodeling::funByBlocks(w,clu=rep(1:length(n),times=n),ignore.diag=FALSE, FUN=sum)
+  if((packageVersion("blockmodeling")<"1.0.9") & length(dim(wByHB))==3) wByHB<-aperm(wByHB, c(2,3,1))
+  
   if(length(dim(wByHB))==3){
     wByHB<-aperm(wByHB,c(2,3,1))
   }else if(length(dim(wByHB))==2){
