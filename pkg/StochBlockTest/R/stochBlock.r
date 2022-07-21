@@ -407,7 +407,7 @@ llStochBlock<-function(M,
 #'resMl<-stochBlockORP(M=Ml, k=k, n=nn, rep=10)
 #'resMl$ICL
 #'plot(resMl)
-#'clu(resML)
+#'clu(resMl)
 #'
 #' @author \enc{Aleš, Žiberna}{Ales Ziberna}
 #' 
