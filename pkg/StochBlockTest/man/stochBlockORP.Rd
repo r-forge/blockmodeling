@@ -75,11 +75,59 @@ stochBlockORP(
 
 \item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
 
-\item{\dots}{Arguments passed to other functions, see \code{\link{critFunC}}.}
+\item{\dots}{Arguments passed to other functions, see \code{\link{stochBlock}}.}
 }
 \value{
 A list similar to optRandomParC
 }
 \description{
 A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.
+}
+\examples{
+# Simple one-mode network
+library(blockmodeling)
+k<-2
+blockSizes<-rep(20,k)
+IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+if(any(dim(IM)!=c(k,k))) stop("invalid dimmensions")
+
+set.seed(2021)
+clu<-rep(1:k, times=blockSizes)
+n<-length(clu)
+M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+diag(M)<-0
+plotMat(M)
+
+resORP<-stochBlockORP(M,k=2, rep=10, return.all = TRUE)
+resORP$ICL
+plot(resORP)
+clu(resORP)
+
+
+# Linked network
+library(blockmodeling)
+set.seed(2021)
+IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+clu<-rep(1:2, each=20)
+n<-length(clu)
+nClu<-length(unique(clu))
+M1<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n)
+M2<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n)
+M12<-diag(n)
+nn<-c(n,n)
+k<-c(2,2)
+Ml<-matrix(0, nrow=sum(nn),ncol=sum(nn))
+Ml[1:n,1:n]<-M1
+Ml[n+1:n,n+1:n]<-M2
+Ml[n+1:n, 1:n]<-M12
+plotMat(Ml)
+
+resMl<-stochBlockORP(M=Ml, k=k, n=nn, rep=10)
+resMl$ICL
+plot(resMl)
+clu(resML)
+
+}
+\author{
+\enc{Aleš, Žiberna}{Ales Ziberna}
 }

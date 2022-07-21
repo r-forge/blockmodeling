@@ -69,7 +69,7 @@ stochBlockKMint(
 
 \item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
 
-\item{...}{Arguments passed to other functions, see \code{\link{critFunC}}.}
+\item{...}{Arguments passed to other functions, see \code{\link{stochBlock}}.}
 }
 \value{
 A list similar to optRandomParC

@@ -45,6 +45,10 @@ ICLStochBlock(
 If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 
 \item{weightClusterSize}{The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
+
+\item{addOne}{Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.}
+
+\item{eps}{If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.}
 }
 \value{
 The value of ICL

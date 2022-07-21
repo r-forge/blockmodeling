@@ -213,59 +213,60 @@ stochBlockKMint<-function(M, #a square matrix
       if(printRep==1) cat("Final -loglikelihood:",err[i],"\n")
       if(printRep==1) cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
     }
-  } else {
-    oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep, parGenFun,...){
-      temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
-      #skip.par<-c(skip.par,list(temppar))
-      
-      tres <- try(stochBlock(M=M, clu=temppar,  ...))
-      if(inherits(x = tres,what = "try-error")){
-        tres<-list("try-error"=tres, err=Inf, startPart=temppar)
-      }
-      if(deleteMs){
-        tres$M<-NULL
-      }
-      tres$best<-NULL
-      return(list(tres))
-    }
-    
-    if(!requireNamespace("doParallel")|!requireNamespace("doRNG")) useParLapply<-TRUE
-    
-    if(nCores==0){
-      nCores<-detectCores()-1                    
-    }
-    
-    pkgName<-utils::packageName()
-    if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
-    if(useParLapply) {
-      if(is.null(cl)) cl<-makeCluster(nCores)
-      clusterSetRNGStream(cl)
-      nC<-nCores
-      #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
-      #clusterExport(cl, varlist = "kmBlock")
-      clusterExport(cl, varlist = "pkgName", envir=environment())
-      clusterEvalQ(cl, expr={requireNamespace(pkgName,character.only = TRUE)})
-      res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
-      if(stopcl) stopCluster(cl)
-      res<-lapply(res,function(x)x[[1]])
-    } else {
-      requireNamespace("doParallel")
-      requireNamespace("doRNG")
-      if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
-        if(!is.null(cl)) {
-          #cl<-makeCluster(nCores)
-          registerDoParallel(cl)
-        } else registerDoParallel(nCores)
-      }
-      nC<-getDoParWorkers()
-      
-      res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
-      if(!is.null(cl) & stopcl) {
-        registerDoSEQ()
-        stopCluster(cl)
-      }
-    }
-    err<-sapply(res,function(x)x$err)    
-  }
+  } # The else (muticore) option is not yet implemented
+  # else {
+  #   oneRep<-function(i,M,n,k,mingr,maxgr,addParam,rep, parGenFun,...){
+  #     temppar<-parGenFun(n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam)
+  #     #skip.par<-c(skip.par,list(temppar))
+  #     
+  #     tres <- try(stochBlock(M=M, clu=temppar,  ...))
+  #     if(inherits(x = tres,what = "try-error")){
+  #       tres<-list("try-error"=tres, err=Inf, startPart=temppar)
+  #     }
+  #     if(deleteMs){
+  #       tres$M<-NULL
+  #     }
+  #     tres$best<-NULL
+  #     return(list(tres))
+  #   }
+  #   
+  #   if(!requireNamespace("doParallel")|!requireNamespace("doRNG")) useParLapply<-TRUE
+  #   
+  #   if(nCores==0){
+  #     nCores<-detectCores()-1                    
+  #   }
+  #   
+  #   pkgName<-utils::packageName()
+  #   if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
+  #   if(useParLapply) {
+  #     if(is.null(cl)) cl<-makeCluster(nCores)
+  #     clusterSetRNGStream(cl)
+  #     nC<-nCores
+  #     #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
+  #     #clusterExport(cl, varlist = "kmBlock")
+  #     clusterExport(cl, varlist = "pkgName", envir=environment())
+  #     clusterEvalQ(cl, expr={requireNamespace(pkgName,character.only = TRUE)})
+  #     res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
+  #     if(stopcl) stopCluster(cl)
+  #     res<-lapply(res,function(x)x[[1]])
+  #   } else {
+  #     requireNamespace("doParallel")
+  #     requireNamespace("doRNG")
+  #     if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
+  #       if(!is.null(cl)) {
+  #         #cl<-makeCluster(nCores)
+  #         registerDoParallel(cl)
+  #       } else registerDoParallel(nCores)
+  #     }
+  #     nC<-getDoParWorkers()
+  #     
+  #     res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep, parGenFun=parGenFun,...)
+  #     if(!is.null(cl) & stopcl) {
+  #       registerDoSEQ()
+  #       stopCluster(cl)
+  #     }
+  #   }
+  #   err<-sapply(res,function(x)x$err)    
+  # }
 }
 
