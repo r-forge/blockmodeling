@@ -173,7 +173,7 @@ ICLStochBlock<-function(M,
   # ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   # ICL<- -res - 1/2*ICLpen
 
-  return(ICL(M = M,k = k,weights = w,n = n,err=res))
+  return(.ICL(M = M,k = k,weights = w,n = n,err=res))
 
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   # return(res)
@@ -182,7 +182,7 @@ ICLStochBlock<-function(M,
 #' @importFrom utils packageVersion
 
 #| Undeclared function for internal use
-ICL<-function(M, k, weights, n, err, ll){
+.ICL<-function(M, k, weights, n, err, ll){
   if(missing(err)) err<- -ll
   w<-weights
   dmW<-dim(w)
