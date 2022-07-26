@@ -47,8 +47,7 @@
 #' @param colCluChange An array holding the col row clusters where the change occured. Used only for debugging purposes by developers.
 #' @param sameIM Should we demand the same blockmodel image for all relations. The default value is set to \code{FALSE}.
 #' @param regFun Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings. The default value is set to \code{"max"}.
-#' @param homFun In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
-#' absolute deviations.
+#' @param homFun In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default),  \code{"ad"} - absolute deviations and \code{"bll"} - - (minus) binary log-likelihood.
 #' @param usePreSpecM Specifying weather a pre-specified value should be used when computing inconsistency.
 #' @param preSpecM Sufficient value for individual cells for valued approach. Can be a number or a character string giving the name of a function. Set to \code{"max"} for implicit approach. For multi-relational networks, it can be a vector of such values. In case ob binary blockmodeling this argument is a threshold used for binerizing the network. Therefore all values with values lower than \code{preSpecM} are recoded into 0s, all other into 1s. For multi-relational networks, it can be a vector of such values. In case of pre-specified blockmodeling, it can have the same dimensions as \code{blocks}.
 #' @param save.initial.param Should the inital parameters (\code{approaches}, ...) be saved. The default value is \code{TRUE}.

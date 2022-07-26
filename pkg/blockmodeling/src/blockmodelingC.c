@@ -1982,6 +1982,7 @@ int *pnrInSetByClusters - pointer to the vector of sizes of sets for row cluster
 	usage: phom[measureOfVariability][prespecifiedValue]
 	measureOfVariability: 	0 - ss (sum of squared deviations from the prespecified value (default mean))
 							1 - ad (absolute deviations from the prespecified value (default median))
+							2 - bll (- binary log-likelihood)
 	prespecifiedValue:	0 - default (mean or median, depending on the measureOfVariability)
 						1 - as specified in ppreSpecM
 						2 - 0
