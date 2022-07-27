@@ -400,11 +400,12 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
 #' @param maxUnitsRowCluster Maximum number of units in row cluster.
 #' @param maxUnitsColCluster Maximum number of units in col cluster.
 #' @param exchageClusters A matrix of dimensions "number of clusters" x "number of clusters" indicating to which clusters can units from a specific cluster be moved. Useful for multilevel blockmodeling or/in some other cases where some units cannot mix.
+#' @param fixClusters Clusters to be fixed. Used only if \code{exchageClusters = "all"}. A vector of integers that specify clusters to be fixed, where clusters are numbered from 1 to the total (in all modes or sets) number of clusters.
 #' 
 #' @export
 
 
-optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=TRUE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",save.initial.param=TRUE, mulReg=TRUE, addGroupLlErr=TRUE){
+optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useMulti=FALSE, maxPar=50, IM=NULL,EM=NULL,Earr=NULL, justChange=TRUE, sameIM=FALSE, regFun="max", homFun = "ss", usePreSpecM = NULL, preSpecM=NULL, minUnitsRowCluster = 1, minUnitsColCluster = 1, maxUnitsRowCluster = 9999, maxUnitsColCluster = 9999, relWeights=1, posWeights=1, blockTypeWeights=1,combWeights=NULL, exchageClusters="all",fixClusters = NULL, save.initial.param=TRUE, mulReg=TRUE, addGroupLlErr=TRUE){
   
   if(save.initial.param){
     initial.param<-list(initial.param=tryCatch(lapply(as.list(sys.frame(sys.nframe())),eval),error=function(...)return("error")))   #saves the inital parameters
@@ -482,6 +483,8 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
     } else{
       exchageClusters=matrix(as.integer(1),nrow=nRCclu[1],ncol=nRCclu[2])
     }
+	exchageClusters[fixClusters,]<-0
+	exchageClusters[,fixClusters]<-0
   }
   
   if(is.null(isSym)){

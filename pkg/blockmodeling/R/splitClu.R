@@ -9,7 +9,7 @@
 #' @param clu A vector representing a partition of units from different sets. Result of some legacy code for \code{\link{optRandomParC}} or \code{\link{optParC}} or similar functions.
 #' @param n A vector with number of units per set. The assuption is that the first \code{n[1]} elements of \code{clu} are for the first set, the second \code{n[2]} elements of \code{clu} are for the second set and so on. \code{sum(n)} must be equal to \code{length(clu)}.
 #' @param res Result of  (old versions of) functions \code{\link{critFunC}}, \code{\link{optParC}}, \code{\link{optRandomParC}} or similar.
-#' @param renumber If \code{TRUE} (default), dimensions that have only one level are dropped (\code{drop} function is applied to the final result).
+#' @param renumber If \code{TRUE}, elements of each partition (for each set) in the list are renumbered to be from 1:"number of clusters" in that partition). Defaults to \code{FALSE}.
 #'
 #' 
 #' @return A list of partitions if \code{clu}, one for each set of units. A single vector if only one set of units is present.
@@ -18,7 +18,7 @@
 #' @author \enc{Aleš Žiberna}{Ales Ziberna}
 #' 
 #' 
-#' @seealso \code{\link{clu}}
+#' @seealso \code{\link{clu}}, \code{\link{unlistClu}}, \code{\link{unlistCluInt}}
 #'
 #'
 #' @examples

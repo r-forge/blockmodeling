@@ -6,7 +6,7 @@
 #'
 #' @param clu A partition by sets, that is a list of "simple" partitions.
 #' @return The unlisted partition - one vector containing only integers.
-#' @seealso \code{\link{clu}},  \code{\link{splitClu}}
+#' @seealso \code{\link{clu}},  \code{\link{splitClu}}, \code{\link{unlistClu}}
 #' @examples
 #' cluList<-list(c("a","b","a"),c("b","c","b","c"))
 #' unlistCluInt(cluList)

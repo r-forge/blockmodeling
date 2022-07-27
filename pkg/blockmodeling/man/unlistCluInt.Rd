@@ -24,5 +24,5 @@ cluList<-list(c(1,1,1,2,2,2),c(1,1,1,2,2,2,3,3))
 unlistCluInt(cluList)
 }
 \seealso{
-\code{\link{clu}},  \code{\link{splitClu}}
+\code{\link{clu}},  \code{\link{splitClu}}, \code{\link{unlistClu}}
 }

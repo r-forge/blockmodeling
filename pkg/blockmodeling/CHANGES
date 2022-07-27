@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2022
+Version: 1.1.1.9000
+Date: 2022-07-25
+Added option to fix some clusters (they are not "optimized" but fixed as they are) + some minor changes (new unlistClu function) and documentation improvements.
+
 Version: 1.1.0.9005
 Date: 2022-07-01
 Some bugs fixed. Some changes to code made to eliminate NOTEs in Rcheck

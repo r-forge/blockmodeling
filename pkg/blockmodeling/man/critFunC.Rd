@@ -63,6 +63,7 @@ optParC(
   blockTypeWeights = 1,
   combWeights = NULL,
   exchageClusters = "all",
+  fixClusters = NULL,
   save.initial.param = TRUE,
   mulReg = TRUE,
   addGroupLlErr = TRUE
@@ -124,8 +125,7 @@ An array with four dimensions (see example below). The third and the fourth repr
 
 \item{regFun}{Function f used in row-f-regular, column-f-regular, and f-regular blocks. Not used in binary approach. For multi-relational networks, it can be a vector of such character strings. The default value is set to \code{"max"}.}
 
-\item{homFun}{In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default) and \code{"ad"} -
-absolute deviations.}
+\item{homFun}{In case of homogeneity blockmodeling two variability criteria can be used: \code{"ss"} - sum of squares (set by default),  \code{"ad"} - absolute deviations and \code{"bll"} - - (minus) binary log-likelihood.}
 
 \item{usePreSpecM}{Specifying weather a pre-specified value should be used when computing inconsistency.}
 
@@ -162,6 +162,8 @@ absolute deviations.}
 \item{maxUnitsColCluster}{Maximum number of units in col cluster.}
 
 \item{exchageClusters}{A matrix of dimensions "number of clusters" x "number of clusters" indicating to which clusters can units from a specific cluster be moved. Useful for multilevel blockmodeling or/in some other cases where some units cannot mix.}
+
+\item{fixClusters}{Clusters to be fixed. Used only if \code{exchageClusters = "all"}. A vector of integers that specify clusters to be fixed, where clusters are numbered from 1 to the total (in all modes or sets) number of clusters.}
 }
 \value{
 \code{critFunC} returns a list containing:
