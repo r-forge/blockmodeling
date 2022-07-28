@@ -17,12 +17,22 @@
 #' @param nCores The number of to use for parallel computing. 0 means all available - 1, 1 means only once core - no parallel computing.
 #' @param paramGenPar The parameter \code{addParam} from  \code{\link[blockmodeling]{genRandomPar}} (see documentation there). Default here is paramGenPar=list(genPajekPar = FALSE), which is different from the default in \code{\link[blockmodeling]{genRandomPar}}. The same value is used for generating partitions for all partitions.
 #' @param weightClusterSize The weight given to cluster sizes. Defalults to 0, as only this is weighted my the tie-based weights.
-#' @param ... Paramters passed to llStochBlock.
+#' @param ... Paramters passed to \code{\link{llStochBlock}}
+#' 
 #' @return Weights and "intermediate results":
-#'  \item{"errArr"}{A 3d array of errors (\code{mWeights} for each part of the network)}
-#'  \item{"errMatSum"}{\code{errArr} summed over all repretitions.}
-#'  \item{"weightsMat"}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
-weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd ,nCores=0, weightClusterSize=0,paramGenPar=list(genPajekPar = FALSE),...){
+#'  \item{errArr}{A 3d array of errors (\code{mWeights} for each part of the network)}
+#'  \item{errMatSum}{\code{errArr} summed over all repetitions.}
+#'  \item{weightsMat}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
+#'  
+#' @references Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+#' 
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
+#' 
+#' @seealso \code{\link{llStochBlock}}; \code{\link{ICLStochBlock}}
+
+weightsMlLoglik<-function(mlNet,cluParts, k, mWeights=1000, sumFun = sd,
+                          nCores=0, weightClusterSize=0,
+                          paramGenPar=list(genPajekPar = FALSE),...){
 
   requireNamespace('foreach')
   requireNamespace('doParallel')

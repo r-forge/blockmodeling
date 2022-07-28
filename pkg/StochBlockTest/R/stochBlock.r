@@ -1,4 +1,4 @@
-#! Unexported function for internal use
+#| Un-exported function for internal use from blockmodeling
 unlistPar<-function(part){
   if (is.list(part)) {
     part <- sapply(part, paste, collapse = " ")
@@ -37,8 +37,33 @@ unlistPar<-function(part){
 #' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #'
-#' @return A list similar to optParC in package \code{blockmodeling}.
+#' @return A list of class \code{opt.par} normally passed other commands with \code{StockBlockORP} and containing:
+#'\item{clu}{A vector (a list for multi-mode networks) indicating the cluster to which each unit belongs;}
+#'\item{IM}{Image matrix of this partition;}
+#'\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.}
+#'\item{uWeights}{The weights for each unit. A vector with the length equal to the number of units (in all sets).}
+#'\item{err}{The error as the sum of the inconsistencies between this network and the ideal partitions.}
+#'\item{ICL}{Integrated Criterion Likelihood for this partition}
 #'
+#' @references Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+#' 
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
+#' 
+#' @seealso \code{\link{StochBlockORP}}
+#' 
+#' @examples
+#' 
+#' # Create a synthetic dataset
+#' set.seed(2022)
+#' M<-matrix(data = sample(x = 0:1,size = 169*169,
+#'                       replace = T,prob = c(0.952,0.038)),
+#'         nrow = 169,ncol = 169)
+#' # Create an hypothetical partition
+#' clu<-sample(x = 1:10,size = 169,replace = T,
+#'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
+#'                     0.089, 0.130, 0.107, 0.077, 0.118))
+#' res<-stochBlock(M=M, clu=clu)
+#' 
 #' @useDynLib StochBlockTest, .registration = TRUE
 #' @export
 
@@ -167,7 +192,7 @@ stochBlock<-function(M,
   res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   
 	  
-  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=.ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
   #return(res)
   class(res)<-"opt.par"
   return(res)
@@ -202,20 +227,31 @@ stochBlock<-function(M,
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
 #'
-#' @return A list similar to optParC in package \code{blockmodeling}.
+#' @return The value of the ICL function for the partition \code{clu} on the network represented by \code{M}
+#' 
+#' @examples 
+#' set.seed(2022)
+#' M<-matrix(data = sample(x = 0:1,size = 169*169,
+#'                       replace = T,prob = c(0.952,0.038)),
+#'         nrow = 169,ncol = 169)
+#' # Create an hypothetical partition
+#' clu<-sample(x = 1:10,size = 169,replace = T,
+#'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
+#'                     0.089, 0.130, 0.107, 0.077, 0.118))
+#' ICL<-llStochBlock(M,clu)
 #'
 #' @export
 
 llStochBlock<-function(M,
-                   clu,
-                   weights=NULL,
-				           uWeights=NULL,
-                   diagonal = c("ignore","seperate","same"),
-                   limitType=c("none","inside","outside"),
-                   limits=NULL,
-                   weightClusterSize=1.0,
-				  addOne = TRUE,
-				  eps = 0.001){
+                       clu,
+                       weights=NULL,
+                       uWeights=NULL,
+                       diagonal = c("ignore","seperate","same"),
+                       limitType=c("none","inside","outside"),
+                       limits=NULL,
+                       weightClusterSize=1.0,
+                       addOne = TRUE,
+                       eps = 0.001){
 
   if(!all(unique(as.vector(unlist(unclass(M))))%in%c(0,1))) stop("Data must be binary (only 0 and 1)!")
   n1<-dim(M)[1]
@@ -324,9 +360,6 @@ llStochBlock<-function(M,
   # return(res)
 }
 
-
-
-
 #' A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.
 #'
 #' @import parallel
@@ -362,10 +395,34 @@ llStochBlock<-function(M,
 #' @param stopcl Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.
 #' @param \dots Arguments passed to other functions, see \code{\link{stochBlock}}.
 #'
-#' @return A list similar to optRandomParC
+#' @return A human-readable list containing:
+#'  \item{M}{The one- or multi-mode matrix of the network analyzed}
+#'   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
+#'   \item{best}{A list of results from \code{stochblock}, only without \code{M}.}
+#'   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies of the empirical  network with the ideal partitions.}
+#'   \item{nIter}{The vector of the iterations on each starting partition. If many of the values equal\code{maxiter}, then  \code{maxiter} may be too small.}
+#'   \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
+#'   \item{call}{The call to this function.}
+#'   \item{initial.param}{If selected - The initial parameters are used.}
+#'   
+#' @section Warning:
+#' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
+#' due to the underlying algorithm. Hence, partitioning networks with 100 units (or units per mode in the case of multi-mode networks)
+#' in large number of blocks (e.g., >5) can take anything from 20 minutes to a few hours or even days).
+#' 
+#' @section Warning:
+#' When planning on the number of repetitions to run, please be mindful of two issues.<br>
+#' 1. Many repetitions (e.g., >300) on networks with more than 100 units (or units per mode in the case of multi-mode networks)
+#' can rapidly exhaust your RAM memory. For instance, about 700 units will require almost 12GB of RAM for 400 repetitions.<br>
+#' 2. Depending on the specification of the machine running the code, this may make it impossible to run \code{StochBlockORP} from within a
+#' \code{for} or \code{while} loop and similar constructs because the memory is not freed automatically after the partitions is being optimised.
+#' The best practice, in this case, is to restart the R session between each optimisation each partition (e.g., using \code{rstudioapi::restartSession()} which preserves the current session's data).
+#' 
+#' @references Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+#' 
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
 #'
-#'
-#'@examples
+#' @examples
 #'# Simple one-mode network
 #'library(blockmodeling)
 #'k<-2

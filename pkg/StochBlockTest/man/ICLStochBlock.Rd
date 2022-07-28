@@ -29,20 +29,20 @@ ICLStochBlock(
 \item{diagonal}{How should the diagonal values be treated. Possible values are:
 \itemize{
   \item ignore - diagonal values are ignored
-  \item seperate - diagonal values are treated seperately
+  \item separate - diagonal values are treated separately
   \item same - diagonal values are treated the same as all other values
 }}
 
 \item{limitType}{Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.}
 
-\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 \itemize{
   \item number of clusters (of all types)
   \item number of clusters (of all types)
   \item number of relations
   \item 2 - the first is lower limit and the second is upper limit
 }
-If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
+If \code{diagonal} is \code{"separate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 
 \item{weightClusterSize}{The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
 
@@ -55,4 +55,19 @@ The value of ICL
 }
 \description{
 Function that computes integrated classification likelihood based on stochastic one-mode and linked block modeling. If \code{clu} is a list, the method for linked/multilevel networks is applied. The support for multirelational networks is not tested.
+}
+\examples{
+set.seed(2022)
+M<-matrix(data = sample(x = 0:1,size = 169*169,
+                      replace = T,prob = c(0.952,0.038)),
+        nrow = 169,ncol = 169)
+# Create an hypothetical partition
+clu<-sample(x = 1:10,size = 169,replace = T,
+           prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
+                    0.089, 0.130, 0.107, 0.077, 0.118))
+ICL<-ICLStochBlock(M,clu)
+
+}
+\seealso{
+\code{\link{llStochBlock}}; \code{\link{weightsMlLoglik}}
 }

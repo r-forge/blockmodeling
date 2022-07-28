@@ -51,8 +51,20 @@ If \code{diagonal} is \code{"seperate"}, a list of two array. The first should b
 \item{eps}{If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.}
 }
 \value{
-A list similar to optParC in package \code{blockmodeling}.
+The value of the ICL function for the partition \code{clu} on the network represented by \code{M}
 }
 \description{
 Function that computes criterion function used in stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
+}
+\examples{
+set.seed(2022)
+M<-matrix(data = sample(x = 0:1,size = 169*169,
+                      replace = T,prob = c(0.952,0.038)),
+        nrow = 169,ncol = 169)
+# Create an hypothetical partition
+clu<-sample(x = 1:10,size = 169,replace = T,
+           prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
+                    0.089, 0.130, 0.107, 0.077, 0.118))
+ICL<-llStochBlock(M,clu)
+
 }

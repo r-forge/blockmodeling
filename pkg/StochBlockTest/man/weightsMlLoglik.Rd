@@ -33,14 +33,23 @@ weightsMlLoglik(
 
 \item{paramGenPar}{The parameter \code{addParam} from  \code{\link[blockmodeling]{genRandomPar}} (see documentation there). Default here is paramGenPar=list(genPajekPar = FALSE), which is different from the default in \code{\link[blockmodeling]{genRandomPar}}. The same value is used for generating partitions for all partitions.}
 
-\item{...}{Paramters passed to llStochBlock.}
+\item{...}{Paramters passed to \code{\link{llStochBlock}}}
 }
 \value{
 Weights and "intermediate results":
- \item{"errArr"}{A 3d array of errors (\code{mWeights} for each part of the network)}
- \item{"errMatSum"}{\code{errArr} summed over all repretitions.}
- \item{"weightsMat"}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
+ \item{errArr}{A 3d array of errors (\code{mWeights} for each part of the network)}
+ \item{errMatSum}{\code{errArr} summed over all repetitions.}
+ \item{weightsMat}{A matrix of weights, one for each part. An inverse of \code{errMatSum} with NaNs replaced by zeros.}
 }
 \description{
 Computes weights for parts of the multilevel network based on random errors using the SS approach with complete blocks only (compatible with k-means)
+}
+\references{
+Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+}
+\seealso{
+\code{\link{llStochBlock}}; \code{\link{ICLStochBlock}}
+}
+\author{
+\enc{Aleš, Žiberna}{Ales Ziberna}
 }

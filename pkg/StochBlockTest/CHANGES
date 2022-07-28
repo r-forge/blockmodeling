@@ -1,7 +1,16 @@
 2022
 Version: 0.0.2.9044
-Date: 2022-07-26
-StochBlockTest: Internal function ICL renamed to .ICL.
+Date: 2022-07-28
+1. Added examples to the help pages of the functions:
+1a. StockBlockORP
+1b. StockBlock
+1c. llStockBlock
+2. Removed all mentions of OptParC
+3. Inserted detailed descriptions of the functions outputs:
+3a. StockBlockORP
+3b. StockBlock
+4. Inserted description of outputs of the llStockBlock
+5. Corrected several typos
 
 Version: 0.0.2.9043
 Date: 2022-07-21

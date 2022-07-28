@@ -78,11 +78,34 @@ stochBlockORP(
 \item{\dots}{Arguments passed to other functions, see \code{\link{stochBlock}}.}
 }
 \value{
-A list similar to optRandomParC
+A human-readable list containing:
+ \item{M}{The one- or multi-mode matrix of the network analyzed}
+  \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
+  \item{best}{A list of results from \code{stochblock}, only without \code{M}.}
+  \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies of the empirical  network with the ideal partitions.}
+  \item{nIter}{The vector of the iterations on each starting partition. If many of the values equal\code{maxiter}, then  \code{maxiter} may be too small.}
+  \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
+  \item{call}{The call to this function.}
+  \item{initial.param}{If selected - The initial parameters are used.}
 }
 \description{
 A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.
 }
+\section{Warning}{
+
+It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
+due to the underlying algorithm. Hence, partitioning networks with 100 units (or units per mode in the case of multi-mode networks)
+in large number of blocks (e.g., >5) can take anything from 20 minutes to a few hours or even days).
+
+
+When planning on the number of repetitions to run, please be mindful of two issues.<br>
+1. Many repetitions (e.g., >300) on networks with more than 100 units (or units per mode in the case of multi-mode networks)
+can rapidly exhaust your RAM memory. For instance, about 700 units will require almost 12GB of RAM for 400 repetitions.<br>
+2. Depending on the specification of the machine running the code, this may make it impossible to run \code{StochBlockORP} from within a
+\code{for} or \code{while} loop and similar constructs because the memory is not freed automatically after the partitions is being optimised.
+The best practice, in this case, is to restart the R session between each optimisation each partition (e.g., using \code{rstudioapi::restartSession()} which preserves the current session's data).
+}
+
 \examples{
 # Simple one-mode network
 library(blockmodeling)
@@ -127,6 +150,9 @@ resMl$ICL
 plot(resMl)
 clu(resMl)
 
+}
+\references{
+Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
 }
 \author{
 \enc{Aleš, Žiberna}{Ales Ziberna}

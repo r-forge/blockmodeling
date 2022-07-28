@@ -51,8 +51,37 @@ If \code{diagonal} is \code{"seperate"}, a list of two array. The first should b
 \item{eps}{If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.}
 }
 \value{
-A list similar to optParC in package \code{blockmodeling}.
+A list of class \code{opt.par} normally passed other commands with \code{StockBlockORP} and containing:
+\item{clu}{A vector (a list for multi-mode networks) indicating the cluster to which each unit belongs;}
+\item{IM}{Image matrix of this partition;}
+\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.}
+\item{uWeights}{The weights for each unit. A vector with the length equal to the number of units (in all sets).}
+\item{err}{The error as the sum of the inconsistencies between this network and the ideal partitions.}
+\item{ICL}{Integrated Criterion Likelihood for this partition}
 }
 \description{
 Function that performs stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
+}
+\examples{
+
+# Create a synthetic dataset
+set.seed(2022)
+M<-matrix(data = sample(x = 0:1,size = 169*169,
+                      replace = T,prob = c(0.952,0.038)),
+        nrow = 169,ncol = 169)
+# Create an hypothetical partition
+clu<-sample(x = 1:10,size = 169,replace = T,
+           prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
+                    0.089, 0.130, 0.107, 0.077, 0.118))
+res<-stochBlock(M=M, clu=clu)
+
+}
+\references{
+Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+}
+\seealso{
+\code{\link{StochBlockORP}}
+}
+\author{
+\enc{Aleš, Žiberna}{Ales Ziberna}
 }

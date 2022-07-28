@@ -1,10 +1,13 @@
 Package: StochBlockTest
 Type: Package
 Title: Stochastic Blockmodeling of One-Mode and Linked Networks
-Version: 0.0.2.9043
+Version: 0.0.2.9044
 Date: 2022-07-21
-Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
-                  role = c("aut", "cre"))
+Authors@R: c(person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
+                  role = c("aut", "cre")),
+             person('Fabio Ashtar', 'Telarico', email = 'Fabio-Ashtar.Telarico@fdv.uni-lj.si',
+                  role = 'ctb', comment = c(ORCID = '0000-0002-8740-7078')
+            )
 Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>
 Description: Stochastic blockmodeling of one-mode and linked networks.
 License: GPL (>=2)
@@ -12,4 +15,7 @@ Encoding: UTF-8
 Imports: Rcpp (>= 1.0.0), blockmodeling, doParallel, doRNG, foreach
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
+NeedsCompilation: yes
+Packaged: 2022-07-25 14:38:26 UTC; zibernaa
+Author: Aleš Žiberna [aut, cre]
