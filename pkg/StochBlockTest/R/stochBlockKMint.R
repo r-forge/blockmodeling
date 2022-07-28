@@ -15,7 +15,7 @@
 #' @param perm Number or partitions obtained by randomly permuting the k-means partition - if 0, no permutations are made, only the original partition is analyzed.
 #' @param sharePerm The probability that a unit will have their randomly assigned. Defaults to \code{0.20}.
 #'
-#' @return A human-readable list containing:
+#' @return A list containing:
 #'  \item{M}{The one- or multi-mode matrix of the network analyzed}
 #'   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
 #'   \item{best}{A list of results from \code{stochblock}, only without \code{M}.}
@@ -25,25 +25,11 @@
 #'   \item{call}{The call to this function.}
 #'   \item{initial.param}{If selected - The initial parameters are used.}
 #'   
-#' @section Warning:
-#' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
-#' due to the underlying algorithm. Hence, partitioning networks with 100 units (or units per mode in the case of multi-mode networks)
-#' in large number of blocks (e.g., >5) can take anything from 20 minutes to a few hours or even days).
-#' 
-#' @section Warning:
-#' When planning on the number of repetitions to run, please be mindful of two issues.<br>
-#' 1. Many repetitions (e.g., >300) on networks with more than 100 units (or units per mode in the case of multi-mode networks)
-#' can rapidly exhaust your RAM memory. For instance, about 700 units will require almost 12GB of RAM for 400 repetitions.<br>
-#' 2. Depending on the specification of the machine running the code, this may make it impossible to run \code{StochBlockORP} from within a
-#' \code{for} or \code{while} loop and similar constructs because the memory is not freed automatically after the partitions is being optimised.
-#' The best practice, in this case, is to restart the R session between each optimisation each partition (e.g., using \code{rstudioapi::restartSession()} which preserves the current session's data).
 #' 
 #' @references Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
 #' 
 #' @author \enc{Aleš, Žiberna}{Ales Ziberna}
 #'
-#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
-#' 
 #' @export
 
 stochBlockKMint<-function(M, #a square matrix

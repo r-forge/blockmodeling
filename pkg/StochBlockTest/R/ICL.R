@@ -33,7 +33,7 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored
-#'   \item separate - diagonal values are treated separately
+#'   \item seperate - diagonal values are treated seperately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
 #' @param limitType Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.
@@ -44,7 +44,7 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #'   \item number of relations
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
-#' If \code{diagonal} is \code{"separate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
+#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
 #' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
@@ -186,7 +186,7 @@ ICLStochBlock<-function(M,
   # ICLpen<- sum(unclass(parByHB*log(wByHB)))+sum((k-1)*log(n))
   # ICL<- -res - 1/2*ICLpen
 
-  return(ICL(M = M,k = k,weights = w,n = n,err=res))
+  return(.ICL(M = M,k = k,weights = w,n = n,err=res))
 
   # res<-list(M=M, clu=clu, IM=IM, err=err, best=list(list(M=M, clu=clu, IM=IM)))
   # return(res)
@@ -195,7 +195,7 @@ ICLStochBlock<-function(M,
 #' @importFrom utils packageVersion
 
 #| Undeclared function for internal use
-ICL<-function(M, k, weights, n, err, ll){
+.ICL<-function(M, k, weights, n, err, ll){
   if(missing(err)) err<- -ll
   w<-weights
   dmW<-dim(w)

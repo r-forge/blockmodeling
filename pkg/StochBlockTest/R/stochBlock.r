@@ -192,7 +192,7 @@ stochBlock<-function(M,
   res<-.kmBlock(M=M, clu=clu, weights=w, uWeights=uWeights, n=n, nClu=tmNclu, diagonal = diagonal, weightClusterSize = weightClusterSize,  sBorders = limitType, bordersMatLower = bordersMatLower, bordersMatUpper = bordersMatUpper, bordersSeperateLower = bordersSeperateLower, bordersSeperateUpper = bordersSeperateUpper, addOne = addOne, eps = eps)
   
 	  
-  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
+  res<-list(M=M, clu=blockmodeling::splitClu(res$bestClu,n), IM=res$IM, err=res$bestCf, weights=w, uWeights=uWeights, n=n, ICL=.ICL(M=M, k = k, weights=w, n=n, err=res$bestCf))
   #return(res)
   class(res)<-"opt.par"
   return(res)
@@ -227,7 +227,7 @@ stochBlock<-function(M,
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
 #'
-#' @return The value of the ICL function for the partition \code{clu} on the network represented by \code{M}
+#' @return The value of the log-likelihood cerion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
 #' 
 #' @examples 
 #' set.seed(2022)
@@ -395,28 +395,21 @@ llStochBlock<-function(M,
 #' @param stopcl Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.
 #' @param \dots Arguments passed to other functions, see \code{\link{stochBlock}}.
 #'
-#' @return A human-readable list containing:
+#' @return A list of class "opt.more.par" containing:
 #'  \item{M}{The one- or multi-mode matrix of the network analyzed}
 #'   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
 #'   \item{best}{A list of results from \code{stochblock}, only without \code{M}.}
-#'   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies of the empirical  network with the ideal partitions.}
-#'   \item{nIter}{The vector of the iterations on each starting partition. If many of the values equal\code{maxiter}, then  \code{maxiter} may be too small.}
+#'   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies = -log-likelihoods.}
+#'   \item{ICL}{Integrated classification likelihood for the best partition.}
 #'   \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
 #'   \item{call}{The call to this function.}
 #'   \item{initial.param}{If selected - The initial parameters are used.}
+#'   \item{Random.seed}{.Random.seed at the end of the function.}
+#'   \item{cl}{Cluster used for parallel computations if supplied as an imput paramter.}
 #'   
 #' @section Warning:
 #' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
-#' due to the underlying algorithm. Hence, partitioning networks with 100 units (or units per mode in the case of multi-mode networks)
-#' in large number of blocks (e.g., >5) can take anything from 20 minutes to a few hours or even days).
-#' 
-#' @section Warning:
-#' When planning on the number of repetitions to run, please be mindful of two issues.<br>
-#' 1. Many repetitions (e.g., >300) on networks with more than 100 units (or units per mode in the case of multi-mode networks)
-#' can rapidly exhaust your RAM memory. For instance, about 700 units will require almost 12GB of RAM for 400 repetitions.<br>
-#' 2. Depending on the specification of the machine running the code, this may make it impossible to run \code{StochBlockORP} from within a
-#' \code{for} or \code{while} loop and similar constructs because the memory is not freed automatically after the partitions is being optimised.
-#' The best practice, in this case, is to restart the R session between each optimisation each partition (e.g., using \code{rstudioapi::restartSession()} which preserves the current session's data).
+#' due to the underlying algorithm. Hence, partitioning networks with 100 units and large number of blocks (e.g., >5) can take a long time (from 20 minutes to a few hours or even days).
 #' 
 #' @references Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
 #' 
