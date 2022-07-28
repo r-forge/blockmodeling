@@ -51,7 +51,7 @@ If \code{diagonal} is \code{"seperate"}, a list of two array. The first should b
 \item{eps}{If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.}
 }
 \value{
-The value of the ICL function for the partition \code{clu} on the network represented by \code{M}
+The value of the log-likelihood cerion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
 }
 \description{
 Function that computes criterion function used in stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied

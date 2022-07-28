@@ -1,4 +1,9 @@
 2022
+Version: 0.0.2.9045
+Date: 2022-07-28
+Some changes undone.
+Function ICL renamed to .ICL.
+
 Version: 0.0.2.9044
 Date: 2022-07-28
 1. Added examples to the help pages of the functions:

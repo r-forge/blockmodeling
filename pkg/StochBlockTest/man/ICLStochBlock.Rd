@@ -29,7 +29,7 @@ ICLStochBlock(
 \item{diagonal}{How should the diagonal values be treated. Possible values are:
 \itemize{
   \item ignore - diagonal values are ignored
-  \item separate - diagonal values are treated separately
+  \item seperate - diagonal values are treated seperately
   \item same - diagonal values are treated the same as all other values
 }}
 
@@ -42,7 +42,7 @@ ICLStochBlock(
   \item number of relations
   \item 2 - the first is lower limit and the second is upper limit
 }
-If \code{diagonal} is \code{"separate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
+If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 
 \item{weightClusterSize}{The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
 

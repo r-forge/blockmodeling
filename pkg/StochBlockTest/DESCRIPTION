@@ -1,8 +1,8 @@
 Package: StochBlockTest
 Type: Package
 Title: Stochastic Blockmodeling of One-Mode and Linked Networks
-Version: 0.0.2.9044
-Date: 2022-07-21
+Version: 0.0.2.9045
+Date: 2022-07-28
 Authors@R: c(person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre")),
              person('Fabio Ashtar', 'Telarico', email = 'Fabio-Ashtar.Telarico@fdv.uni-lj.si',
@@ -15,4 +15,4 @@ Encoding: UTF-8
 Imports: Rcpp (>= 1.0.0), blockmodeling, doParallel, doRNG, foreach
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
-
+RoxygenNote: 7.1.2
