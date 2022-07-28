@@ -483,8 +483,8 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
     } else{
       exchageClusters=matrix(as.integer(1),nrow=nRCclu[1],ncol=nRCclu[2])
     }
-	exchageClusters[fixClusters,]<-0
-	exchageClusters[,fixClusters]<-0
+	exchageClusters[fixClusters,]<-as.integer(0)
+	exchageClusters[,fixClusters]<-as.integer(0)
   }
   
   if(is.null(isSym)){

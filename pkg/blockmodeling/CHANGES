@@ -3,6 +3,10 @@ Title: Generalized and Classical Blockmodeling of Valued Networks
 
 
 2022
+Version: 1.1.1.9001
+Date: 2022-07-25
+A bug fix related to exchangeClusters.
+
 Version: 1.1.1.9000
 Date: 2022-07-25
 Added option to fix some clusters (they are not "optimized" but fixed as they are) + some minor changes (new unlistClu function) and documentation improvements.
