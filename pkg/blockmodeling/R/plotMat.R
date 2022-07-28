@@ -9,8 +9,8 @@
 #'
 #' @param x A result from a corresponding function or a matrix or similar object representing a network.
 #' @param clu A partition. Each unique value represents one cluster. If the network is one-mode,
-#' then this should be a vector, else a list of vectors, one for each mode.
-#' @param orderClu Should the partition be ordered before plotting. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decearsing" (see \code{\link{orderClu}} for interpretation) order.
+#' then this should be a vector, else a list of vectors, one for each mode/set.
+#' @param orderClu Should the partition be ordered before plotting. \code{FALSE} by default. If \code{TRUE}, \code{\link{orderClu}} is used (using default arguments) to order the clusters in a partition in "decreasing" (see \code{\link{orderClu}} for interpretation) order.
 #' @param M A matrix or similar object representing a network - either \code{x} or \code{M} must be supplied - both are here to make the code compatible with generic and with older functions.
 #' @param ylab Label for y axis.
 #' @param xlab Label for x axis.
@@ -46,7 +46,9 @@
 #' @param legend.size Relative legend size.
 #' @param legend.text.hor.pos Horizontal position of the legend text (bottom) - 0 = bottom, 0.5 = middle,...
 #' @param par.line.width The width of the line that separates  the partitions.
+#' @param par.line.width.newSet The width of the line that separates  that separates the sets/modes - only used when \code{clu} is a list and \code{par.line.width} has length 1.
 #' @param par.line.col The color of the line that separates the partitions.
+#' @param par.line.col.newSet The color of the line that separates  that separates the sets/modes - only used when \code{clu} is a list and \code{par.line.col} has length 1.
 #' @param IM.dens The density of shading lines in each block.
 #' @param IM The image (as obtained  with \code{critFunC}) of the blockmodel. \code{dens.leg} is used to translate this image into \code{IM.dens}.
 #' @param wnet Specifies which matrix (if more) should be plotted  - used if \code{M} is an array.
@@ -73,8 +75,8 @@
 #' @param title.col Title for the column-normalized matrix in nm version
 #' @param par.set A list of possible plotting parameters (to \code{par}) to be used in nm version
 #' @param which Which (if there are more than one) of optimal solutions to plot.
-#' @param colLabels Should the labels of units be colored. If \code{FALSE}, these are not collored, if \code{TRUE}, they are colored with colors of clusters as defined by palette.
-#' This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
+#' @param colLabels Should the labels of units be colored. If \code{FALSE}, these are not colored, if \code{TRUE}, they are colored with colors of clusters as defined by palette.
+#' This can be also a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
 #' @param MplotValues A matrix to strings to plot in cells. Only to be used if other values than those in the original matrix (\code{x} or \code{M} arguments) should be used. Defaults to \code{NULL}, in which case the valued from original matrix are plotted (if this is not prevented by some other arguments). Overrides all other arguments that deal with cell values (e.g. \code{print.digits.cells}). Sets \code{print.val} to \code{TRUE} and \code{plot.legend} to \code{FALSE}.
 #' @param \dots Additional arguments to \code{plot.default} for \code{plotMat} and also to \code{plotMat} for other functions. 
 #'
@@ -117,18 +119,18 @@ function(
    x=M, #x should be a matrix or similar object
     clu=NULL,   #partition
     orderClu=FALSE, #should the partition be ordered
-    M=x, #M should be a matrix or similar object  - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possbily some other functions in the package
+    M=x, #M should be a matrix or similar object  - both (x and M) are here to make the code compatible with generic plot and with older versions of plot.mat and possibly some other functions in the package
     ylab="",
     xlab="",
     main=NULL,
     print.val=!length(table(M))<=2, #should the values be printed inside the cells
     print.0=FALSE,  #should the values equal to 0 be printed inside the cells, only used if 'print.val == TRUE'
-    plot.legend=!print.val&&!length(table(M))<=2,   #should the legend for the colors be ploted
+    plot.legend=!print.val&&!length(table(M))<=2,   #should the legend for the colors be plotted
     print.legend.val="out", #where should the values for the legend be printed: 'out' - outside the cells (bellow), 'in' - inside the cells, 'both' - inside and outside the cells
     print.digits.legend=2,  #the number of digits that should appear in the legend
     print.digits.cells=2, #the number of digits that should appear in the cells (of the matrix and/or legend)
-    print.cells.mf=NULL, #if not null, the above argument is igonred, the cell values are printed as the cell are multiplied by this factor and rounded
-    outer.title=FALSE,  #should the title be printed on the 'inner' or 'outer' plot, default is 'inner' if legend is ploted and 'outer' otherwise
+    print.cells.mf=NULL, #if not null, the above argument is ignored, the cell values are printed as the cell are multiplied by this factor and rounded
+    outer.title=FALSE,  #should the title be printed on the 'inner' or 'outer' plot, default is 'inner' if legend is plotted and 'outer' otherwise
     title.line= ifelse(outer.title,-1.5,7), #the line (from the top) where the title should be printed
     mar= c(0.5, 7, 8.5, 0)+0.1, #A numerical vector of the form 'c(bottom, left, top, right)' which gives the lines of margin to be specified on the four sides of the plot. The default is 'c(5, 4, 4, 2) + 0.1'.
     cex.val="default",  #size of the values printed
@@ -140,8 +142,8 @@ function(
     print.axes.val=NULL,    #should the axes values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
     print.x.axis.val=!is.null(colnames(M)), #should the x axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
     print.y.axis.val=!is.null(rownames(M)), #should the y axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
-    x.axis.val.pos = 1.01, #y coordiante of the x axis values
-    y.axis.val.pos = -0.01,  #x coordiante of the y axis values
+    x.axis.val.pos = 1.01, #y coordinate of the x axis values
+    y.axis.val.pos = -0.01,  #x coordinate of the y axis values
     cex.main=par()$cex.main,
     cex.lab=par()$cex.lab,
     yaxis.line=-1.5,    #the position of the y axis (the argument 'line')
@@ -150,13 +152,15 @@ function(
     legend.up=0.03, #how much left should the legend be from the matrix
     legend.size=1/min(dim(M)),  #relative legend size
     legend.text.hor.pos=0.5,    #horizontal position of the legend text (bottom) - 0 = bottom, 0.5 = middle,...
-    par.line.width = 3, #the width of the line that seperates the partitions
-    par.line.col = "blue", #the color of the line that seperates the partitions
+    par.line.width = 3, #the width of the line that separates the partitions
+	par.line.width.newSet = par.line.width[1]*2, #the width of the line that separates the sets
+    par.line.col = "blue", #the color of the line that separates the partitions
+	par.line.col.newSet = "red", #the color of the line that separates the sets
     IM.dens= NULL,
-    IM= NULL,   #Image used for ploting (shaded lines)
-    wnet=NULL,      #which net (if more) should be ploted - used if M is an array
-    wIM=NULL,   #which IM (if more) should be used for ploting (defualt = wnet) - used if IM is an array
-    use.IM=length(dim(IM))==length(dim(M))|!is.null(wIM),   #should IM be used for ploting?
+    IM= NULL,   #Image used for plotting (shaded lines)
+    wnet=NULL,      #which net (if more) should be plotted - used if M is an array
+    wIM=NULL,   #which IM (if more) should be used for plotting (default = wnet) - used if IM is an array
+    use.IM=length(dim(IM))==length(dim(M))|!is.null(wIM),   #should IM be used for plotting?
     dens.leg=c(null=100, nul=100),
     blackdens=70,
     plotLines = FALSE, #Should the lines in the matrix be printed (best set to FALSE for larger networks)
@@ -172,9 +176,9 @@ function(
     joinColOperator = "+",
     colTies=FALSE,
     maxValPlot=NULL, # maximal value used for determining the color of cells in the plot. This value and all higher (in absolute terms) will produce a pure black/red color
-	printMultipliedMessage = TRUE, # shold mutiplication message be printed when values were the printed tie values are multiplied
+	printMultipliedMessage = TRUE, # should multiplication message be printed when values were the printed tie values are multiplied
 	replaceNAdiagWith0=TRUE, #Should the diagonal with only NAs be replace by 0s?
-	colLabels=FALSE, # Should the labels of units be colored. If FALSE, these are not collored, if TRUE, they are colored with colors of clusters as defined by palette. This can be aslo a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
+	colLabels=FALSE, # Should the labels of units be colored. If FALSE, these are not colored, if TRUE, they are colored with colors of clusters as defined by palette. This can be also a vector of colors (or integers) for one-mode networks or a list of two such vectors for two-mode networks.
 	MplotValues=NULL, #a matrix of strings to plot into cells.
     ... #aditional arguments to plot.default
 ){
@@ -221,25 +225,25 @@ function(
                 main.title=main,main.title.line=-2,
                 print.val=print.val,    #should the values be printed inside the cells
                 print.0=print.0,    #should the values equal to 0 be printed inside the cells, only used if 'print.val == TRUE'
-                plot.legend=plot.legend,   #should the legend for the colors be ploted
+                plot.legend=plot.legend,   #should the legend for the colors be plotted
                 print.legend.val=print.legend.val,  #where should the values for the legend be printed: 'out' - outside the cells (bellow), 'in' - inside the cells, 'both' - inside and outside the cells
                 print.digits.legend=print.digits.legend,    #the number of digits that should appear in the legend
                 print.digits.cells=print.digits.cells, #the number of digits that should appear in the cells (of the matrix and/or legend)
-                print.cells.mf=print.cells.mf, #if not null, the above argument is igonred, the cell values are printed as the cell are multiplied by this factor and rounded
-                outer.title=outer.title,    #should the title be printed on the 'inner' or 'outer' plot, default is 'inner' if legend is ploted and 'outer' otherwise
+                print.cells.mf=print.cells.mf, #if not null, the above argument is ignored, the cell values are printed as the cell are multiplied by this factor and rounded
+                outer.title=outer.title,    #should the title be printed on the 'inner' or 'outer' plot, default is 'inner' if legend is plotted and 'outer' otherwise
                 title.line= title.line, #the line (from the top) where the title should be printed
                 mar= mar, #A numerical vector of the form 'c(bottom, left, top, right)' which gives the lines of margin to be specified on the four sides of the plot. The default is 'c(5, 4, 4, 2) + 0.1'.
                 cex.val=cex.val,    #size of the values printed
-                val.y.coor.cor = val.y.coor.cor, #correction for centering the values in the sqares in y direction
-                val.x.coor.cor = val.x.coor.cor, #correction for centering the values in the sqares in x direction
+                val.y.coor.cor = val.y.coor.cor, #correction for centering the values in the squares in y direction
+                val.x.coor.cor = val.x.coor.cor, #correction for centering the values in the squares in x direction
                 cex.legend=cex.legend,  #size of the text in the legend,
                 legend.title=legend.title,  #the title of the legend
                 cex.axes=cex.axes,  #size of the characters in axes, 'default' makes the cex so small that all categories can be printed
                 print.axes.val=print.axes.val,  #should the axes values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
                 print.x.axis.val=print.x.axis.val,  #should the x axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
                 print.y.axis.val=print.y.axis.val,  #should the y axis values be printed, 'default' prints each axis if 'rownames' or 'colnames' is not 'NULL'
-                x.axis.val.pos = x.axis.val.pos, #y coordiante of the x axis values
-                y.axis.val.pos = y.axis.val.pos,  #x coordiante of the y axis values
+                x.axis.val.pos = x.axis.val.pos, #y coordinate of the x axis values
+                y.axis.val.pos = y.axis.val.pos,  #x coordinate of the y axis values
                 cex.main=cex.main,
                 cex.lab=cex.lab,
                 yaxis.line=yaxis.line,  #the position of the y axis (the argument 'line')
@@ -248,12 +252,14 @@ function(
                 legend.up=legend.up,    #how much left should the legend be from the matrix
                 legend.size=legend.size,    #relative legend size
                 legend.text.hor.pos=legend.text.hor.pos,    #horizontal position of the legend text (bottom) - 0 = bottom, 0.5 = middle,...
-                par.line.width = par.line.width , #the width of the line that seperates the partitions
-                par.line.col = par.line.col, #the color of the line that seperates the partitions
+                par.line.width = par.line.width , #the width of the line that separates the partitions
+				par.line.width.newSet = par.line.width.newSet, #the width of the line that separates the sets
+                par.line.col = par.line.col, #the color of the line that separates the partitions
+				par.line.col.newSet = par.line.col.newSet, #the color of the line that separates the sets				
                 IM.dens= IM.dens,
-                IM= IM, #Image used for ploting (shaded lines)
+                IM= IM, #Image used for plotting (shaded lines)
                 wIM=wIM,    #which IM (if more) should be used for ploting (defualt = wnet) - used if IM is an array
-                use.IM=use.IM,  #should IM be used for ploting?
+                use.IM=use.IM,  #should IM be used for plotting?
                 dens.leg=dens.leg,
                 blackdens=blackdens,
                 plotLines = plotLines,...
@@ -301,7 +307,8 @@ function(
     if(is.null(colnames(M))){
         colnames(M)<-1:dm[2]
     }
-
+	
+	newSetK<-0
     if(!is.null(clu)){  #is any clustering provided, ordering of the matrix if 'TRUE'
       if(is.list(clu)){
         clu<-lapply(clu,function(x)as.integer(as.factor(x)))
@@ -310,7 +317,10 @@ function(
           clu[[iMode ]]<-clu[[iMode ]]+sum(tmNclu[1:(iMode -1)])
         }
         unlistClu<-unlist(clu)
-        if( all(length(unlistClu)==dm)) clu<-unlistClu
+        if( all(length(unlistClu)==dm)){
+			clu<-unlistClu
+			newSetK<-cumsum(tmNclu[-length(tmNclu)])
+		}
       }
         if(!is.list(clu)){
             tclu<-table(clu)
@@ -380,7 +390,7 @@ function(
     xaxe<-colnames(M)
 
 
-    ytop <- rep(x=(dm[1]:1)/dm[1],times=dm[2])  #definin the positions of rectangules
+    ytop <- rep(x=(dm[1]:1)/dm[1],times=dm[2])  #defining the positions of rectangles
     ybottom<- ytop - 1/dm[1]
     xright <- rep(x=(1:dm[2])/dm[2],each=dm[1])
     xleft <- xright - 1/dm[2]
@@ -420,7 +430,7 @@ function(
         max.aM<-max(aM)
         aMnorm<-as.vector(aM)/max.aM
         if(max.aM!=0){
-            col<-gray(1-aMnorm)   #definin the color of rectangules
+            col<-gray(1-aMnorm)   #definin the color of rectangles
         }else col<-matrix(gray(1),nrow=dm[1],ncol=dm[2])
         col[M<0]<-paste("#FF",substr(col[M<0],start=4,stop=7),sep="")
     }
@@ -434,6 +444,15 @@ function(
   }else{
     rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,density=dens,border=if(plotLines)"black" else NA)
   } 
+  
+  if(newSetK[1]!=0 && length(par.line.col)==1) {
+    par.line.col<-rep(par.line.col, length(lines.row))
+	par.line.col[newSetK]<-par.line.col.newSet
+  }
+  if(newSetK[1]!=0 && length(par.line.width)==1){
+	par.line.width<-rep(par.line.width, length(lines.row))
+	par.line.width[newSetK]<-par.line.width.newSet
+  }
   if(frameMatrix) rect(xleft=0, ybottom=0, xright=1, ytop=1, cex.lab=cex.lab,border="black")
     if(!is.null(clu)){  #ploting the lines between clusters
         if(!is.null(lines.row)) segments(x0=x0ParLine,x1=x1ParLine,y0=lines.row,y1=lines.row,col=par.line.col,lwd=par.line.width)
@@ -596,7 +615,7 @@ function(
     #for(iName in relNames) 
         iName<-relNames[i]
         if(relDim==1){
-            plot.mat(M[iName,,],main=iName, IM=IM[i,,],...)
+            plotMat(M[iName,,],main=iName, IM=IM[i,,],...)
         } else if(relDim==3) plot.mat(M[,,iName],main=iName, IM=IM[i,,],...)
     }
     

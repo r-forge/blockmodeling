@@ -1,8 +1,12 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
-
 2022
+Version: 1.1.2.9000
+Date: 2022-07-28
+plotMat and all functions calling it (plot.* methods for results of critFunC, optParC and optRandomParC) now plot the lines separating sets/modes of units (if clu is a list) with different color (red) and twice as wide as regular lines. 
+Also several spelling errors corrected in plotMat and co documentation and comments. 
+
 Version: 1.1.1.9001
 Date: 2022-07-25
 A bug fix related to exchangeClusters.
