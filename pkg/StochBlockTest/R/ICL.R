@@ -54,10 +54,10 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #' @examples 
 #' set.seed(2022)
 #' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = T,prob = c(0.952,0.038)),
+#'                       replace = TRUE,prob = c(0.952,0.038)),
 #'         nrow = 169,ncol = 169)
 #' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = T,
+#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
 #'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
 #'                     0.089, 0.130, 0.107, 0.077, 0.118))
 #' ICL<-ICLStochBlock(M,clu)

@@ -15,8 +15,8 @@ unlistPar<-function(part){
 #' @import blockmodeling
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
-#' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}.
+#' @param clu A partition. Each unique value represents one cluster. If the network is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
+#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.
 #' @param uWeights The weights for each unin. A vector with the length equal to the number of units (in all sets).
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
@@ -24,14 +24,14 @@ unlistPar<-function(part){
 #'   \item seperate - diagonal values are treated seperately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
-#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 #' \itemize{
 #'   \item number of clusters (of all types)
 #'   \item number of clusters (of all types)
 #'   \item number of relations
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
-#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.
+#' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
 #' @param limitType Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.
 #' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
 #' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
@@ -56,10 +56,10 @@ unlistPar<-function(part){
 #' # Create a synthetic dataset
 #' set.seed(2022)
 #' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = T,prob = c(0.952,0.038)),
+#'                       replace = TRUE,prob = c(0.952,0.038)),
 #'         nrow = 169,ncol = 169)
 #' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = T,
+#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
 #'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
 #'                     0.089, 0.130, 0.107, 0.077, 0.118))
 #' res<-stochBlock(M=M, clu=clu)
@@ -138,10 +138,10 @@ stochBlock<-function(M,
   	  dl<-dim(limits)
   	  if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
 	  dl<-dim(limits)
-  	  if(length(dl)!=4) stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	  if(length(dl)!=4) stop("'limits' has wrong dimensions (see help for correct dimensions)")
   	  
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-  	    stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersMatLower <- limits[,,,1]
   	    bordersMatUpper <- limits[,,,2]
@@ -155,9 +155,9 @@ stochBlock<-function(M,
   	  dl<-dim(limits)
   	  if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
   	  dl<-dim(limits)
-	  if(length(dl)!=4) stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+	  if(length(dl)!=4) stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-  	    stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersMatLower <- limits[,,,1]
   	    bordersMatUpper <- limits[,,,2]
@@ -167,9 +167,9 @@ stochBlock<-function(M,
   	  dl<-dim(diagLimits)
   	  if(length(dl)==2 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1],1,dl[2]))
 	  dl<-dim(diagLimits)
-  	  if(length(dl)!=3) stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	  if(length(dl)!=3) stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
-  	    stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+  	    stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
   	  } else{
   	    bordersSeperateLower <- diagLimits[,,1]
   	    bordersSeperateUpper <- diagLimits[,,2]
@@ -205,17 +205,17 @@ stochBlock<-function(M,
 #' Function that computes criterion function used in stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
-#' @param clu A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
-#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}.
-#' @param uWeights The weights for each unin. A vector with the length equal to the number of units (in all sets).
+#' @param clu A partition. Each unique value represents one cluster. If the network is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.
+#' @param weights The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.
+#' @param uWeights The weights for each unit. A vector with the length equal to the number of units (in all sets).
 #' @param diagonal How should the diagonal values be treated. Possible values are:
 #' \itemize{
 #'   \item ignore - diagonal values are ignored
-#'   \item seperate - diagonal values are treated seperately
+#'   \item seperate - diagonal values are treated separately
 #'   \item same - diagonal values are treated the same as all other values
 #' }
 #' @param limitType Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.
-#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+#' @param limits If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 #' \itemize{
 #'   \item number of clusters (of all types)
 #'   \item number of clusters (of all types)
@@ -225,17 +225,17 @@ stochBlock<-function(M,
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.
 #' @param addOne Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
-#' @param weightClusterSize The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
+#' @param weightClusterSize The weight given to cluster sizes (log-probabilities) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
 #'
-#' @return The value of the log-likelihood cerion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
+#' @return The value of the log-likelihood criterion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
 #' 
 #' @examples 
 #' set.seed(2022)
 #' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = T,prob = c(0.952,0.038)),
+#'                       replace = TRUE,prob = c(0.952,0.038)),
 #'         nrow = 169,ncol = 169)
 #' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = T,
+#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
 #'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
 #'                     0.089, 0.130, 0.107, 0.077, 0.118))
 #' ICL<-llStochBlock(M,clu)
@@ -308,10 +308,10 @@ llStochBlock<-function(M,
       if(!is.array(limits)) stop("'limits' must be specified as an array!")
       dl<-dim(limits)
       if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
-      if(dim(limits)!=4) stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(limits)!=4) stop("'limits' has wrong dimensions (see help for correct dimensions)")
       
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-        stop("'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
@@ -324,9 +324,9 @@ llStochBlock<-function(M,
       if(!is.array(limits)) stop("First element of 'limits' must be specified as an array!")
       dl<-dim(limits)
       if(length(dl)==3 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1:2],1,dl[3]))
-      if(dim(limits)!=4) stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(limits)!=4) stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
       if(all(dim(limits)!=c(sum(tmNclu),sum(tmNclu),dim(M)[3],2))){
-        stop("First element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("First element of 'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersMatLower <- limits[,,,1]
         bordersMatUpper <- limits[,,,2]
@@ -335,9 +335,9 @@ llStochBlock<-function(M,
       if(!is.array(diagLimits)) stop("Second element of 'limits' must be specified as an array!")
       dl<-dim(diagLimits)
       if(length(dl)==2 & dim(M)[3]==1) limits<-array(limits, dim=c(dl[1],1,dl[2]))
-      if(dim(diagLimits)!=3) stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+      if(dim(diagLimits)!=3) stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
       if(all(dim(diagLimits)!=c(sum(tmNclu),dim(M)[3],2))){
-        stop("Second element of 'limits' has wrong dimmensions (see help for correct dimmensions)")
+        stop("Second element of 'limits' has wrong dimensions (see help for correct dimensions)")
       } else{
         bordersSeperateLower <- diagLimits[,,,1]
         bordersSeperateUpper <- diagLimits[,,,2]
@@ -390,9 +390,9 @@ llStochBlock<-function(M,
 #' @param printRep Should some information about each optimization be printed.
 #' @param n The number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is one mode (both modes are in rows and columns).
 #' @param nCores Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.
-#' @param useParLapply Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.
+#' @param useParLapply Should \code{parLapplyLB} be used (otherwise \code{foreach} is used). Defaults to true as it needs less dependencies. It might be removed in future releases and only allow the use of parLapplyLB.
 #' @param cl The cluster to use (if formed beforehand). Defaults to \code{NULL}.
-#' @param stopcl Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.
+#' @param stopcl Should the cluster be stopped after the function finishes. Defaults to \code{is.null(cl)}.
 #' @param \dots Arguments passed to other functions, see \code{\link{stochBlock}}.
 #'
 #' @return A list of class "opt.more.par" containing:
@@ -405,7 +405,7 @@ llStochBlock<-function(M,
 #'   \item{call}{The call to this function.}
 #'   \item{initial.param}{If selected - The initial parameters are used.}
 #'   \item{Random.seed}{.Random.seed at the end of the function.}
-#'   \item{cl}{Cluster used for parallel computations if supplied as an imput paramter.}
+#'   \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
 #'   
 #' @section Warning:
 #' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
@@ -421,7 +421,7 @@ llStochBlock<-function(M,
 #'k<-2
 #'blockSizes<-rep(20,k)
 #'IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
-#'if(any(dim(IM)!=c(k,k))) stop("invalid dimmensions")
+#'if(any(dim(IM)!=c(k,k))) stop("invalid dimensions")
 #'
 #'set.seed(2021)
 #'clu<-rep(1:k, times=blockSizes)
@@ -466,27 +466,27 @@ llStochBlock<-function(M,
 stochBlockORP<-function(M, #a square matrix
                          k,#number of clusters/groups
                          rep,#number of repetitions/different starting partitions to check
-                         save.initial.param=TRUE,  #save the initial parametrs of this call
+                         save.initial.param=TRUE,  #save the initial parameters of this call
                          deleteMs=TRUE, #delete networks/matrices from results of optParC or optParMultiC to save space
                          max.iden=10, #the maximum number of results that should be saved (in case there are more than max.iden results with minimal error, only the first max.iden will be saved)
                          return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
-                         return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
+                         return.err=TRUE,#if 'FALSE', only the results of crit.fun are returned (a list of all (best) solutions including errors), else the result is list
                          seed=NULL,#the seed for random generation of partitions
                          RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
-                         parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
-                         mingr=NULL, #minimal alowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
-                         maxgr=NULL, #maximal alowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
-                         addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for the default function "genRandomPar"
-                           genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the other options is completly random)
-                           probGenMech = NULL),    #Here the probabilities for different mechanizems for specifying the partitions are set. If not set this is determined based on the previous parameter.
+                         parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept arguments: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parameters)
+                         mingr=NULL, #minimal allowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
+                         maxgr=NULL, #maximal allowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
+                         addParam=list(  #list of additional parameters for generating partitions. Here they are specified for the default function "genRandomPar"
+                           genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the other options is completely random)
+                           probGenMech = NULL),    #Here the probabilities for different mechanizes for specifying the partitions are set. If not set this is determined based on the previous parameter.
                          maxTriesToFindNewPar=rep*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
-                         skip.par = NULL, #partitions to be skiped
+                         skip.par = NULL, #partitions to be skipped
                          printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed
                          n=NULL, #the number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is onemode (both modes are in rows and columns)
                          nCores=1, #number of cores to be used 0 -means all available cores, can also be a cluster object,
                          useParLapply=FALSE, #should parLapply be used instead of foreach
                          cl = NULL, #the cluster to use (if formed beforehand)
-                         stopcl = is.null(cl), # should the cluster be stoped
+                         stopcl = is.null(cl), # should the cluster be stopped
                          ... #paramters to stochBlock
  ){
    dots<-list(...)
