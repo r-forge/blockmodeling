@@ -8,7 +8,7 @@ unlistPar<-function(part){
   part
 }
 
-#' Function that performs stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
+#' Function that performs stochastic one-mode and linked blockmodeling by optimizing a single partition. If \code{clu} is a list, the method for linked/multilevel networks is applied
 #'
 #' @import doParallel
 #' @import doRNG
@@ -49,20 +49,46 @@ unlistPar<-function(part){
 #' 
 #' @author \enc{Aleš, Žiberna}{Ales Ziberna}
 #' 
-#' @seealso \code{\link{StochBlockORP}}
+#' @seealso \code{\link{stochBlockORP}}
 #' 
 #' @examples
 #' 
-#' # Create a synthetic dataset
+#' # Create a synthetic network matrix
 #' set.seed(2022)
-#' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = TRUE,prob = c(0.952,0.038)),
-#'         nrow = 169,ncol = 169)
-#' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
-#'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
-#'                     0.089, 0.130, 0.107, 0.077, 0.118))
-#' res<-stochBlock(M=M, clu=clu)
+#' library(blockmodeling)
+#' k<-2 # number of blocks to generate
+#' blockSizes<-rep(20,k)
+#' IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#' clu<-rep(1:k, times=blockSizes)
+#' n<-length(clu)
+#' M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+#' clu<-sample(1:2,nrow(M),replace=TRUE)
+#' plotMat(M,clu) # Have a look at this random partition
+#' res<-stochBlock(M,clu) # Optimising the partition
+#' plot(res) # Have a look at the optimised parition
+#' 
+#' # Create a synthetic linked-network matrix
+#' set.seed(2022)
+#' library(blockmodeling)
+#' IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#' clu<-rep(1:2, each=20) # Partition to generate
+#' n<-length(clu)
+#' nClu<-length(unique(clu)) # Number of clusters to generate
+#' M1<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n) # First network
+#' M2<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n) # Second network
+#' M12<-diag(n) # Linking network
+#' nn<-c(n,n)
+#' k<-c(2,2)
+#' Ml<-matrix(0, nrow=sum(nn),ncol=sum(nn)) 
+#' Ml[1:n,1:n]<-M1
+#' Ml[n+1:n,n+1:n]<-M2
+#' Ml[n+1:n, 1:n]<-M12 
+#' plotMat(Ml) # Linked network
+#' clu1<-sample(1:2,nrow(M1),replace=TRUE)
+#' clu2<-sample(3:4,nrow(M1),replace=TRUE)
+#' plotMat(Ml,list(clu1,clu2)) # Have a look at this random partition
+#' res<-stochBlock(Ml,list(clu1,clu2)) # Optimising the partition
+#' plot(res) # Have a look at the optimised parition
 #' 
 #' @useDynLib StochBlockTest, .registration = TRUE
 #' @export
@@ -227,18 +253,27 @@ stochBlock<-function(M,
 #' @param eps If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.
 #' @param weightClusterSize The weight given to cluster sizes (log-probabilities) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.
 #'
-#' @return The value of the log-likelihood criterion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
+#' @return - the value of the log-likelihood criterion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
 #' 
 #' @examples 
+#' # Create a synthetic network matrix
 #' set.seed(2022)
-#' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = TRUE,prob = c(0.952,0.038)),
-#'         nrow = 169,ncol = 169)
-#' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
-#'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
-#'                     0.089, 0.130, 0.107, 0.077, 0.118))
-#' ICL<-llStochBlock(M,clu)
+#' library(blockmodeling)
+#' k<-2 # number of blocks to generate
+#' blockSizes<-rep(20,k)
+#' IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#' clu<-rep(1:k, times=blockSizes)
+#' n<-length(clu)
+#' M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+#' clu<-sample(1:2,nrow(M),replace=TRUE)
+#' plotMat(M,clu) # Have a look at this random partition
+#' ll_pre<-llStochBlock(M,clu) # Calculate its loglikelihood
+#' res<-stochBlockORP(M,k=2,rep=10) # Optimizing the partition
+#' plot(res) # Have a look at the optimized partition
+#' ll_post<-llStochBlock(M,clu(res)) # Calculate its loglikelihood
+#' # We expect the loglikelihood pre-optimization to be smaller:
+#' (-ll_pre)<(-ll_post)
+#'   
 #'
 #' @export
 
@@ -478,7 +513,7 @@ stochBlockORP<-function(M, #a square matrix
                          maxgr=NULL, #maximal allowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
                          addParam=list(  #list of additional parameters for generating partitions. Here they are specified for the default function "genRandomPar"
                            genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the other options is completely random)
-                           probGenMech = NULL),    #Here the probabilities for different mechanizes for specifying the partitions are set. If not set this is determined based on the previous parameter.
+                           probGenMech = NULL),    #Here the probabilities for different mechanisms for specifying the partitions are set. If not set this is determined based on the previous parameter.
                          maxTriesToFindNewPar=rep*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
                          skip.par = NULL, #partitions to be skipped
                          printRep= ifelse(rep<=10,1,round(rep/10)), #should some information about each optimization be printed

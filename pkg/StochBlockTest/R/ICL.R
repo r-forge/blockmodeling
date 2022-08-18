@@ -52,15 +52,25 @@ findActiveParam<-function(M, n, k, na.rm=TRUE){
 #' @return The value of ICL
 #' 
 #' @examples 
+#' # Create a synthetic network matrix
 #' set.seed(2022)
-#' M<-matrix(data = sample(x = 0:1,size = 169*169,
-#'                       replace = TRUE,prob = c(0.952,0.038)),
-#'         nrow = 169,ncol = 169)
-#' # Create an hypothetical partition
-#' clu<-sample(x = 1:10,size = 169,replace = TRUE,
-#'            prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
-#'                     0.089, 0.130, 0.107, 0.077, 0.118))
-#' ICL<-ICLStochBlock(M,clu)
+#' library(blockmodeling)
+#' k<-2 # number of blocks to generate
+#' blockSizes<-rep(20,k)
+#' IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#' clu<-rep(1:k, times=blockSizes)
+#' n<-length(clu)
+#' M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+#' clu<-sample(1:2,nrow(M),replace=TRUE)
+#' plotMat(M,clu) # Have a look at this random partition
+#' ICL_pre<-ICLStochBlock(M,clu) # Calculate its ICL
+#' ICL_pre
+#' res<-stochBlock(M,clu=clu) # Optimizing the partition
+#' plot(res) # Have a look at the optimized partition
+#' ICL_post<-res$ICL # Calculate its ICL
+#' ICL_post
+#' # We expect the ICL pre-optimisation to be smaller:
+#' ICL_pre<ICL_post			   
 #' 
 #' @seealso \code{\link{llStochBlock}}; \code{\link{weightsMlLoglik}}
 #'
