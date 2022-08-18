@@ -2,7 +2,7 @@
 % Please edit documentation in R/stochBlock.r
 \name{stochBlock}
 \alias{stochBlock}
-\title{Function that performs stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied}
+\title{Function that performs stochastic one-mode and linked blockmodeling by optimizing a single partition. If \code{clu} is a list, the method for linked/multilevel networks is applied}
 \usage{
 stochBlock(
   M,
@@ -20,9 +20,9 @@ stochBlock(
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.}
 
-\item{clu}{A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
+\item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
 
-\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}.}
+\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.}
 
 \item{uWeights}{The weights for each unin. A vector with the length equal to the number of units (in all sets).}
 
@@ -35,14 +35,14 @@ stochBlock(
 
 \item{limitType}{Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.}
 
-\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 \itemize{
   \item number of clusters (of all types)
   \item number of clusters (of all types)
   \item number of relations
   \item 2 - the first is lower limit and the second is upper limit
 }
-If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimmensions, as one of the first two must be ommited.}
+If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 
 \item{weightClusterSize}{The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
 
@@ -60,27 +60,53 @@ A list of class \code{opt.par} normally passed other commands with \code{StockBl
 \item{ICL}{Integrated Criterion Likelihood for this partition}
 }
 \description{
-Function that performs stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
+Function that performs stochastic one-mode and linked blockmodeling by optimizing a single partition. If \code{clu} is a list, the method for linked/multilevel networks is applied
 }
 \examples{
 
-# Create a synthetic dataset
+# Create a synthetic network matrix
 set.seed(2022)
-M<-matrix(data = sample(x = 0:1,size = 169*169,
-                      replace = T,prob = c(0.952,0.038)),
-        nrow = 169,ncol = 169)
-# Create an hypothetical partition
-clu<-sample(x = 1:10,size = 169,replace = T,
-           prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
-                    0.089, 0.130, 0.107, 0.077, 0.118))
-res<-stochBlock(M=M, clu=clu)
+library(blockmodeling)
+k<-2 # number of blocks to generate
+blockSizes<-rep(20,k)
+IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+clu<-rep(1:k, times=blockSizes)
+n<-length(clu)
+M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+clu<-sample(1:2,nrow(M),replace=TRUE)
+plotMat(M,clu) # Have a look at this random partition
+res<-stochBlock(M,clu) # Optimising the partition
+plot(res) # Have a look at the optimised parition
+
+# Create a synthetic linked-network matrix
+set.seed(2022)
+library(blockmodeling)
+IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+clu<-rep(1:2, each=20) # Partition to generate
+n<-length(clu)
+nClu<-length(unique(clu)) # Number of clusters to generate
+M1<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n) # First network
+M2<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n) # Second network
+M12<-diag(n) # Linking network
+nn<-c(n,n)
+k<-c(2,2)
+Ml<-matrix(0, nrow=sum(nn),ncol=sum(nn)) 
+Ml[1:n,1:n]<-M1
+Ml[n+1:n,n+1:n]<-M2
+Ml[n+1:n, 1:n]<-M12 
+plotMat(Ml) # Linked network
+clu1<-sample(1:2,nrow(M1),replace=TRUE)
+clu2<-sample(3:4,nrow(M1),replace=TRUE)
+plotMat(Ml,list(clu1,clu2)) # Have a look at this random partition
+res<-stochBlock(Ml,list(clu1,clu2)) # Optimising the partition
+plot(res) # Have a look at the optimised parition
 
 }
 \references{
 Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
 }
 \seealso{
-\code{\link{StochBlockORP}}
+\code{\link{stochBlockORP}}
 }
 \author{
 \enc{Aleš, Žiberna}{Ales Ziberna}

@@ -69,11 +69,11 @@ stochBlockORP(
 
 \item{nCores}{Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.}
 
-\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.}
+\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{foreach} is used). Defaults to true as it needs less dependencies. It might be removed in future releases and only allow the use of parLapplyLB.}
 
 \item{cl}{The cluster to use (if formed beforehand). Defaults to \code{NULL}.}
 
-\item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
+\item{stopcl}{Should the cluster be stopped after the function finishes. Defaults to \code{is.null(cl)}.}
 
 \item{\dots}{Arguments passed to other functions, see \code{\link{stochBlock}}.}
 }
@@ -88,7 +88,7 @@ A list of class "opt.more.par" containing:
   \item{call}{The call to this function.}
   \item{initial.param}{If selected - The initial parameters are used.}
   \item{Random.seed}{.Random.seed at the end of the function.}
-  \item{cl}{Cluster used for parallel computations if supplied as an imput paramter.}
+  \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
 }
 \description{
 A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.
@@ -105,7 +105,7 @@ library(blockmodeling)
 k<-2
 blockSizes<-rep(20,k)
 IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
-if(any(dim(IM)!=c(k,k))) stop("invalid dimmensions")
+if(any(dim(IM)!=c(k,k))) stop("invalid dimensions")
 
 set.seed(2021)
 clu<-rep(1:k, times=blockSizes)

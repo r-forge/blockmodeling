@@ -63,11 +63,11 @@ stochBlockKMint(
 
 \item{nCores}{Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.}
 
-\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{mforeach} is used). Defaults to true as it needs less dependencies. It might be removed in future releses and only allow the use of parLapplyLB.}
+\item{useParLapply}{Should \code{parLapplyLB} be used (otherwise \code{foreach} is used). Defaults to true as it needs less dependencies. It might be removed in future releases and only allow the use of parLapplyLB.}
 
 \item{cl}{The cluster to use (if formed beforehand). Defaults to \code{NULL}.}
 
-\item{stopcl}{Should the cluster be stoped after the function finishes. Defaults to \code{is.null(cl)}.}
+\item{stopcl}{Should the cluster be stopped after the function finishes. Defaults to \code{is.null(cl)}.}
 
 \item{...}{Arguments passed to other functions, see \code{\link{stochBlock}}.}
 }

@@ -20,22 +20,22 @@ llStochBlock(
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.}
 
-\item{clu}{A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
+\item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
 
-\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimmensions as \code{M}.}
+\item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.}
 
-\item{uWeights}{The weights for each unin. A vector with the length equal to the number of units (in all sets).}
+\item{uWeights}{The weights for each unit. A vector with the length equal to the number of units (in all sets).}
 
 \item{diagonal}{How should the diagonal values be treated. Possible values are:
 \itemize{
   \item ignore - diagonal values are ignored
-  \item seperate - diagonal values are treated seperately
+  \item seperate - diagonal values are treated separately
   \item same - diagonal values are treated the same as all other values
 }}
 
 \item{limitType}{Type of limit to use. Forced to 'none' if \code{limits} is \code{NULL}. Otherwise, one of either \code{outer} or \code{inner}.}
 
-\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimmensions equal to:
+\item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 \itemize{
   \item number of clusters (of all types)
   \item number of clusters (of all types)
@@ -44,27 +44,36 @@ llStochBlock(
 }
 If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 
-\item{weightClusterSize}{The weight given to cluster sizes (logprobabilites) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
+\item{weightClusterSize}{The weight given to cluster sizes (log-probabilities) compared to ties in loglikelihood. Defaults to 1, which is "classical" stochastic blockmodeling.}
 
 \item{addOne}{Should one tie with the value of the tie equal to the density of the superBlock be added to each block to prevent block means equal to 0 or 1 and also "shrink" the block means toward the superBlock mean. Defaults to TRUE.}
 
 \item{eps}{If addOne = FALSE, the minimal deviation from 0 or 1 that the block mean/density can take.}
 }
 \value{
-The value of the log-likelihood cerion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
+- the value of the log-likelihood criterion for the partition \code{clu} on the network represented by \code{M} for binary stochastic blockmodel.
 }
 \description{
 Function that computes criterion function used in stochastic one-mode and linked blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
 }
 \examples{
+# Create a synthetic network matrix
 set.seed(2022)
-M<-matrix(data = sample(x = 0:1,size = 169*169,
-                      replace = T,prob = c(0.952,0.038)),
-        nrow = 169,ncol = 169)
-# Create an hypothetical partition
-clu<-sample(x = 1:10,size = 169,replace = T,
-           prob = c(0.088, 0.118, 0.118, 0.072, 0.083,
-                    0.089, 0.130, 0.107, 0.077, 0.118))
-ICL<-llStochBlock(M,clu)
+library(blockmodeling)
+k<-2 # number of blocks to generate
+blockSizes<-rep(20,k)
+IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+clu<-rep(1:k, times=blockSizes)
+n<-length(clu)
+M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+clu<-sample(1:2,nrow(M),replace=TRUE)
+plotMat(M,clu) # Have a look at this random partition
+ll_pre<-llStochBlock(M,clu) # Calculate its loglikelihood
+res<-stochBlockORP(M,k=2,rep=10) # Optimizing the partition
+plot(res) # Have a look at the optimized partition
+ll_post<-llStochBlock(M,clu(res)) # Calculate its loglikelihood
+# We expect the loglikelihood pre-optimization to be smaller:
+(-ll_pre)<(-ll_post)
+  
 
 }
