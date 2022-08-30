@@ -547,7 +547,7 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
       maxBlockTypes<-1
       blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
 	  if(any(dim(blocks)!=nRCclu)){
-		  if(nMode==2& sum(dim(blocks))==nRCclu)){
+		  if(nMode==2& (sum(dim(blocks))==nRCclu)){
 			for(i in 1:dM[3]){
 			  blocksArr[1,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks
 			}

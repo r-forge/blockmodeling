@@ -439,11 +439,13 @@ function(
 	
 	if(!(plotLines)){
 		plotRect<-rep(TRUE,length(col))
-		plotRect[col==0]<-FALSE
-		plotRect[col=="white"]<-FALSE
-		plotRect[col=="transparent"]<-FALSE
-		plotRect[grep(pattern = "^#......00$",x=testColVec)]<-FALSE
-		
+		if(is.integer(col)){
+			plotRect[col==0]<-FALSE
+		}else{
+			plotRect[col=="white"]<-FALSE
+			plotRect[col=="transparent"]<-FALSE
+			plotRect[grep(pattern = "^#......00$",x=col)]<-FALSE
+		}
 		
 	}
 	
