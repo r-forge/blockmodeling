@@ -452,9 +452,9 @@ function(
     par(mar=mar, xpd=NA)    #ploting
     plot.default(c(0,1),c(0,1),type="n",axes=FALSE,ann=FALSE,xaxs="i",asp=asp,...)
   if(is.null(IM.dens)||all(IM.dens==-1)){
-    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab[plotRect],border=if(plotLines)"black" else NA)
+    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab,border=if(plotLines)"black" else NA)
   }else{
-    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab[plotRect],density=dens[plotRect],border=if(plotLines)"black" else NA)
+    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab,density=dens[plotRect],border=if(plotLines)"black" else NA)
   } 
   
   if(newSetK[1]!=0 && length(par.line.col)==1) {
