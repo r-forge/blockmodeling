@@ -297,6 +297,7 @@ critFunC<-function(M, clu, approaches, blocks, isTwoMode = NULL, isSym = NULL,
     } else stop("array ('blocks' argument) has a wrong number of dimmensions")
   }
   dB<-dim(blocks)
+  if(any(dB!=c(maxBlockTypes,dM[3],nRCclu))) stop("array ('blocks' argument) has a wrong dimensions of dimensions")
   
   if(dB[2]!=dM[3])stop("the number of relations implied by 'blocks' and by 'M' does not match")
   if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")
@@ -511,7 +512,7 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
     blocksArr[1:length(blocks),,,]<-blocks
     blocks <- blocksArr
   } else if(!is.array(blocks)){
-    stop("'blocks' argument should be a vector, a list or an array with appropriate dimmensions")
+    stop("'blocks' argument should be a vector, a list or an array with appropriate dimensions")
   }else {
     if(length(dim(blocks))==4){
       maxBlockTypes<-dim(blocks)[1]
@@ -522,48 +523,48 @@ optParC<-function(M, clu, approaches, blocks, nMode=NULL,isSym=NULL,diag=1, useM
           blocks[,,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-oldBlocks
           blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
           blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-          if(any(dim(blocks)!=c(maxBlockTypes,dM[3],nRCclu))) stop("array ('blocks' argument) has a wrong dimensions of dimensions")    
-        } else stop("array ('blocks' argument) has a wrong dimensions of dimensions")
+          if(any(dim(blocks)!=c(maxBlockTypes,dM[3],nRCclu))) stop("array ('blocks' argument) has a wrong dimensions")    
+        } else stop("array ('blocks' argument) has a wrong dimensions")
       }
     } else if(length(dim(blocks))==3){
       maxBlockTypes<-dim(blocks)[1]
       blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))      
-      if(nMode==2){
-        for(i in 1:dM[3]){
-          blocksArr[,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks 
-        }
-      } else {
+	  if(any(dim(blocks)!=c(maxBlockTypes,nRCclu))){
+		  if(nMode==2 & (sum(dim(blocks)[c(2,3)])==nRCclu)){
+			for(i in 1:dM[3]){
+			  blocksArr[,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks 
+			}
+			blocksArr[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
+			blocksArr[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
+		  } else stop("array ('blocks' argument) has a wrong dimensions")
+	  } else {
         for(i in 1:dM[3]){
           blocksArr[,i,,]<-blocks 
         }
       }
-      blocks <- blocksArr
-      if(nMode==2){
-        blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
-        blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-      }
-      
+      blocks <- blocksArr     
     } else if(length(dim(blocks))==2){
       maxBlockTypes<-1
       blocksArr<-array(NA,dim=c(maxBlockTypes,dM[3],nRCclu))
-      if(nMode==2){
-        for(i in 1:dM[3]){
-          blocksArr[1,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks
-        }
-      }else {
+	  if(any(dim(blocks)!=nRCclu)){
+		  if(nMode==2& sum(dim(blocks))==nRCclu)){
+			for(i in 1:dM[3]){
+			  blocksArr[1,i,1:tmNclu[1],(tmNclu[1]+1):sum(tmNclu)]<-blocks
+			}
+			blocksArr[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
+			blocksArr[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
+		  } else stop("array ('blocks' argument) has a wrong dimensions")
+	  }else {
         for(i in 1:dM[3]){
           blocksArr[1,i,,]<-blocks
         }
       }
       blocks<-blocksArr
-      if(nMode==2){
-        blocks[1,,(tmNclu[1]+1):sum(tmNclu),]<-"dnc"
-        blocks[1,,1:tmNclu[1],1:tmNclu[1]]<-"dnc"
-      }
-    } else stop("array ('blocks' argument) has a wrong number of dimmensions")
+    } else stop("array ('blocks' argument) has a wrong number of dimensions")
   }
-  
   dB<-dim(blocks)
+  if(any(dB!=c(maxBlockTypes,dM[3],nRCclu))) stop("array ('blocks' argument) has a wrong dimensions of dimensions")
+  
   
   if(dB[2]!=dM[3])stop("the number of relations implied by 'blocks' and by 'M' does not match")
   if(!all(dB[3:4]==nRCclu))stop("number of clusters implied by 'blocks' and by 'clu' does not match")

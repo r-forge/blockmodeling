@@ -2,6 +2,11 @@ Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
 2022
+Version: 1.1.3
+Date: 2022-08-30
+Corrected handling of blockmodels with 2 or 3 dimensions when partition had two sets of units.
+Speeded up plotting of sparse matrices.
+
 Version: 1.1.2.9000
 Date: 2022-07-28
 plotMat and all functions calling it (plot.* methods for results of critFunC, optParC and optRandomParC) now plot the lines separating sets/modes of units (if clu is a list) with different color (red) and twice as wide as regular lines. 

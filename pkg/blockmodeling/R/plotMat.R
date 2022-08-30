@@ -436,13 +436,23 @@ function(
     }
 
     asp<-dm[1]/dm[2]    #making sure that the cells are squares	
-
+	
+	if(!(plotLines)){
+		plotRect<-rep(TRUE,length(col))
+		plotRect[col==0]<-FALSE
+		plotRect[col=="white"]<-FALSE
+		plotRect[col=="transparent"]<-FALSE
+		plotRect[grep(pattern = "^#......00$",x=testColVec)]<-FALSE
+		
+		
+	}
+	
     par(mar=mar, xpd=NA)    #ploting
     plot.default(c(0,1),c(0,1),type="n",axes=FALSE,ann=FALSE,xaxs="i",asp=asp,...)
   if(is.null(IM.dens)||all(IM.dens==-1)){
-    rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,border=if(plotLines)"black" else NA)
+    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab[plotRect],border=if(plotLines)"black" else NA)
   }else{
-    rect(xleft=xleft, ybottom=ybottom, xright=xright, ytop=ytop, col=col,cex.lab=cex.lab,density=dens,border=if(plotLines)"black" else NA)
+    rect(xleft=xleft[plotRect], ybottom=ybottom[plotRect], xright=xright[plotRect], ytop=ytop[plotRect], col=col[plotRect],cex.lab=cex.lab[plotRect],density=dens[plotRect],border=if(plotLines)"black" else NA)
   } 
   
   if(newSetK[1]!=0 && length(par.line.col)==1) {
