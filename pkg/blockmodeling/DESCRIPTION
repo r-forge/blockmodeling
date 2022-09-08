@@ -14,4 +14,5 @@ Description: This is primarily meant as an implementation of generalized blockmo
  Žiberna (2007)<doi:10.1016/j.socnet.2006.04.002>, Žiberna (2008)<doi:10.1080/00222500701790207>,
  Žiberna (2014)<doi:10.1016/j.socnet.2014.04.002>.
 License: GPL (>=2)
-
+Encoding: UTF-8
+RoxygenNote: 7.2.1
