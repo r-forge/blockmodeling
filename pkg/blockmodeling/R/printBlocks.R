@@ -1,5 +1,5 @@
 #' @encoding UTF-8
-#' @title Niceprinting of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.
+#' @title Nice printing of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.
 #'  
 #' @param blocks \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.
 #' 
@@ -26,7 +26,9 @@ printBlocks<-function(blocks){
     } else if(length(dim(B))==3){
       print(data.frame(apply(B,2:3,function(x)paste(na.omit(x),collapse=",")),check.names = FALSE))
     } else if(length(dim(B))==4){
-      for(i in 1:dim(B)[2]){
+	  if(dim(B)[2]==1){
+		printBlocks(B[,1,,])
+	  } else for(i in 1:dim(B)[2]){
         cat("Relation",i,"\n")
         print(data.frame(apply(B[,i,,],2:3,function(x)paste(na.omit(x),collapse=",")),check.names = FALSE))
       }

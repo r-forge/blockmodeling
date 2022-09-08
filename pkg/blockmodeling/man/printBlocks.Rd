@@ -3,7 +3,7 @@
 \encoding{UTF-8}
 \name{printBlocks}
 \alias{printBlocks}
-\title{Niceprinting of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.}
+\title{Nice printing of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.}
 \usage{
 printBlocks(blocks)
 }
@@ -14,7 +14,7 @@ printBlocks(blocks)
 Used for side effects (printing)
 }
 \description{
-Niceprinting of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.
+Nice printing of the \code{blocks} parameter as used in \code{\link{optRandomParC}} and \code{\link{critFunC}}.
 }
 \seealso{
 \code{\link{optRandomParC}}, \code{\link{critFunC}}
