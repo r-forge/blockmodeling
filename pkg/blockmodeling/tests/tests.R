@@ -38,7 +38,7 @@ tmp$err
 plot(tmp)
 critFunC(baker>0, clu=clu, approaches = "hom", blocks = c("nul","com"),homFun="bll", mulReg = TRUE, diag=2)$err
 
-if(requireNamespace("StochBlockTest")) StochBlockTest::llStochBlock(baker>0, clu=clu,addOne = FALSE)
+#if(requireNamespace("StochBlockTest")) StochBlockTest::llStochBlock(baker>0, clu=clu,addOne = FALSE)
 
 clu2L<-list(rep(1:2, each=5),rep(1:2, each=5))
 tmp<-critFunC(baker>0, clu=clu2L, approaches = "hom", blocks = c("nul","com"),homFun="bll", mulReg = TRUE)

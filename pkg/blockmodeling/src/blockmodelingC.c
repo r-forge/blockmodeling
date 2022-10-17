@@ -3300,13 +3300,11 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 									pbestRowParMatrix[i] = pbestrowPar[i];
 								}
 
-								/* Zdajle poskušam narediti tako, da bo program šel èez vsa možna razbitja in shranil doloèeno število najboljših
-								Torej da se zanka ne bo zakljuèila, ko se bo našlo prvo boljše razbitje
+								/* Zdajle poskusam narediti tako, da bo program sel cez vsa mozna razbitja in shranil doloceno stevilo najboljsih
+								Torej da se zanka ne bo zakljucila, ko se bo naslo prvo boljse razbitje
+								Pazi da bos popravil spremembe, tako tko spodaj, na zactku iteracije pa jih je potrebno ponovno udejanjiti!!!
 
-
-								Pazi da boš popravil spremembe, tako tko spodaj, na zaètku iteracije pa jih je potrebno ponovno udejanjiti!!!
-
-								Mogoèe se da kako bolje to narediti!!!
+								Mogoce se da kako bolje to narediti!!!
 								*/
 
 
