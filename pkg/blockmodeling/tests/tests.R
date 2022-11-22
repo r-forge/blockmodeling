@@ -17,13 +17,13 @@ resBll<-optRandomParC(baker>0,k=4, approaches = "hom", blocks = c("nul","com"),r
 plot(resBll)
 print(resBll)
 
-if(requireNamespace("StochBlockTest")){
-  StochBlockTest::llStochBlock(baker>0, clu=clu(resBll), addOne = FALSE, diagonal = "seperate")
-  resSB<-StochBlockTest::stochBlockORP(baker>0,k = 4, rep = 100, addOne = FALSE, diagonal = "seperate")
-  err(resSB)
-  plot(resSB)
-  crand(clu(resSB),clu(resBll))
-}
+# if(requireNamespace("StochBlockTest")){
+  # StochBlockTest::llStochBlock(baker>0, clu=clu(resBll), addOne = FALSE, diagonal = "seperate")
+  # resSB<-StochBlockTest::stochBlockORP(baker>0,k = 4, rep = 100, addOne = FALSE, diagonal = "seperate")
+  # err(resSB)
+  # plot(resSB)
+  # crand(clu(resSB),clu(resBll))
+# }
 
 
 tmp<-critFunC(baker>0, clu=clu, approaches = "hom", blocks = c("nul","rre"),homFun="bll", mulReg = TRUE)
