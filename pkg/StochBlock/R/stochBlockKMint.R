@@ -167,10 +167,7 @@ stochBlockKMint<-function(M, #a square matrix
   
   if(nCores==1||!requireNamespace("parallel")){
     if(nCores!=1) {
-      oldWarn<-options("warn")
-      options(warn=1)
-      warning("Only single core is used as package 'parallel' is not available")
-      options(warn=oldWarn)
+      warning("Only single core is used as package 'parallel' is not available", immediate.=TRUE)
     }
     
     

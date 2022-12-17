@@ -622,10 +622,7 @@ stochBlockORP<-function(M, #a square matrix
    
    if(nCores==1||!requireNamespace('parallel')){
      if(nCores!=1) {
-       oldWarn<-options("warn")
-       options(warn=1)
-       warning("Only single core is used as package 'parallel' is not available")
-       options(warn=oldWarn)
+       warning("Only single core is used as package 'parallel' is not available", immediate.=TRUE)
      }
      for(i in 1:rep){
        if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
