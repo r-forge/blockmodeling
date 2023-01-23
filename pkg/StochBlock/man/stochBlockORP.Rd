@@ -14,7 +14,6 @@ stochBlockORP(
   return.all = FALSE,
   return.err = TRUE,
   seed = NULL,
-  RandomSeed = NULL,
   parGenFun = blockmodeling::genRandomPar,
   mingr = NULL,
   maxgr = NULL,
@@ -48,8 +47,6 @@ stochBlockORP(
 \item{return.err}{Should the error for each optimized partition be returned. Defaults to \code{TRUE}.}
 
 \item{seed}{Optional. The seed for random generation of partitions.}
-
-\item{RandomSeed}{Optional. Integer vector, containing the random number generator. It is only looked for in the user's workspace.}
 
 \item{parGenFun}{The function (object) that will generate random partitions. The default function is   \code{\link{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).}
 

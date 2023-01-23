@@ -6,7 +6,7 @@
 \alias{StochBlock-package}
 \title{StochBlock: Stochastic Blockmodeling of One-Mode and Linked Networks}
 \description{
-Stochastic blockmodeling of one-mode and linked networks as implemented in Škulj and Žiberna (2022) \doi{10.1016/j.socnet.2022.02.001}. The optimization is done via CEM algorithm that can be initialized by random partitions or the results of k-means algorithm. The development of this package is financially supported by the Slovenian Research Agency (\url{https://www.arrs.si/}) within the research programs P5-0168 and the research projects J7-8279 (Blockmodeling multilevel and temporal networks) and J5-2557 (Comparison and evaluation of different approaches to blockmodeling dynamic networks by simulations with application to Slovenian co-authorship networks).
+Stochastic blockmodeling of one-mode and linked networks as implemented in Škulj and Žiberna (2022) \doi{10.1016/j.socnet.2022.02.001}. The optimization is done via CEM (Classification Expectation Maximization) algorithm that can be initialized by random partitions or the results of k-means algorithm. The development of this package is financially supported by the Slovenian Research Agency (\url{https://www.arrs.si/}) within the research programs P5-0168 and the research projects J7-8279 (Blockmodeling multilevel and temporal networks) and J5-2557 (Comparison and evaluation of different approaches to blockmodeling dynamic networks by simulations with application to Slovenian co-authorship networks).
 }
 \author{
 \strong{Maintainer}: Aleš Žiberna \email{ales.ziberna@fdv.uni-lj.si} (\href{https://orcid.org/0000-0003-1534-6971}{ORCID})

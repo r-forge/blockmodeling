@@ -51,8 +51,6 @@ stochBlockKMint(
 
 \item{seed}{Optional. The seed for random generation of partitions.}
 
-\item{RandomSeed}{Optional. Integer vector, containing the random number generator. It is only looked for in the user's workspace.}
-
 \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep * 1000}.}
 
 \item{skip.par}{The partitions that are not allowed or were already checked and should therefore be skipped.}
