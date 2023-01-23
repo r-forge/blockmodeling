@@ -415,7 +415,6 @@ llStochBlock<-function(M,
 #' @param return.all If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.
 #' @param return.err Should the error for each optimized partition be returned. Defaults to \code{TRUE}.
 #' @param seed Optional. The seed for random generation of partitions.
-#' @param RandomSeed Optional. Integer vector, containing the random number generator. It is only looked for in the user's workspace.
 #' @param parGenFun The function (object) that will generate random partitions. The default function is   \code{\link{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).
 #' @param mingr Minimal allowed group size.
 #' @param maxgr Maximal allowed group size.
@@ -507,7 +506,6 @@ stochBlockORP<-function(M, #a square matrix
                          return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
                          return.err=TRUE,#if 'FALSE', only the results of crit.fun are returned (a list of all (best) solutions including errors), else the result is list
                          seed=NULL,#the seed for random generation of partitions
-                         RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
                          parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept arguments: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parameters)
                          mingr=NULL, #minimal allowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
                          maxgr=NULL, #maximal allowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
@@ -561,9 +559,7 @@ stochBlockORP<-function(M, #a square matrix
      n<-dim(M)[1:2]
    } else warning("Number of nodes by modes can not be determined. Parameter 'n' must be supplied!!!")
    
-   if(!is.null(RandomSeed)){
-     .Random.seed <-  RandomSeed
-   } else if(!is.null(seed))set.seed(seed)
+   if(!is.null(seed))set.seed(seed)
    
    
    on.exit({
