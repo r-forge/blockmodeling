@@ -16,7 +16,6 @@ stochBlockKMint(
   return.all = FALSE,
   return.err = TRUE,
   seed = NULL,
-  RandomSeed = NULL,
   maxTriesToFindNewPar = perm * 10,
   skip.par = NULL,
   printRep = ifelse(perm <= 10, 1, round(perm/10)),

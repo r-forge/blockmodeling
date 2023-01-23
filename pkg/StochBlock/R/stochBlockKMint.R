@@ -43,7 +43,6 @@ stochBlockKMint<-function(M, #a square matrix
                         return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
                         return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
                         seed=NULL,#the seed for random generation of partitions
-                        RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
 #                        mingr=NULL, #minimal allowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
 #                        maxgr=NULL, #maximal allowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
                         maxTriesToFindNewPar=perm*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
@@ -96,9 +95,7 @@ stochBlockKMint<-function(M, #a square matrix
   
   if(nmode!=length(n)) stop("The lengths of k and n must match!")
     
-  if(!is.null(RandomSeed)){
-    .Random.seed <-  RandomSeed
-  } else if(!is.null(seed))set.seed(seed)
+  if(!is.null(seed))set.seed(seed)
   
   
   on.exit({
