@@ -19,8 +19,8 @@ C  MULTISTART ONE-MODE KL-MEANS (WCSS CRITERION) BLOCK PLACEMENTS **UNKNOWN**
           IF(I.NE.J.OR.IDIAG.NE.0) ASUM = ASUM + A(I,J)
         END DO
       END DO
-      IF(IDIAG.NE.0) ASUM = ASUM/DFLOAT(RO*RO)
-      IF(IDIAG.EQ.0) ASUM = ASUM/DFLOAT(RO*RO-RO)
+      IF(IDIAG.NE.0) ASUM = ASUM/DBLE(RO*RO)
+      IF(IDIAG.EQ.0) ASUM = ASUM/DBLE(RO*RO-RO)
       DO I = 1,RO
         DO J = 1,RO
           IF(I.NE.J.OR.IDIAG.NE.0) ASSE = ASSE + (A(I,J)-ASUM)**2
@@ -88,9 +88,9 @@ C
           DO L = 1,RC
             IF(NR(K).GT.0.AND.NR(L).GT.0) THEN
               IF(K.NE.L.OR.IDIAG.NE.0) THEN
-                V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(L))
+                V(K,L) = V(K,L)/DBLE(NR(K)*NR(L))
               ELSEIF(NR(K).GT.1) THEN
-                V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(K)-NR(K))
+                V(K,L) = V(K,L)/DBLE(NR(K)*NR(K)-NR(K))
 			  ELSE 
 			    V(K,L) = ASUM
               END IF  
@@ -170,9 +170,9 @@ C             ! Make sure that the clusters are not empty
           DO L = 1,RC
             IF(NR(K).GT.0.AND.NR(L).GT.0) THEN
               IF(K.NE.L.OR.IDIAG.NE.0) THEN
-                V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(L))
+                V(K,L) = V(K,L)/DBLE(NR(K)*NR(L))
               ELSEIF(NR(K).GT.1) THEN
-                V(K,L) = V(K,L)/DFLOAT(NR(K)*NR(K)-NR(K))
+                V(K,L) = V(K,L)/DBLE(NR(K)*NR(K)-NR(K))
 			  ELSE 
 			    V(K,L) = ASUM				
               END IF  
