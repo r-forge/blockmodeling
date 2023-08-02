@@ -1,0 +1,23 @@
+Package: kmBlock
+Type: Package
+Title: k-means like blockmodeling of one-mode and linked networks
+Version: 0.0.2.9002
+Date: 2022-06-01
+Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
+                  role = c("aut", "cre"))
+Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>
+Description: k-means like blockmodeling of one-mode and linked networks.
+License: GPL (>=2)
+Encoding: UTF-8
+Imports: Rcpp (>= 1.0.0)
+LinkingTo: Rcpp, RcppArmadillo
+SystemRequirements: C++11
+Author: Aleš Žiberna [aut, cre]
+Repository: R-Forge
+Repository/R-Forge/Project: blockmodeling
+Repository/R-Forge/Revision: 359
+Repository/R-Forge/DateTimeStamp: 2022-06-01 10:23:32
+Date/Publication: 2022-06-01 10:23:32
+NeedsCompilation: yes
+Packaged: 2023-01-05 12:51:29 UTC; rforge
+RoxygenNote: 7.2.0
