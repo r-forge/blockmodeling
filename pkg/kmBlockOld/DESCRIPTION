@@ -1,7 +1,7 @@
-Package: kmBlock
+Package: kmBlockOld
 Type: Package
 Title: k-means like blockmodeling of one-mode and linked networks
-Version: 0.0.1.9102
+Version: 0.0.1.9103
 Date: 2020-05-04
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre"))
@@ -12,3 +12,5 @@ Encoding: UTF-8
 Imports: Rcpp (>= 1.0.0)
 LinkingTo: Rcpp, RcppArmadillo
 SystemRequirements: C++11
+Author: Aleš Žiberna [aut, cre]
+RoxygenNote: 7.2.0
