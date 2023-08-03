@@ -1,3 +1,11 @@
+unlistPar<- function(part){
+  if(is.list(part)){
+    part<-sapply(part,paste,collapse=" ")
+    part<-paste(paste("\nMode ", 1:length(part),":",sep=""), part,collapse="",sep=" ")
+  }
+  part
+}
+
 #' Function that performs k-means like one-mode blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied
 #'
 #' @param M A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.
@@ -17,7 +25,12 @@
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
+#' @param limitType What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' @import Rcpp 
+#' @importFrom Rcpp evalCpp
+#' @useDynLib kmBlock, .registration = TRUE
+#' @export
 kmBlockC<-function(M, 
                   clu, 
                   weights=NULL, 
@@ -140,7 +153,10 @@ kmBlockC<-function(M,
 #'   \item 2 - the first is lower limit and the second is upper limit
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
+#' @param limitType What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"
 #' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' @export
+
 critFunKmeans<-function(M, 
                    clu, 
                    weights=NULL, 
@@ -237,11 +253,103 @@ critFunKmeans<-function(M,
 
 
 
-#' A function for optimizing multiple random partitions using k-means like blockmodeling. Similar to optRandomParC, but calling kmBlock for optimizing individual partitions.
+#' A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Similar to \code{optRandomParC}, but calling \code{kmBlockC} for optimizing individual partitions.
 #'
-#' @inheritParams optRandomParC
-#' @return A list similar to optRandomParC
-# 
+#' @import parallel
+#' @import foreach
+#' @import doParallel
+#' @import doRNG
+#' @import blockmodeling
+#'
+#' @param M A square matrix giving the adjaciency relationg between the network's nodes (aka vertexes)
+#' @param k The number of clusters used in the generation of partitions.
+#' @param rep The number of repetitions/different starting partitions to check.
+#' @param save.initial.param Should the inital parameters(\code{approaches}, ...) of using \code{kmBlockC} be saved. The default value is \code{TRUE}.
+#' @param deleteMs Delete networks/matrices from the results of to save space. Defaults to \code{TRUE}.
+#' @param max.iden Maximum number of results that should be saved (in case there are more than \code{max.iden} results with minimal error, only the first \code{max.iden} will be saved).
+#' @param return.all If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.
+#' @param return.err Should the error for each optimized partition be returned. Defaults to \code{TRUE}.
+#' @param seed Optional. The seed for random generation of partitions.
+#' @param parGenFun The function (object) that will generate random partitions. The default function is   \code{\link{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).
+#' @param mingr Minimal allowed group size.
+#' @param maxgr Maximal allowed group size.
+#' @param addParam A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link{genRandomPar}}.
+#' @param maxTriesToFindNewPar The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep * 1000}.
+#' @param skip.par The partitions that are not allowed or were already checked and should therefore be skipped.
+#' @param printRep Should some information about each optimization be printed.
+#' @param n The number of units by "modes". It is used only for generating random partitions. It has to be set only if there are more than two modes or if there are two modes, but the matrix representing the network is one mode (both modes are in rows and columns).
+#' @param nCores Number of cores to be used. Value \code{0} means all available cores. It can also be a cluster object.
+#' @param useParLapply Should \code{parLapplyLB} be used (otherwise \code{foreach} is used). Defaults to true as it needs less dependencies. It might be removed in future releases and only allow the use of parLapplyLB.
+#' @param cl The cluster to use (if formed beforehand). Defaults to \code{NULL}.
+#' @param stopcl Should the cluster be stopped after the function finishes. Defaults to \code{is.null(cl)}.
+#' @param \dots Arguments passed to other functions, see \code{\link{kmBlockC}}.
+#'
+#' @return A list of class "opt.more.par" containing:
+#'  \item{M}{The one- or multi-mode matrix of the network analyzed}
+#'   \item{res}{If \code{return.all = TRUE} - A list of results the same as \code{best} - one \code{best} for each partition optimized.}
+#'   \item{best}{A list of results from \code{kmBlockC}, only without \code{M}.}
+#'   \item{err}{If \code{return.err = TRUE} - The vector of errors or inconsistencies = -log-likelihoods.}
+#'   \item{ICL}{Integrated classification likelihood for the best partition.}
+#'   \item{checked.par}{If selected - A list of checked partitions. If \code{merge.save.skip.par} is \code{TRUE}, this list also includes the partitions in \code{skip.par}.}
+#'   \item{call}{The call to this function.}
+#'   \item{initial.param}{If selected - The initial parameters are used.}
+#'   \item{Random.seed}{.Random.seed at the end of the function.}
+#'   \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
+#'   
+#' @section Warning:
+#' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
+#' due to the underlying algorithm. Hence, partitioning networks with several hundred units and large number of blocks (e.g., >5) can take a long time (from 20 minutes to a few hours or even days).
+#' 
+#' @references Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126.
+#' 
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
+#'
+#' @examples
+#'# Simple one-mode network
+#'library(blockmodeling)
+#'k<-2
+#'blockSizes<-rep(20,k)
+#'IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#'if(any(dim(IM)!=c(k,k))) stop("invalid dimensions")
+#'
+#'set.seed(2021)
+#'clu<-rep(1:k, times=blockSizes)
+#'n<-length(clu)
+#'M<-matrix(rbinom(n*n,1,IM[clu,clu]),ncol=n, nrow=n)
+#'diag(M)<-0
+#'plotMat(M)
+#'
+#'resORP<-kmBlockORPC(M,k=2, rep=10, return.all = TRUE)
+#'plot(resORP)
+#'clu(resORP)
+#'
+#'
+#'# Linked network
+#'library(blockmodeling)
+#'set.seed(2021)
+#'IM<-matrix(c(0.8,.4,0.2,0.8), nrow=2)
+#'clu<-rep(1:2, each=20)
+#'n<-length(clu)
+#'nClu<-length(unique(clu))
+#'M1<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n)
+#'M2<-matrix(rbinom(n^2,1,IM[clu,clu]),ncol=n, nrow=n)
+#'M12<-diag(n)
+#'nn<-c(n,n)
+#'k<-c(2,2)
+#'Ml<-matrix(0, nrow=sum(nn),ncol=sum(nn))
+#'Ml[1:n,1:n]<-M1
+#'Ml[n+1:n,n+1:n]<-M2
+#'Ml[n+1:n, 1:n]<-M12
+#'plotMat(Ml)
+#'
+#'resMl<-kmBlockORPC(M=Ml, k=k, n=nn, rep=10)
+#'plot(resMl)
+#'clu(resMl)
+#'
+#' @author \enc{Aleš, Žiberna}{Ales Ziberna}
+#' 
+#' @export
+
 kmBlockORPC<-function(M, #a square matrix
                          k,#number of clusters/groups
                          rep,#number of repetitions/different starting partitions to check
@@ -251,8 +359,7 @@ kmBlockORPC<-function(M, #a square matrix
                          return.all=FALSE,#if 'FALSE', solution for only the best (one or more) partition/s is/are returned
                          return.err=TRUE,#if 'FALSE', only the resoults of crit.fun are returned (a list of all (best) soulutions including errors), else the resoult is list
                          seed=NULL,#the seed for random generation of partitions
-                         RandomSeed=NULL, # the state of .Random.seed (e.g. as saved previously). Should not be "typed" by the user
-                         parGenFun = genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
+                         parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
                          mingr=NULL, #minimal alowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
                          maxgr=NULL, #maximal alowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
                          addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for dthe default function "genRandomPar"
@@ -304,9 +411,7 @@ kmBlockORPC<-function(M, #a square matrix
      n<-dim(M)[1:2]
    } else warning("Number of nodes by modes can not be determined. Parameter 'n' must be supplied!!!")
    
-   if(!is.null(RandomSeed)){
-     .Random.seed <-  RandomSeed
-   } else if(!is.null(seed))set.seed(seed)
+	if(!is.null(seed))set.seed(seed)
    
    
    on.exit({
@@ -319,9 +424,9 @@ kmBlockORPC<-function(M, #a square matrix
            ifelse(is.null(best.clu),
                   TRUE,
                   if(nmode==1){
-                    !any(sapply(best.clu,rand2,clu2=res1[[i]]$clu)==1)
+                    !any(sapply(best.clu,blockmodeling::rand2,clu2=res1[[i]]$clu)==1)
                   } else {
-                    !any(sapply(best.clu,function(x,clu2)rand2(unlist(x),clu2),clu2=unlist(res1[[i]]$clu))==1)
+                    !any(sapply(best.clu,function(x,clu2)blockmodeling::rand2(unlist(x),clu2),clu2=unlist(res1[[i]]$clu))==1)
                    }
            )
          ){
@@ -330,7 +435,7 @@ kmBlockORPC<-function(M, #a square matrix
          }
          
          if(length(best)>=max.iden) {
-           warning("Only the first ",max.iden," solutions out of ",length(na.omit(err))," solutions with minimal sum of square deviations will be saved.\n")
+           warning("Only the first ",max.iden," solutions out of ",length(stats::na.omit(err))," solutions with minimal sum of square deviations will be saved.\n")
            break
          }
          
@@ -339,12 +444,12 @@ kmBlockORPC<-function(M, #a square matrix
      
      names(best)<-paste("best",1:length(best),sep="")
      
-     if(any(na.omit(err)==-Inf) || ss(na.omit(err))!=0 || length(na.omit(err))==1){
+     if(any(stats::na.omit(err)==-Inf) || blockmodeling::ss(stats::na.omit(err))!=0 || length(stats::na.omit(err))==1){
        cat("\n\nOptimization of all partitions completed\n")
        cat(length(best),"solution(s) with minimal sum of square deviations =", min(err,na.rm=TRUE), "found.","\n")
      }else {
        cat("\n\nOptimization of all partitions completed\n")
-       cat("All",length(na.omit(err)),"solutions have sum of square deviations",err[1],"\n")
+       cat("All",length(stats::na.omit(err)),"solutions have sum of square deviations",err[1],"\n")
      }
      
      call<-list(call=match.call())
@@ -363,7 +468,7 @@ kmBlockORPC<-function(M, #a square matrix
    
    
    
-   if(nCores==1||!require(parallel)){
+   if(nCores==1||!requireNamespace("parallel")){
      if(nCores!=1) {
        oldWarn<-options("warn")
        options(warn=1)
@@ -381,8 +486,8 @@ kmBlockORPC<-function(M, #a square matrix
            ifelse(is.null(skip.par),
                   FALSE,
                   if(nmode==1) {
-                    any(sapply(skip.par,rand2,clu2=temppar)==1)
-                  } else any(sapply(skip.par,function(x,clu2)rand2(unlist(x),clu2),clu2=unlist(temppar))==1)
+                    any(sapply(skip.par,blockmodeling::rand2,clu2=temppar)==1)
+                  } else any(sapply(skip.par,function(x,clu2)blockmodeling::rand2(unlist(x),clu2),clu2=unlist(temppar))==1)
            )
          ununiqueParTested=ununiqueParTested+1
          endFun<-ununiqueParTested>=maxTriesToFindNewPar
@@ -395,7 +500,7 @@ kmBlockORPC<-function(M, #a square matrix
        
        skip.par<-c(skip.par,list(temppar))
        
-       if(printRep==1) cat("Starting partition:",blockmodeling:::unlistPar(temppar),"\n")
+       if(printRep==1) cat("Starting partition:",unlistPar(temppar),"\n")
        res[[i]]<-kmBlockC(M=M, clu=temppar,  ...)
        if(deleteMs){
          res[[i]]$M<-NULL
@@ -405,7 +510,7 @@ kmBlockORPC<-function(M, #a square matrix
        err[i]<-res[[i]]$err
        if(printRep==1){
          cat("Final sum of square deviations:",err[i],"\n")
-         cat("Final partition:   ",blockmodeling:::unlistPar(res[[i]]$clu),"\n")
+         cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
        }
      }
    } else {
@@ -415,7 +520,7 @@ kmBlockORPC<-function(M, #a square matrix
        #skip.par<-c(skip.par,list(temppar))
        
        tres <- try(kmBlockC(M=M, clu=temppar,  ...))
-       if(class(tres)=="try-error"){
+       if(inherits(x = tres,what = "try-error")){
          tres<-list("try-error"=tres, err=Inf, startPart=temppar)
        }
        if(deleteMs){
@@ -425,40 +530,40 @@ kmBlockORPC<-function(M, #a square matrix
        return(list(tres))
      }
      
-     if(!useParLapply) if(!require(doParallel)|!require(doRNG)) useParLapply<-TRUE
+     if(!useParLapply) if(!requireNamespace("doParallel")|!requireNamespace("doRNG")) useParLapply<-TRUE
      
      if(nCores==0){
-       nCores<-detectCores()-1                    
+       nCores<-parallel::detectCores()-1                    
      }
      
  	pkgName<-utils::packageName()
  	if(is.null(pkgName)) pkgName<-utils::packageName(environment(fun.by.blocks))
      if(useParLapply) {
-       if(is.null(cl)) cl<-makeCluster(nCores)
-       clusterSetRNGStream(cl)
+       if(is.null(cl)) cl<-parallel::makeCluster(nCores)
+       parallel::clusterSetRNGStream(cl)
        nC<-nCores
-       #clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
-       #clusterExport(cl, varlist = "kmBlock")
-       clusterExport(cl, varlist = "pkgName", envir=environment()) 	   
-       clusterEvalQ(cl, expr={require(pkgName,character.only = TRUE)})
-       res<-parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
-       if(stopcl) stopCluster(cl)
+       #parallel::clusterExport(cl, varlist = c("kmBlock","kmBlockORP"))
+       #parallel::clusterExport(cl, varlist = "kmBlock")
+       parallel::clusterExport(cl, varlist = "pkgName", envir=environment()) 	   
+       parallel::clusterEvalQ(cl, expr={requireNamespace(pkgName,character.only = TRUE)})
+       res<-parallel::parLapplyLB(cl = cl,1:rep, fun = oneRep, M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+       if(stopcl) parallel::stopCluster(cl)
        res<-lapply(res,function(x)x[[1]])
      } else {
-       library(doParallel)
-       library(doRNG)
+       requireNamespace("doParallel")
+       requireNamespace("doRNG")
        if(!getDoParRegistered()|(getDoParWorkers()!=nCores)){
  		if(!is.null(cl)) {
- 			#cl<-makeCluster(nCores)
+ 			#cl<-parallel::makeCluster(nCores)
  			registerDoParallel(cl)
  		} else registerDoParallel(nCores)
        }
        nC<-getDoParWorkers()
  
-       res<-foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
+       res<-foreach::foreach(i=1:rep,.combine=c, .packages=pkgName) %dorng% oneRep(i=i,M=M,n=n,k=k,mingr=mingr,maxgr=maxgr,addParam=addParam,rep=rep,...)
  	  if(!is.null(cl) & stopcl) {
  		registerDoSEQ()
- 		stopCluster(cl)
+ 		parallel::stopCluster(cl)
  	  }
      }
      err<-sapply(res,function(x)x$err)    

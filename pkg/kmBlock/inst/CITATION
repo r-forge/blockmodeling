@@ -7,7 +7,7 @@ aut<-eval(parse(text=meta$"Authors@R"))
 autText<-format(aut, include = c("family", "given"),
    braces = list(family = c("", ",")))
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
 	title = "k-means-based algorithm for blockmodeling linked networks",
 	volume = "29",
 	shorttitle = "k-means-based algorithm for blockmodeling linked networks",
@@ -20,7 +20,7 @@ citEntry(entry = "Article",
 	textVersion= "Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126."
 )
 
-citEntry(entry="Manual",
+bibentry(bibtype="Manual",
 	title = meta$Title,
 	author= aut,
 	year =year,

@@ -27,6 +27,8 @@ critFunKmeans(
   \item same - diagonal values are treated the same as all other values
 }}
 
+\item{limitType}{What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"}
+
 \item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 \itemize{
   \item number of clusters (of all types)
