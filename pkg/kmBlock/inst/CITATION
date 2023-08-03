@@ -1,0 +1,31 @@
+citHeader("To cite package '",meta$Package,"' in publications please use package citation and the following article:", sep="")
+     
+# Grab the version and date from the DESCRIPTION file
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+aut<-eval(parse(text=meta$"Authors@R"))
+autText<-format(aut, include = c("family", "given"),
+   braces = list(family = c("", ",")))
+
+citEntry(entry = "Article",
+	title = "k-means-based algorithm for blockmodeling linked networks",
+	volume = "29",
+	shorttitle = "k-means-based algorithm for blockmodeling linked networks",
+#	doi = "10.1016/j.socnet.2019.10.006",
+	journal = "Social Networks",
+	author = as.person("Aleš Žiberna"),
+	year = "2020",
+	number = "2",
+	pages = "153--169",
+	textVersion= "Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126."
+)
+
+citEntry(entry="Manual",
+	title = meta$Title,
+	author= aut,
+	year =year,
+	note =vers,
+	textVersion= paste(autText," (", year, 
+	").  ",meta$Title,", ",
+	vers, ".", sep="")
+)
