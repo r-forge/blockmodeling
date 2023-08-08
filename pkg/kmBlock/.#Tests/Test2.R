@@ -1,5 +1,5 @@
 library(kmBlock)
-library(blockmodelingTest)
+library(blockmodeling)
 
 M<-outer(rep(1:5, each=2),rep(1:5, each=2))
 diag(M)<-100
@@ -8,12 +8,12 @@ clu<-rep(0:4, each=2)
 n<-10
 nClu<-5
 
-meanByBlocks(M, clu,nClu, diag="same",n )
-meanByBlocks(M, clu,nClu, diag="ignore",n )
-meanByBlocks(M, clu,nClu, diag="seperate",n )
+kmBlock:::meanByBlocks(M, clu,nClu, diag="same",n )
+kmBlock:::meanByBlocks(M, clu,nClu, diag="ignore",n )
+kmBlock:::meanByBlocks(M, clu,nClu, diag="seperate",n )
 
-fun.by.blocks(M[,,1],clu=clu)==meanByBlocks(M, clu,nClu, diag="ignore",n )$meansByBlocs[,,1]
-fun.by.blocks(M[,,1],clu=clu,ignore.diag = FALSE)==meanByBlocks(M, clu,nClu, diag="same",n )$meansByBlocs[,,1]
+fun.by.blocks(M[,,1],clu=clu)==kmBlock:::meanByBlocks(M, clu,nClu, diag="ignore",n )$meansByBlocs[,,1]
+fun.by.blocks(M[,,1],clu=clu,ignore.diag = FALSE)==kmBlock:::meanByBlocks(M, clu,nClu, diag="same",n )$meansByBlocs[,,1]
 
 #set inf borders
 bordersLower<-array(-Inf, dim=dim(M))
@@ -26,8 +26,8 @@ bordersSeperateUpper = matrix( Inf, sum(nClu), dim(M)[3] )
 W<-M
 W[,,]<-1.0
 M[5:10,5:10,]<-0
-critFunction( M, clu, W, sum(nClu),n )
-kmBlock::kmBlock(M,clu,W,sum(n),sum(nClu))
+kmBlock:::critFunction( M, clu, W, sum(nClu),n )
+kmBlock:::kmBlock(M,clu,W,sum(n),sum(nClu))
 
 bordersLower<-array(-Inf, dim=c(sum(nClu),sum(nClu),dim(M)[3]))
 bordersUpper<-array(Inf, dim=c(sum(nClu),sum(nClu),dim(M)[3]))
@@ -45,18 +45,18 @@ system.time(res<-kmBlock::kmBlockORPC(M[,,1],k=5,rep=100,  diagonal =  "seperate
 
 system.time(res<-blockmodelingTest::kmBlockORP(M[,,1],k=5,rep=100))
 
-system.time(res<-blockmodelingTest::optRandomParC(M[,,1],k=5,rep=100,approach="hom", blocks="com"))
+system.time(res<-blockmodeling::optRandomParC(M[,,1],k=5,rep=100,approach="hom", blocks="com"))
 
 
 clu2<-c(0:4, 0:4)
-critFunction( M, clu2, W, sum(nClu),n )
-kmBlock::kmBlock(M,clu2,W,sum(n),sum(nClu))
+kmBlock:::critFunction( M, clu2, W, sum(nClu),n )
+kmBlock:::kmBlock(M,clu2,W,sum(n),sum(nClu))
 
 
 
 clu3<-sample(c(0:4, 0:4))
-critFunction( M, clu3, W, sum(nClu),n, "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
-kmBlock::kmBlock(M,clu3,W,sum(n),sum(nClu), "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+kmBlock:::critFunction( M, clu3, W, sum(nClu),n, "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
+kmBlock:::kmBlock(M,clu3,W,sum(n),sum(nClu), "seperate", "inside", bordersLower, bordersUpper, bordersSeperateLower, bordersSeperateUpper )
 
 
 lim2<-lim

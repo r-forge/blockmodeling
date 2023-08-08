@@ -2,6 +2,10 @@ Package: kmBlock
 Title: k-means like blockmodeling of one-mode and linked networks
 
 2023
+Version: 0.1.0
+Date: 2023-08-08
+Version increase indicating beta stage after testing. Ready for CRAN.
+
 Version: 0.0.2.9100
 Date: 2023-08-03
 Fixes based on R-check on r-forge.
