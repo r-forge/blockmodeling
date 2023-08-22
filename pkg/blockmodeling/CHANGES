@@ -1,6 +1,19 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+
+2023
+Version: 1.1.4.9001
+Date: 2023-08-22
+Added "#' @aliases blockmodeling-package" to blockmodeling-package.R due to change in roxygen2. A CRAN maintainer request.
+
+
+Version: 1.1.4.9000
+Date: 2023-05-09
+Fixed minor bug in plotMat
+Commented out StochBlockTest from tests.R file.
+
+
 2022
 Version: 1.1.4
 Date: 2022-11-17

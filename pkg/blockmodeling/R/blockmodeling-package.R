@@ -93,5 +93,6 @@
 #' @keywords cluster graphs package
 #' @docType package
 #' @name blockmodeling
+#' @aliases blockmodeling-package
 #' @useDynLib blockmodeling, .registration = TRUE
 NULL

@@ -4,6 +4,7 @@
 \encoding{UTF-8}
 \name{blockmodeling}
 \alias{blockmodeling}
+\alias{blockmodeling-package}
 \title{An R package for Generalized and classical blockmodeling of valued networks}
 \description{
 This package is primarily meant as an implementation of Generalized blockmodeling. In addition, functions for computation of (dis)similarities in terms of structural and regular equivalence, plotting and other "utility" functions are provided.
