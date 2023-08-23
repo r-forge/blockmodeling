@@ -1,7 +1,6 @@
 \name{kmBlock-package}
 \alias{kmBlock-package}
 \alias{kmBlock}
-\alias{kmBlock}
 \docType{package}
 \title{
 \packageTitle{kmBlock}

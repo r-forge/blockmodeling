@@ -39,7 +39,7 @@ critFunKmeans(
 If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.}
 }
 \value{
-A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+A list similar to optParC in package \code{blockmodeling}.
 }
 \description{
 Function that computes criterion function used in  k-means like one-mode blockmodeling. If \code{clu} is a list, the method for linked/multilevel networks is applied

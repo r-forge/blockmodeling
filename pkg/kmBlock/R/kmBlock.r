@@ -26,7 +26,7 @@ unlistPar<- function(part){
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
 #' @param limitType What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"
-#' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' @return A list similar to optParC in package \code{blockmodeling}.
 #' @import Rcpp 
 #' @importFrom Rcpp evalCpp
 #' @useDynLib kmBlock, .registration = TRUE
@@ -154,7 +154,7 @@ kmBlockC<-function(M,
 #' }
 #' If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.
 #' @param limitType What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"
-#' @return A list similar to optParC in package \code{blockmodeling} or \code{blockmodelingTest}.
+#' @return A list similar to optParC in package \code{blockmodeling}.
 #' @export
 
 critFunKmeans<-function(M, 
@@ -253,7 +253,7 @@ critFunKmeans<-function(M,
 
 
 
-#' A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Similar to \code{optRandomParC}, but calling \code{kmBlockC} for optimizing individual partitions.
+#' A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Calls \code{kmBlockC} for optimizing individual random partitions.
 #'
 #' @import parallel
 #' @import foreach
@@ -297,7 +297,7 @@ critFunKmeans<-function(M,
 #'   \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
 #'   
 #' @section Warning:
-#' It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
+#' It should be noted that the time needed to optimize the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
 #' due to the underlying algorithm. Hence, partitioning networks with several hundred units and large number of blocks (e.g., >5) can take a long time (from 20 minutes to a few hours or even days).
 #' 
 #' @references Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126.
@@ -572,7 +572,7 @@ kmBlockORPC<-function(M, #a square matrix
  
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage('To cite \"', pkgname, 'in publications please use package citation and the following article:\n\n\n\n',
+  packageStartupMessage('To cite \"', pkgname, '\" in publications please use package citation and the following article:\n\n\n\n',
                         '\u017Diberna, Ale\u0161 (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126.\n\n\n\n',
                         'To see these entries in BibTeX format, use "print(<citation>, bibtex=TRUE)", "toBibtex(.)", or set "options(citation.bibtex.max=999)".')
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/kmBlock.r
 \name{kmBlockORPC}
 \alias{kmBlockORPC}
-\title{A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Similar to \code{optRandomParC}, but calling \code{kmBlockC} for optimizing individual partitions.}
+\title{A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Calls \code{kmBlockC} for optimizing individual random partitions.}
 \usage{
 kmBlockORPC(
   M,
@@ -88,11 +88,11 @@ A list of class "opt.more.par" containing:
   \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
 }
 \description{
-A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Similar to \code{optRandomParC}, but calling \code{kmBlockC} for optimizing individual partitions.
+A function for optimizing multiple random partitions using k-means one-mode and linked blockmodeling. Calls \code{kmBlockC} for optimizing individual random partitions.
 }
 \section{Warning}{
 
-It should be noted that the time needed to optimise the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
+It should be noted that the time needed to optimize the partition depends on the number of units (aka nodes) in the networks as well as the number of clusters
 due to the underlying algorithm. Hence, partitioning networks with several hundred units and large number of blocks (e.g., >5) can take a long time (from 20 minutes to a few hours or even days).
 }
 
