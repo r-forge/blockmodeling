@@ -6,7 +6,7 @@ Date: 2023-08-23
 Authors@R: person("Aleš", "Žiberna", email = "ales.ziberna@fdv.uni-lj.si", 
                   role = c("aut", "cre"))
 Maintainer: Aleš Žiberna <ales.ziberna@fdv.uni-lj.si>
-Description: k-means like blockmodeling of one-mode and linked networks.
+Description: k-means like blockmodeling of one-mode and linked networks as presented in Žiberna (2020) <doi:10.1016/j.socnet.2019.10.006>. The development of this package is financially supported by the Slovenian Research Agency (<https://www.arrs.si/>) within the research programs P5-0168 and the research projects J7-8279 (Blockmodeling multilevel and temporal networks) and J5-2557 (Comparison and evaluation of different approaches to blockmodeling dynamic networks by simulations with application to Slovenian co-authorship networks).
 License: GPL (>=2)
 Encoding: UTF-8
 Imports: 

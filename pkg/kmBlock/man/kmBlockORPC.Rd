@@ -140,7 +140,10 @@ clu(resMl)
 
 }
 \references{
-Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126.
+Žiberna, Aleš (2020). k-means-based algorithm for blockmodeling linked networks. Social Networks 32(1), 105-126, \doi{10.1016/j.socnet.2019.10.006}.
+}
+\seealso{
+\code{\link{kmBlockC}}
 }
 \author{
 \enc{Aleš, Žiberna}{Ales Ziberna}

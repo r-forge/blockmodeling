@@ -16,18 +16,18 @@ critFunKmeans(
 \arguments{
 \item{M}{A matrix representing the (usually valued) network. For multi-relational networks, this should be an array with the third dimension representing the relation.}
 
-\item{clu}{A partition. Each unique value represents one cluster. If the nework is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
+\item{clu}{A partition. Each unique value represents one cluster. If the network is one-mode, than this should be a vector, else a list of vectors, one for each mode. Similarly, if units are comprised of several sets, clu should be the list containing one vector for each set.}
 
 \item{weights}{The weights for each cell in the matrix/array. A matrix or an array with the same dimensions as \code{M}.}
 
 \item{diagonal}{How should the diagonal values be treated. Possible values are:
 \itemize{
   \item ignore - diagonal values are ignored 
-  \item seperate - diagonal values are treated seperately
+  \item seperate - diagonal values are treated separately
   \item same - diagonal values are treated the same as all other values
 }}
 
-\item{limitType}{What do the limits represent, on which "side" od this limits should the values lie. Possible values: "none","inside","outside"}
+\item{limitType}{What do the limits represent, on which "side" of this limits should the values lie. Possible values: "none","inside","outside"}
 
 \item{limits}{If \code{diagonal} is \code{"ignore"} or \code{"same"}, an array with dimensions equal to:
 \itemize{
@@ -36,7 +36,7 @@ critFunKmeans(
   \item number of relations
   \item 2 - the first is lower limit and the second is upper limit
 }
-If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be simmilar with only 3 dimensions, as one of the first two must be ommited.}
+If \code{diagonal} is \code{"seperate"}, a list of two array. The first should be as described above, representing limits for off diagonal values. The second should be similar with only 3 dimensions, as one of the first two must be omitted.}
 }
 \value{
 A list similar to optParC in package \code{blockmodeling}.
