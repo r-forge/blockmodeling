@@ -2,7 +2,7 @@
 % Please edit documentation in R/stochBlock.r
 \name{stochBlockORP}
 \alias{stochBlockORP}
-\title{A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.}
+\title{A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Calls stochBlock for optimizing individual partitions.}
 \usage{
 stochBlockORP(
   M,
@@ -88,7 +88,7 @@ A list of class "opt.more.par" containing:
   \item{cl}{Cluster used for parallel computations if supplied as an input parameter.}
 }
 \description{
-A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Similar to optRandomParC, but calling stochBlock for optimizing individual partitions.
+A function for optimizing multiple random partitions using stochastic one-mode and linked blockmodeling. Calls stochBlock for optimizing individual partitions.
 }
 \section{Warning}{
 
@@ -142,7 +142,10 @@ clu(resMl)
 
 }
 \references{
-Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252.
+Škulj, D., & Žiberna, A. (2022). Stochastic blockmodeling of linked networks. Social Networks, 70, 240-252, \doi{10.1371/journal.pcbi.1005697}.
+}
+\seealso{
+\code{\link{stochBlock}}
 }
 \author{
 \enc{Aleš, Žiberna}{Ales Ziberna}
