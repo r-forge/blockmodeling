@@ -7,11 +7,11 @@ aut<-eval(parse(text=meta$"Authors@R"))
 autText<-format(aut, include = c("family", "given"),
    braces = list(family = c("", ",")))
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
 	title = "Generalized blockmodeling of valued networks",
 	volume = "29",
 	shorttitle = "Generalized blockmodeling of valued networks",
-#	doi = "10.1016/j.socnet.2006.04.002",
+	doi = "10.1016/j.socnet.2006.04.002",
 	journal = "Social Networks",
 	author = as.person("Aleš Žiberna"),
 	year = "2007",
@@ -20,7 +20,7 @@ citEntry(entry = "Article",
 	textVersion= "Žiberna, Aleš (2007). Generalized blockmodeling of valued networks. Social Networks 29(1), 105-126."
 )
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
 	title = "Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence",
 	volume = "32",
 	shorttitle = "Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence",
@@ -33,7 +33,7 @@ citEntry(entry = "Article",
 	textVersion = "Žiberna, Aleš (2008). Direct and indirect approaches to blockmodeling of valued networks in terms of regular equivalence. Journal of Mathematical Sociology 32(1), 57–84."
 )
 
-citEntry(entry = "Article",
+bibentry(bibtype = "Article",
 	title = "Blockmodeling of Multilevel Networks",
 	volume = "39",
 	shorttitle = "Blockmodeling of Multilevel Networks",
@@ -46,7 +46,7 @@ citEntry(entry = "Article",
 )
 
 
-citEntry(entry="Manual",
+bibentry(bibtype="Manual",
 	title = meta$Title,
 	author= aut,
 	year =year,
