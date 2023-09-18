@@ -6,7 +6,7 @@
 \alias{kmBlock-package}
 \title{kmBlock: k-Means Like Blockmodeling of One-Mode and Linked Networks}
 \description{
-k-means like blockmodeling of one-mode and linked networks as presented in Žiberna (2020) \doi{10.1016/j.socnet.2019.10.006}. The development of this package is financially supported by the Slovenian Research Agency (\url{https://www.arrs.si/}) within the research programs P5-0168 and the research projects J7-8279 (Blockmodeling multilevel and temporal networks) and J5-2557 (Comparison and evaluation of different approaches to blockmodeling dynamic networks by simulations with application to Slovenian co-authorship networks).
+Implements k-means like blockmodeling of one-mode and linked networks as presented in Žiberna (2020) \doi{10.1016/j.socnet.2019.10.006}. The development of this package is financially supported by the Slovenian Research Agency (\url{https://www.arrs.si/}) within the research programs P5-0168 and the research projects J7-8279 (Blockmodeling multilevel and temporal networks) and J5-2557 (Comparison and evaluation of different approaches to blockmodeling dynamic networks by simulations with application to Slovenian co-authorship networks).
 }
 \examples{
 # Simple one-mode network

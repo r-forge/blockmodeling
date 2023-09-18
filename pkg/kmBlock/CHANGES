@@ -2,6 +2,10 @@ Package: kmBlock
 Title: k-means like blockmodeling of one-mode and linked networks
 
 2023
+Version: 0.1.2
+Date: 2023-09-18
+Replaced "cat" calls with "message" calls (CRAN request).
+
 Version: 0.1.1
 Date: 2023-08-23
 Some small documentation changes.

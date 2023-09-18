@@ -447,11 +447,11 @@ kmBlockORPC<-function(M, #a square matrix
      names(best)<-paste("best",1:length(best),sep="")
      
      if(any(stats::na.omit(err)==-Inf) || blockmodeling::ss(stats::na.omit(err))!=0 || length(stats::na.omit(err))==1){
-       cat("\n\nOptimization of all partitions completed\n")
-       cat(length(best),"solution(s) with minimal sum of square deviations =", min(err,na.rm=TRUE), "found.","\n")
+       message("\n\nOptimization of all partitions completed\n",
+               length(best)," solution(s) with minimal sum of square deviations = ", min(err,na.rm=TRUE), " found.","\n")
      }else {
-       cat("\n\nOptimization of all partitions completed\n")
-       cat("All",length(stats::na.omit(err)),"solutions have sum of square deviations",err[1],"\n")
+       message("\n\nOptimization of all partitions completed\n", 
+               "All ",length(stats::na.omit(err))," solutions have sum of square deviations ",err[1],"\n")
      }
      
      call<-list(call=match.call())
@@ -472,13 +472,10 @@ kmBlockORPC<-function(M, #a square matrix
    
    if(nCores==1||!requireNamespace("parallel")){
      if(nCores!=1) {
-       oldWarn<-options("warn")
-       options(warn=1)
-       warning("Only single core is used as package 'parallel' is not available")
-       options(warn=oldWarn)
+       warning("Only single core is used as package 'parallel' is not available", immediate. = TRUE)
      }
      for(i in 1:rep){
-       if(printRep & (i%%printRep==0)) cat("\n\nStarting optimization of the partiton",i,"of",rep,"partitions.\n")
+       if(printRep & (i%%printRep==0)) message("\n\nStarting optimization of the partiton ",i," of ",rep," partitions.\n")
        find.unique.par<-TRUE
        ununiqueParTested=0
        while(find.unique.par){
@@ -495,14 +492,14 @@ kmBlockORPC<-function(M, #a square matrix
          endFun<-ununiqueParTested>=maxTriesToFindNewPar
          if(endFun) {
            break
-         } else if(ununiqueParTested%%10==0) cat(ununiqueParTested,"partitions tested for unique partition\n")
+         } else if(ununiqueParTested%%10==0) message(ununiqueParTested," partitions tested for unique partition\n")
        }
        
        if(endFun) break
        
        skip.par<-c(skip.par,list(temppar))
        
-       if(printRep==1) cat("Starting partition:",unlistPar(temppar),"\n")
+       if(printRep==1) message("Starting partition: ",unlistPar(temppar),"\n")
        res[[i]]<-kmBlockC(M=M, clu=temppar,  ...)
        if(deleteMs){
          res[[i]]$M<-NULL
@@ -511,8 +508,8 @@ kmBlockORPC<-function(M, #a square matrix
  
        err[i]<-res[[i]]$err
        if(printRep==1){
-         cat("Final sum of square deviations:",err[i],"\n")
-         cat("Final partition:   ",unlistPar(res[[i]]$clu),"\n")
+         message("Final sum of square deviations: ",err[i],"\n")
+         message("Final partition: ",unlistPar(res[[i]]$clu),"\n")
        }
      }
    } else {
