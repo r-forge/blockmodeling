@@ -1929,7 +1929,7 @@ int *pblocks - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifyin
 ### Not implemetned ### double *pblocks - pointer to error multipliers by blocks
 int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
 double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
-double *pEarr - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+double *pEarr - pointer to the 4d array (pmaxBlockTypes, Rel, row, col) specifying the errors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
 double *perr - pointer to the error returned by this function
 int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
 int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
@@ -2346,16 +2346,56 @@ void parVec2Arr(const int *pn, int *pnClus, int *pnUnitsClu, int *pParArr, const
 }
 
 
-/* for now this function moves to improved partition as soon as it findes one */
+
+
+void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const int *pnRowClus, const int *pmaxBlockTypes,  const int *psourcenUnitsRowClu, const int *psourcerowParArr, const int *psourceIM, const double *psourceEM, const double *psourceEarr, const double *psourceerr, int *pdestnUnitsRowClu, int *pdestrowParArr, int *pdestIM, double *pdestEM, double *pdestEarr, double *pdesterr){
+	/*update dest results */
+
+	*pdesterr = *psourceerr;
+
+	for(int i=0;i<*pnRowClus;i++){
+		pdestnUnitsRowClu[i] = psourcenUnitsRowClu[i];
+	}
+	for(int i=0;i<((*pnRowClus)*(*pnc));i++){
+		pdestrowParArr[i] = psourcerowParArr[i];
+	}
+
+	/* image matrix */
+	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+		pdestIM[i] = psourceIM[i];
+	}
+
+	/* number of block types by block - not needed
+	int *pdestnBlockTypeByBlock;
+	pdestnBlockTypeByBlock = (int *) malloc((*pnRel)*(*pnRowClus)*(*pnColClus)*sizeof(int));
+	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+		pdestnBlockTypeByBlock[i] = pnBlockTypeByBlock[i];
+	} */
+
+
+	/* error matrix */
+	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+		pdestEM[i] = psourceEM[i];
+	}
+
+	/* error array by block types*/
+	for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+		pdestEarr[i] = psourceEarr[i];
+	}
+}
+
+/* for now this function moves to improved partition as soon as it finds one */
 /* however, the "move" is selected randomly, while it is true that "moves" are tried before "exchanges" */
-void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmulReg, const int *pnrInSetByClusters){
+void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym, const int *pdiag, const int *pjustMove, const int *pnImp, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmulReg, const int *pnrInSetByClusters){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
 	int *pnc - pointer to the number of columns
 	int *pisTwoMode - pointer to 0 (false) or 1 (true) specifying it the network is two-mode
-	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symetric) (0 - as any other value, 1 - seperately, 2 - ignore)
-	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elements
+	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symmetric) 0 (false) or 1 (true) 
+	int *pdiag - pointer to array of length (nRel - number of relation) specifying how to treat the diagonal elements (0 - as any other value, 1 - separately, 2 - ignore)
+	int *pjustMove - pointer weather to try just moves (1) or moves and exchanges (0)
+	int *pnImp - pointer to the number of improvements that must be found before before we move to a better partition.
 	int *pnRel - pointer to the number of relations
 	int *pnColClus - pointer to the number of column clusters
 	int *pnRowClus - pointer to the number of column clusters
@@ -2369,7 +2409,7 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifying allowed block types
 	int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
 	double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
-	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
 	double *perr - pointer to the total error
 	int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
 	int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
@@ -2518,48 +2558,49 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 
 
 
-		/* prepare temoprary objects - end*/
+		/* prepare temporary objects - end*/
 
 
-
+		*psameErr = 1;
 		int improve=1;
 /*Rprintf("OK1\n");*/
 
-		/* loop until no impovement is found */
+		/* loop until no improvement is found */
 		*pnIter=0;
 		while(improve){
 			*pnIter = *pnIter + 1;
 			/* copy temp results to permanent  - start*/
 			/* partition*/
 			for(int i=0;i<*pnRowClus;i++){
-				pnUnitsRowClu[i] = ptempnUnitsRowClu[i];
+				pnUnitsRowClu[i] = pbestnUnitsRowClu[i];
 			}
 			for(int i=0;i<((*pnRowClus)*(*pnc));i++){
-				prowParArr[i] = ptemprowParArr[i];
+				prowParArr[i] = pbestrowParArr[i];
 			}
 
 			/* image matrix */
 			for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-				pIM[i] = ptempIM[i];
+				pIM[i] = pbestIM[i];
 			}
 
 			/* error matrix */
 			for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-				pEM[i] = ptempEM[i];
+				pEM[i] = pbestEM[i];
 			}
 
 			/* error array by block types*/
 			for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-				pEarr[i] = ptempEarr[i];
+				pEarr[i] = pbestEarr[i];
 			}
 
-			*perr = *ptemperr;
+			*perr = *pbesterr;
 
 			/* copy temp results to permanent  - end*/
 
 			improve=0;
-			*psameErr = 1;
 
+			/*update temp results */
+			updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr);
 
 
 			/* to make the order of evaluation random - start */
@@ -2678,43 +2719,48 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 							if (*ptemperr< (*perr)) {
 /*Rprintf("OK4a\n");*/
 /*Rprintf("################################################################\n");								*/
-								improve=1;
-								break;
-							} else {
-								if (*ptemperr == (*perr)) {*psameErr += 1;}
+								improve++;
+								
+								if (*ptemperr< (*pbesterr)) {
+									updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
+									*psameErr = 1;
+								}
+								if (improve >= (*pnImp)) break;
+							} 
+							
+							if (*ptemperr == (*pbesterr)) {*psameErr += 1;}
 /*Rprintf("OK4b\n");*/
 
-								/* undo if the improvement was not found */
-								ptempnUnitsRowClu[iClu2]--;	/* this line must be before the line below */
-								ptemprowParArr[iClu2*(*pnr)+ptempnUnitsRowClu[iClu2]] = prowParArr[iClu2*(*pnr)+ptempnUnitsRowClu[iClu2]];
-								ptemprowParArr[iClu*(*pnr)+iUnit]=prowParArr[iClu*(*pnr)+iUnit];
-								ptempnUnitsRowClu[iClu]++; /* this line must be after the above line */
+							
+							/* undo change found */
+							ptempnUnitsRowClu[iClu2]--;	/* this line must be before the line below */
+							ptemprowParArr[iClu2*(*pnr)+ptempnUnitsRowClu[iClu2]] = prowParArr[iClu2*(*pnr)+ptempnUnitsRowClu[iClu2]];
+							ptemprowParArr[iClu*(*pnr)+iUnit]=prowParArr[iClu*(*pnr)+iUnit];
+							ptempnUnitsRowClu[iClu]++; /* this line must be after the above line */
 
-								/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
-								if(*pjustChange){
-									/* temp result - copy "regular" to temp - start*/
-									/* image matrix */
-									for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-										ptempIM[i] = pIM[i];
-									}
-
-									/* error matrix */
-									for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-										ptempEM[i] = pEM[i];
-									}
-
-									/* error array by block types*/
-									for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-										ptempEarr[i] = pEarr[i];
-									}
-									/* temp result  - end*/
+							/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
+							if(*pjustChange){
+								/* temp result - copy "regular" to temp - start*/
+								/* image matrix */
+								for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+									ptempIM[i] = pIM[i];
 								}
-							}
-/*Rprintf("OK5\n");*/
-						}
 
-						/*check the exchange of units only if iClu1 < iClu2 to avoid repeating the same move */
-						if(iClu < iClu2){
+								/* error matrix */
+								for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+									ptempEM[i] = pEM[i];
+								}
+
+								/* error array by block types*/
+								for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+									ptempEarr[i] = pEarr[i];
+								}
+								/* temp result  - end*/
+							}
+						}
+/*Rprintf("OK5\n");*/
+						/*check the exchange of units only if iClu1 < iClu2 to avoid repeating the same move*/
+						if((iClu < iClu2)&&(*pjustMove==0)){
 							/* to make the order of evaluation random - start*/
 							int rndUnitsInClu2[pnUnitsRowClu[iClu2]];
 							for(int i=0;i<pnUnitsRowClu[iClu2];i++){
@@ -2756,50 +2802,55 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 /* Rprintf("Error after exchange = %.2f\n", *ptemperr); */
 
 								if (*ptemperr< (*perr)) {
-/*Rprintf("OK4a-2\n");*/
-/*Rprintf("################################################################\n");								*/
-									improve=1;
-									break;
-								} else {
-									if (*ptemperr == (*perr)) {*psameErr += 1;}
+	/*Rprintf("OK4a\n");*/
+	/*Rprintf("################################################################\n");								*/
+									improve++;
+									
+									if (*ptemperr< (*pbesterr)) {
+										updateResults(pnc, pnRel, pnColClus, pnRowClus, pmaxBlockTypes, ptempnUnitsRowClu, ptemprowParArr, ptempIM, ptempEM, ptempEarr, ptemperr, pbestnUnitsRowClu, pbestrowParArr, pbestIM, pbestEM, pbestEarr, pbesterr);
+										*psameErr = 1;
+									}
+									if (improve >= (*pnImp)) break;
+								} 
+								
+								if (*ptemperr == (*pbesterr)) {*psameErr += 1;}
+	/*Rprintf("OK4b\n");*/
 
-									/* undo if the improvement was not found */
-									ptemprowParArr[iClu*(*pnr)+iUnit]=ptemprowParArr[iClu2*(*pnr)+iUnit2];
-									ptemprowParArr[iClu2*(*pnr)+iUnit2]=unit2;
+								/* undo change found */
+								ptemprowParArr[iClu*(*pnr)+iUnit]=ptemprowParArr[iClu2*(*pnr)+iUnit2];
+								ptemprowParArr[iClu2*(*pnr)+iUnit2]=unit2;
 
 
 
-									/* temp values must be set to equal permament to be updated as needed if justChange is used*/
-									if(*pjustChange){
-										/* temp result - copy "regular" to temp - start*/
-										/* image matrix */
-										for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-											ptempIM[i] = pIM[i];
-										}
-
-										/* error matrix */
-										for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-											ptempEM[i] = pEM[i];
-										}
-
-										/* error array by block types*/
-										for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-											ptempEarr[i] = pEarr[i];
-										}
-										/* temp result  - end*/
+								/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
+								if(*pjustChange){
+									/* temp result - copy "regular" to temp - start*/
+									/* image matrix */
+									for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+										ptempIM[i] = pIM[i];
 									}
 
-/*Rprintf("OK4b-2\n");*/
-								}
-							}
-						}
-/*Rprintf("OK6\n");*/
+									/* error matrix */
+									for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+										ptempEM[i] = pEM[i];
+									}
 
-						if(improve) break;
+									/* error array by block types*/
+									for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
+										ptempEarr[i] = pEarr[i];
+									}
+									/* temp result  - end*/
+								}
+								
+							}								
+							/*Rprintf("OK4b-2\n");*/
+						}
+						/*Rprintf("OK6\n");*/
+						if(improve >= (*pnImp)) break;
 					}
-					if(improve) break;
+					if(improve >= (*pnImp)) break;
 				}
-				if(improve) break;
+				if(improve >= (*pnImp)) break;
 			}
 		}
 
@@ -2842,79 +2893,15 @@ void optPar(const double *pM, const int *pnr, const int *pnc,  const int *pnRel,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-void updateResults(const int *pnc, const int *pnRel, const int *pnColClus, const int *pnRowClus, const int *pmaxBlockTypes,  const int *psourcenUnitsRowClu, const int *psourcerowParArr, const int *psourceIM, const double *psourceEM, const double *psourceEarr, const double *psourceerr, int *pdestnUnitsRowClu, int *pdestrowParArr, int *pdestIM, double *pdestEM, double *pdestEarr, double *pdesterr){
-	/*update dest results */
-
-	*pdesterr = *psourceerr;
-
-	for(int i=0;i<*pnRowClus;i++){
-		pdestnUnitsRowClu[i] = psourcenUnitsRowClu[i];
-	}
-	for(int i=0;i<((*pnRowClus)*(*pnc));i++){
-		pdestrowParArr[i] = psourcerowParArr[i];
-	}
-
-	/* image matrix */
-	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-		pdestIM[i] = psourceIM[i];
-	}
-
-	/* number of block types by block - not needed
-	int *pdestnBlockTypeByBlock;
-	pdestnBlockTypeByBlock = (int *) malloc((*pnRel)*(*pnRowClus)*(*pnColClus)*sizeof(int));
-	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-		pdestnBlockTypeByBlock[i] = pnBlockTypeByBlock[i];
-	} */
-
-
-	/* error matrix */
-	for(int i=0;i<((*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-		pdestEM[i] = psourceEM[i];
-	}
-
-	/* error array by block types*/
-	for(int i=0;i<((*pmaxBlockTypes)*(*pnRel)*(*pnRowClus)*(*pnColClus));i++){
-		pdestEarr[i] = psourceEarr[i];
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym,const int *pdiag, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pmulReg, const int *pnrInSetByClusters){
+void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *pnRel, const int *pisTwoMode, const int *pisSym, const int *pdiag, const int *pjustMove, const int *pnColClus, const int *pnRowClus, int *pnUnitsRowClu, int *pnUnitsColClu, int *prowPar, int *pcolPar, int *prowParArr, int *pcolParArr,const int *papproaches, const int *pmaxBlockTypes,const int *pnBlockTypeByBlock, const int *pblocks, int *pIM, double *pEM, double *pEarr, double *perr, const int *pjustChange, int *prowCluChange, int *pcolCluChange, const int *psameIM, const int *pregFun, const int *phomFun, const int *pusePreSpec, const double *ppreSpecM, const int *pminUnitsRowCluster, const int *pminUnitsColCluster, const int *pmaxUnitsRowCluster, const int *pmaxUnitsColCluster, int *psameErr, int *pnIter, const double *pcombWeights, const int *pexchageClusters, const int *pmaxPar, int *pbestColParMatrix, int *pbestRowParMatrix, const int *pmulReg, const int *pnrInSetByClusters){
 	/*
 	double *pM - pointer to array or matrix representiing the (multirelational) network
 	int *pnr - pointer to the number of rows
 	int *pnc - pointer to the number of columns
 	int *pisTwoMode - pointer to 0 (false) or 1 (true) specifying it the network is two-mode
-	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symetric) (0 - as any other value, 1 - seperately, 2 - ignore)
-	int *pdiag - pointer to array of length (nRel - number of relation) 0 (false) or 1 (true) specifying how to treat the diagonal elements
+	int *pisSym - pointer to array of length (nRel - number of relation) specifying if the matrix (for each relation) is symmetric) 0 (false) or 1 (true) 
+	int *pdiag - pointer to array of length (nRel - number of relation) specifying how to treat the diagonal elements (0 - as any other value, 1 - separately, 2 - ignore)
+	int *pjustMove - pointer weather to try just moves (1) or moves and exchanges (0)	
 	int *pnRel - pointer to the number of relations
 	int *pnColClus - pointer to the number of column clusters
 	int *pnRowClus - pointer to the number of column clusters
@@ -2928,7 +2915,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 	int *pblocks - pointer to the 4d array (nBlockTypesByBlock, Rel, row, col) specifying allowed block types
 	int *pIM - pointer to 3d array (Rel, row, col) specifying the image matrix
 	double *pEM - pointer to 3d array (Rel, row, col) specifying the error for each block
-	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errrors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
+	double *pEarr - pointer to the 4d array ((*pmaxBlockTypes), Rel, row, col) specifying the errors for each allowed block type - it is very important that the value is Infinitive for block types that are not allowed
 	double *perr - pointer to the total error
 	int *pjustChange - pointer to a value specifying if only the errors for changed clusters should be computed
 	int *prowCluChange - pointer to an array holding the two row clusters where the change occurred
@@ -2974,7 +2961,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 		critFun(pM, pnr, pnc,  pnRel, pisTwoMode, pisSym,  pdiag, pnColClus, pnRowClus, pnUnitsRowClu, pnUnitsColClu, prowParArr, pcolParArr, papproaches, pmaxBlockTypes, pnBlockTypeByBlock, pblocks, pIM, pEM, pEarr, perr, &zero, prowCluChange, pcolCluChange, psameIM, pregFun, phomFun, pusePreSpec,  ppreSpecM, pcombWeights, pmulReg, pnrInSetByClusters);
 /*Rprintf("Initial error = %.2f\n", *perr);*/
 
-		/* prepare temoprary objects - start*/
+		/* prepare temporary objects - start*/
 
 
 		/* best result  - start*/
@@ -3095,7 +3082,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 
 
 
-		/* prepare temoprary objects - end*/
+		/* prepare temporary objects - end*/
 
 
 
@@ -3103,7 +3090,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 /*Rprintf("OK1\n");*/
 		*psameErr = 1;
 
-		/* loop until no impovement is found */
+		/* loop until no improvement is found */
 		*pnIter=0;
 
 		while(improve){
@@ -3364,7 +3351,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 							ptemprowParArr[iClu*(*pnr)+iUnit]=prowParArr[iClu*(*pnr)+iUnit];
 							ptempnUnitsRowClu[iClu]++; /* this line must be after the above line */
 
-							/* temp values must be set to equal permament to be updated as needed if justChange is used*/
+							/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
 							if(*pjustChange){
 								/* temp result - copy "regular" to temp - start*/
 								/* image matrix */
@@ -3388,7 +3375,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 						}
 
 						/*check the exchange of units only if iClu1 < iClu2 to avoid repeating the same move */
-						if(iClu < iClu2){
+						if((iClu < iClu2)&&(*pjustMove==0)){
 							/* to make the order of evaluation random - start*/
 /*							int rndUnitsInClu2[pnUnitsRowClu[iClu2]];
 							for(int i=0;i<pnUnitsRowClu[iClu2];i++){
@@ -3493,7 +3480,7 @@ void optParMulti(const double *pM, const int *pnr, const int *pnc,  const int *p
 								ptemprowParArr[iClu*(*pnr)+iUnit]=ptemprowParArr[iClu2*(*pnr)+iUnit2];
 								ptemprowParArr[iClu2*(*pnr)+iUnit2]=unit2;
 
-								/* temp values must be set to equal permament to be updated as needed if justChange is used*/
+								/* temp values must be set to equal permanent to be updated as needed if justChange is used*/
 								if(*pjustChange){
 									/* temp result - copy "regular" to temp - start*/
 									/* image matrix */

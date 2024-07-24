@@ -44,6 +44,8 @@ optParC(
   isSym = NULL,
   diag = 1,
   useMulti = FALSE,
+  justMove = FALSE,
+  nImp = 1,
   maxPar = 50,
   IM = NULL,
   EM = NULL,
@@ -151,7 +153,11 @@ An array with four dimensions (see example below). The third and the fourth repr
 
 \item{useMulti}{Which version of local search should be used. The default value is set to \code{FALSE}. If \code{FALSE}, first possible all moves in random order and then all possible exchanges in random order are tired. When a move with lower value of criterion function is found, the algorithm moves to this new partition. If \code{TRUE} the version of local search where all possible moves and exchanges are tired first and then the one with the lowest error is selected and used. In this case, several optimal partitions are found. \code{maxPar} best partitions are returned.}
 
-\item{maxPar}{The number of partitions with optimal criterion fuction to be returned. Only used If \code{useMulti} is \code{TRUE}.}
+\item{justMove}{Should just moves (so and not also exchanges) be allowed. The default value is set to \code{FALSE} mainly for backcompatibility reasons. If \code{TRUE}, the search is not so thorough, but is much faster.}
+
+\item{nImp}{Only used if \code{useMulti} is \code{FALSE}. In this case, it determines how many better partitions than the original one have to be found before we move to a better partition. Defaults to 1 for backcompatibility reasons and as this is experimental feature.}
+
+\item{maxPar}{The number of partitions with optimal criterion function to be returned. Only used If \code{useMulti} is \code{TRUE}.}
 
 \item{minUnitsRowCluster}{Minimum number of units in row cluster.}
 
