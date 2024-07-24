@@ -42,8 +42,7 @@ kmBlockC<-function(M,
   diagonal<-match.arg(diagonal)
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
-    weights<-M
-    weights[,]<-1
+    weights <- array(1, dim(M))
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   w<-weights
 
@@ -168,8 +167,7 @@ critFunKmeans<-function(M,
   diagonal<-match.arg(diagonal)
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
-    weights<-M
-    weights[]<-1
+    weights<- array(1, dim = dim(M)), 
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   w<-weights
   
@@ -364,7 +362,7 @@ kmBlockORPC<-function(M, #a square matrix
                          parGenFun = blockmodeling::genRandomPar, #The function that will generate random partitions. It should accept argumetns: k (number of partitions by modes, n (number of units by modes), seed (seed value for random generation of partition), addParam (a list of additional parametres)
                          mingr=NULL, #minimal alowed group size (defaults to c(minUnitsRowCluster,minUnitsColCluster) if set, else to 1) - only used for parGenFun function 
                          maxgr=NULL, #maximal alowed group size (default to c(maxUnitsRowCluster,maxUnitsColCluster) if set, else to Inf) - only used for parGenFun function 
-                         addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for dthe default function "genRandomPar"
+                         addParam=list(  #list of additional parameters for gerenrating partitions. Here they are specified for the default function "genRandomPar"
                            genPajekPar = TRUE,     #Should the partitions be generated as in Pajek (the other options is completly random)
                            probGenMech = NULL),    #Here the probabilities for different mechanizems for specifying the partitions are set. If not set this is determined based on the previous parameter.
                          maxTriesToFindNewPar=rep*10,    #The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before 
