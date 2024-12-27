@@ -40,7 +40,7 @@ unlistClu<-function(clu, renumber=FALSE){
   if(renumber){
     clu<-lapply(clu, function(x)as.integer(factor(x)))
 	for(i in 2:length(clu)){
-      clu[[i]]<-clu[[i]]+cumsum(k[1:(i-1)])
+      clu[[i]]<-clu[[i]]+sum(k[1:(i-1)])
 	}
   }
   cluVec<-unlist(clu)

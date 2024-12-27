@@ -1,6 +1,11 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+2024
+Version: 1.1.6
+Date: 2024-12-27
+A bug fix in unlistClu.
+
 
 2023
 Version: 1.1.5.9000
