@@ -10,7 +10,7 @@ unlistClu(clu, renumber = FALSE)
 \arguments{
 \item{clu}{A list representing a partition of units from different sets. Each element should be a partition for one set.}
 
-\item{renumber}{If \code{TRUE} (default), are renumbered so that they are 1:"total number of clusters". If any cluster "ID" is present in more than one set of units (one partition, one element of the list), this is done even if \code{renumber = FALSE}.}
+\item{renumber}{If \code{TRUE} (default is \code{FALSE}), are renumbered so that they are 1:"total number of clusters". If any cluster "ID" is present in more than one set of units (one partition, one element of the list), this is done even if \code{renumber = FALSE}.}
 }
 \value{
 A vector representing a partition. It also has an attribute \code{n} with the number of units that were in each set.

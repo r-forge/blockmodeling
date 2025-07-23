@@ -5,7 +5,7 @@
 #' Essentially, if the argument is a list (otherwise function just returns its argument), the function calls unlist on it. Before it, it however makes sure that names from different elements of the list to not repeat.  The opposite of \code{\link{splitClu}}. The \code{n} argument of the \code{\link{splitClu}} is returned as an attribute. If \code{renumber=TRUE} (default), it is practically identical to unlistCluInt.
 #' 
 #' @param clu A list representing a partition of units from different sets. Each element should be a partition for one set. 
-#' @param renumber If \code{TRUE} (default), are renumbered so that they are 1:"total number of clusters". If any cluster "ID" is present in more than one set of units (one partition, one element of the list), this is done even if \code{renumber = FALSE}.
+#' @param renumber If \code{TRUE} (default is \code{FALSE}), are renumbered so that they are 1:"total number of clusters". If any cluster "ID" is present in more than one set of units (one partition, one element of the list), this is done even if \code{renumber = FALSE}.
 #'
 #' 
 #' @return A vector representing a partition. It also has an attribute \code{n} with the number of units that were in each set.

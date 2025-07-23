@@ -1,6 +1,12 @@
 Name: blockmodeling
 Title: Generalized and Classical Blockmodeling of Valued Networks
 
+2025
+
+Version: 1.1.7
+Date: 2025-07-23
+Added a few utiliti functions, e.g. to compute the length of partitions.
+
 2024
 Version: 1.1.6
 Date: 2024-12-27
