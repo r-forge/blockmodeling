@@ -1,6 +1,11 @@
 Package: kmBlock
 Title: k-means like blockmodeling of one-mode and linked networks
 
+2025
+Version: 0.1.4
+Date: 2025-07-23
+Updated link to R help to a function in another package. 
+
 2024
 Version: 0.1.3
 Date: 2024-07-24

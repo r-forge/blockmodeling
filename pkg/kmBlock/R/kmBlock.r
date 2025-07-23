@@ -167,7 +167,7 @@ critFunKmeans<-function(M,
   diagonal<-match.arg(diagonal)
   limitType<-match.arg(limitType)  
   if(is.null(weights)){
-    weights<- array(1, dim = dim(M)), 
+    weights<- array(1, dim = dim(M))
   } else if(any(dim(weights)!=dim(M))) stop("Weights have wrong dim!")
   w<-weights
   
@@ -269,10 +269,10 @@ critFunKmeans<-function(M,
 #' @param return.all If \code{FALSE}, solution for only the best (one or more) partition/s is/are returned.
 #' @param return.err Should the error for each optimized partition be returned. Defaults to \code{TRUE}.
 #' @param seed Optional. The seed for random generation of partitions.
-#' @param parGenFun The function (object) that will generate random partitions. The default function is   \code{\link{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).
+#' @param parGenFun The function (object) that will generate random partitions. The default function is \code{\link[blockmodeling]{genRandomPar}}. The function has to accept the following parameters: \code{k} (number o of partitions by modes, \code{n} (number of units by modes), \code{seed} (seed value for random generation of partition), \code{addParam} (a list of additional parameters).
 #' @param mingr Minimal allowed group size.
 #' @param maxgr Maximal allowed group size.
-#' @param addParam A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link{genRandomPar}}.
+#' @param addParam A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link[blockmodeling]{genRandomPar}}.
 #' @param maxTriesToFindNewPar The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep * 1000}.
 #' @param skip.par The partitions that are not allowed or were already checked and should therefore be skipped.
 #' @param printRep Should some information about each optimization be printed.
