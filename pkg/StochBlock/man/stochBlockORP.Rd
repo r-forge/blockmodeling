@@ -54,7 +54,7 @@ stochBlockORP(
 
 \item{maxgr}{Maximal allowed group size.}
 
-\item{addParam}{A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link[blockmodeling]{genRandomPar}}.}
+\item{addParam}{A list of additional parameters for function specified above. In the usage section they are specified for the default function \code{\link{genRandomPar}}.}
 
 \item{maxTriesToFindNewPar}{The maximum number of partition try when trying to find a new partition to optimize that was not yet checked before - the default value is \code{rep * 1000}.}
 

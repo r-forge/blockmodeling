@@ -1,4 +1,8 @@
 2025
+Version: 0.1.5
+Date: 2025-07-23
+Added up and down (or split and merge) optimization function).
+
 Version: 0.1.4
 Date: 2025-07-23
 Updated link to R help to a function in another package.  Also addressed some other notes in R check.
